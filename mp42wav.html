@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SONIC_STRIPPER // WEB_AUDIO_EDITION</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Syncopate:wght@700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --surface: #151515;
+            --accent: #00f0ff;
+            --text: #e0e0e0;
+            --text-dim: #666;
+            --border: #222;
+            --font-main: 'Space Grotesk', sans-serif;
+            --font-display: 'Syncopate', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            padding: 2rem;
+            position: relative;
+        }
+
+        .app-container::before {
+            content: "OFFLINE_MODE";
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--accent);
+            color: #000;
+            font-size: 10px;
+            padding: 2px 8px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--border);
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone:hover {
+            border-color: var(--accent);
+            background: #1a1a1a;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-wrap {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .bar-bg {
+            height: 4px;
+            background: #222;
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+
+        .status-text {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-family: var(--font-display);
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        button:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .log {
+            margin-top: 2rem;
+            font-family: monospace;
+            font-size: 11px;
+            color: #444;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+        <h1>Stripper // MP4 ➔ WAV</h1>
+
+        <div class="drop-zone" id="drop-zone">
+            <p>DROP MP4 FILE</p>
+            <input type="file" id="file-input" class="hidden" accept="video/*">
+        </div>
+
+        <div class="progress-wrap" id="processing-ui">
+            <div class="status-text" id="status-label">Ready to process</div>
+            <div class="bar-bg">
+                <div class="bar-fill" id="bar"></div>
+            </div>
+            <button id="start-btn">Extract Audio</button>
+            <button id="reset-btn" style="background:none; color:var(--text-dim); border:1px solid #333;">Reset</button>
+        </div>
+
+        <div class="log" id="log"></div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const processingUi = document.getElementById('processing-ui');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const bar = document.getElementById('bar');
+        const statusLabel = document.getElementById('status-label');
+        const logEl = document.getElementById('log');
+
+        let selectedFile = null;
+
+        function log(msg) {
+            const div = document.createElement('div');
+            div.textContent = `> ${msg}`;
+            logEl.appendChild(div);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        dropZone.onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                dropZone.classList.add('hidden');
+                processingUi.style.display = 'block';
+                log(`Loaded: ${selectedFile.name}`);
+            }
+        };
+
+        startBtn.onclick = async () => {
+            startBtn.disabled = true;
+            statusLabel.textContent = "Decoding video stream...";
+            log("Initializing Web Audio Context...");
+
+            try {
+                const arrayBuffer = await selectedFile.arrayBuffer();
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+                // Decode the audio from the video file
+                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+                statusLabel.textContent = "Encoding to WAV...";
+                bar.style.width = "50%";
+                log("Channel Count: " + audioBuffer.numberOfChannels);
+
+                // Convert AudioBuffer to WAV
+                const wavBlob = audioBufferToWav(audioBuffer);
+
+                const url = URL.createObjectURL(wavBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = selectedFile.name.replace(/\.[^/.]+$/, "") + ".wav";
+                a.click();
+
+                bar.style.width = "100%";
+                statusLabel.textContent = "Extraction Complete";
+                log("File saved as WAV.");
+            } catch (err) {
+                log("Error: " + err.message);
+                statusLabel.textContent = "Failed to process";
+            }
+        };
+
+        resetBtn.onclick = () => location.reload();
+
+        // Helper: Convert AudioBuffer to WAV format
+        function audioBufferToWav(buffer) {
+            const numChannels = buffer.numberOfChannels;
+            const sampleRate = buffer.sampleRate;
+            const format = 1; // PCM
+            const bitDepth = 16;
+
+            let result;
+            if (numChannels === 2) {
+                result = interleave(buffer.getChannelData(0), buffer.getChannelData(1));
+            } else {
+                result = buffer.getChannelData(0);
+            }
+
+            return writeWav(result, numChannels, sampleRate);
+        }
+
+        function interleave(left, right) {
+            const length = left.length + right.length;
+            const result = new Float32Array(length);
+            for (let i = 0; i < left.length; i++) {
+                result[i * 2] = left[i];
+                result[i * 2 + 1] = right[i];
+            }
+            return result;
+        }
+
+        function writeWav(samples, numChannels, sampleRate) {
+            const buffer = new ArrayBuffer(44 + samples.length * 2);
+            const view = new DataView(buffer);
+
+            const writeString = (offset, string) => {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            };
+
+            writeString(0, 'RIFF');
+            view.setUint32(4, 32 + samples.length * 2, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * numChannels * 2, true);
+            view.setUint16(32, numChannels * 2, true);
+            view.setUint16(34, 16, true);
+            writeString(36, 'data');
+            view.setUint32(40, samples.length * 2, true);
+
+            let offset = 44;
+            for (let i = 0; i < samples.length; i++, offset += 2) {
+                const s = Math.max(-1, Math.min(1, samples[i]));
+                view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
+
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CHAOS // Double Pendulum Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syne:wght@800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --panel-color: #141418;
+            --accent-color: #00ffaa;
+            --accent-dim: rgba(0, 255, 170, 0.15);
+            --text-main: #e0e0e6;
+            --text-muted: #80808a;
+            --border-style: 1px solid #2d2d35;
+            --font-heading: 'Syne', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --spacing: 2rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: crosshair;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* Layout */
+        aside {
+            width: 380px;
+            height: 100%;
+            background: var(--panel-color);
+            border-right: var(--border-style);
+            padding: var(--spacing);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            overflow-y: auto;
+        }
+
+        main {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            line-height: 0.9;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            font-weight: 700;
+            font-size: 0.7rem;
+            margin-bottom: 2rem;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Controls */
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        label span {
+            color: var(--accent-color);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            background: #333;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 0;
+            background: var(--accent-color);
+            margin-top: -7px;
+            transition: transform 0.2s ease;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 2rem;
+        }
+
+        button {
+            background: transparent;
+            border: var(--border-style);
+            color: var(--text-main);
+            padding: 1rem;
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border-color: var(--accent-color);
+        }
+
+        button.active {
+            background: var(--text-main);
+            color: var(--bg-color);
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .stats {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            text-align: right;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+
+            aside {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: var(--border-style);
+            }
+
+            main {
+                height: 60vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside>
+        <h1>CHAOS<br>THEORY</h1>
+        <div class="badge">SYSTEM: DOUBLE PENDULUM</div>
+
+        <p class="description">
+            An exploration of sensitivity to initial conditions. Tiny changes in mass or length result in wildly
+            different trajectories over time.
+        </p>
+
+        <div class="control-group">
+            <label>Mass 1 <span id="m1-val">20</span></label>
+            <input type="range" id="m1" min="5" max="50" value="20">
+        </div>
+
+        <div class="control-group">
+            <label>Mass 2 <span id="m2-val">20</span></label>
+            <input type="range" id="m2" min="5" max="50" value="20">
+        </div>
+
+        <div class="control-group">
+            <label>Length 1 <span id="r1-val">150</span></label>
+            <input type="range" id="r1" min="50" max="250" value="150">
+        </div>
+
+        <div class="control-group">
+            <label>Length 2 <span id="r2-val">150</span></label>
+            <input type="range" id="r2" min="50" max="250" value="150">
+        </div>
+
+        <div class="control-group">
+            <label>Gravity <span id="g-val">1.0</span></label>
+            <input type="range" id="g" min="0.1" max="3" step="0.1" value="1">
+        </div>
+
+        <div class="button-grid">
+            <button id="resetBtn">Reset</button>
+            <button id="traceBtn" class="active">Trace</button>
+        </div>
+    </aside>
+
+    <main>
+        <canvas id="canvas"></canvas>
+        <div class="stats">
+            <div id="kinetic-energy">KE: 0.00J</div>
+            <div id="potential-energy">PE: 0.00J</div>
+            <div id="fps">FPS: 60</div>
+        </div>
+    </main>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // UI Elements
+        const m1Input = document.getElementById('m1');
+        const m2Input = document.getElementById('m2');
+        const r1Input = document.getElementById('r1');
+        const r2Input = document.getElementById('r2');
+        const gInput = document.getElementById('g');
+        const resetBtn = document.getElementById('resetBtn');
+        const traceBtn = document.getElementById('traceBtn');
+
+        let state = {
+            r1: 150, r2: 150,
+            m1: 20, m2: 20,
+            a1: Math.PI / 2, a2: Math.PI / 2,
+            a1_v: 0, a2_v: 0,
+            g: 1,
+            history: [],
+            showTrace: true
+        };
+
+        function resize() {
+            canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+            canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+
+        function update() {
+            const { m1, m2, r1, r2, a1, a2, a1_v, a2_v, g } = state;
+
+            // Physics Equations for Double Pendulum Accelerations
+            let num1 = -g * (2 * m1 + m2) * Math.sin(a1);
+            let num2 = -m2 * g * Math.sin(a1 - 2 * a2);
+            let num3 = -2 * Math.sin(a1 - a2) * m2;
+            let num4 = a2_v * a2_v * r2 + a1_v * a1_v * r1 * Math.cos(a1 - a2);
+            let den = r1 * (2 * m1 + m2 - m2 * Math.cos(2 * a1 - 2 * a2));
+            let a1_a = (num1 + num2 + num3 * num4) / den;
+
+            num1 = 2 * Math.sin(a1 - a2);
+            num2 = (a1_v * a1_v * r1 * (m1 + m2));
+            num3 = g * (m1 + m2) * Math.cos(a1);
+            num4 = a2_v * a2_v * r2 * m2 * Math.cos(a1 - a2);
+            den = r2 * (2 * m1 + m2 - m2 * Math.cos(2 * a1 - 2 * a2));
+            let a2_a = (num1 * (num2 + num3 + num4)) / den;
+
+            state.a1_v += a1_a;
+            state.a2_v += a2_a;
+            state.a1 += state.a1_v;
+            state.a2 += state.a2_v;
+
+            // Friction
+            state.a1_v *= 0.999;
+            state.a2_v *= 0.999;
+        }
+
+        function draw() {
+            const ox = canvas.width / (2 * window.devicePixelRatio);
+            const oy = canvas.height / (2 * window.devicePixelRatio) - 50;
+
+            const x1 = state.r1 * Math.sin(state.a1) + ox;
+            const y1 = state.r1 * Math.cos(state.a1) + oy;
+            const x2 = x1 + state.r2 * Math.sin(state.a2);
+            const y2 = y1 + state.r2 * Math.cos(state.a2);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (state.showTrace) {
+                state.history.push({ x: x2, y: y2 });
+                if (state.history.length > 500) state.history.shift();
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(0, 255, 170, 0.3)';
+                ctx.lineWidth = 1;
+                state.history.forEach((p, i) => {
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                });
+                ctx.stroke();
+            }
+
+            ctx.strokeStyle = '#80808a';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(ox, oy);
+            ctx.lineTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+
+            ctx.fillStyle = '#00ffaa';
+            ctx.beginPath();
+            ctx.arc(x1, y1, state.m1 / 4 + 4, 0, Math.PI * 2);
+            ctx.arc(x2, y2, state.m2 / 4 + 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Energy display
+            const ke = 0.5 * state.m2 * (state.r2 * state.a2_v) ** 2;
+            document.getElementById('kinetic-energy').innerText = `KE: ${Math.abs(ke).toFixed(1)}`;
+        }
+
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        // Interaction Setup
+        [m1Input, m2Input, r1Input, r2Input, gInput].forEach(el => {
+            el.oninput = (e) => {
+                state[e.target.id] = parseFloat(e.target.value);
+                document.getElementById(e.target.id + '-val').innerText = e.target.value;
+                if (e.target.id.startsWith('r')) state.history = [];
+            };
+        });
+
+        resetBtn.onclick = () => {
+            state.a1 = Math.PI / 2 + (Math.random() - 0.5);
+            state.a2 = Math.PI / 2;
+            state.a1_v = 0; state.a2_v = 0;
+            state.history = [];
+        };
+
+        traceBtn.onclick = () => {
+            state.showTrace = !state.showTrace;
+            traceBtn.classList.toggle('active');
+        };
+
+        window.onresize = resize;
+        resize();
+        loop();
+    </script>
+</body>
+
+</html>

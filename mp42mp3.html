@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SONIC_STRIPPER // MP3_FIXED</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Syncopate:wght@700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #111;
+            --accent: #ff0055;
+            --text: #ffffff;
+            --text-dim: #555;
+            --border: #222;
+            --font-main: 'Space Grotesk', sans-serif;
+            --font-display: 'Syncopate', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .app-box {
+            width: 100%;
+            max-width: 500px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            box-shadow: 15px 15px 0px var(--accent);
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        .drop-area {
+            border: 1px dashed var(--text-dim);
+            padding: 4rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .drop-area:hover {
+            background: #1a0008;
+            border-color: var(--accent);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #process-zone {
+            margin-top: 1rem;
+        }
+
+        .progress-container {
+            height: 4px;
+            background: #222;
+            width: 100%;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        #bar {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .status {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            width: 100%;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:disabled {
+            background: #222;
+            color: #444;
+            cursor: not-allowed;
+        }
+
+        .log {
+            margin-top: 1.5rem;
+            font-family: monospace;
+            font-size: 10px;
+            color: #00ff66;
+            height: 80px;
+            overflow-y: auto;
+            background: #000;
+            padding: 10px;
+            border: 1px solid #111;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-box">
+        <h1>STRIPPER.MP3</h1>
+
+        <div class="drop-area" id="drop-zone">
+            <p style="font-weight:bold">CLICK TO LOAD MP4</p>
+            <input type="file" id="file-input" class="hidden" accept="video/*">
+        </div>
+
+        <div id="process-zone" class="hidden">
+            <div class="status" id="status">ENGINE READY</div>
+            <div class="progress-container">
+                <div id="bar"></div>
+            </div>
+            <button id="convert-btn" disabled>WAITING FOR LIB...</button>
+        </div>
+
+        <div class="log" id="log-window"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.all.min.js"></script>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const processZone = document.getElementById('process-zone');
+        const convertBtn = document.getElementById('convert-btn');
+        const bar = document.getElementById('bar');
+        const statusText = document.getElementById('status');
+        const logWindow = document.getElementById('log-window');
+
+        let currentFile = null;
+
+        function log(m) {
+            const d = document.createElement('div');
+            d.textContent = `[${new Date().toLocaleTimeString()}] > ${m}`;
+            logWindow.appendChild(d);
+            logWindow.scrollTop = logWindow.scrollHeight;
+        }
+
+        // Check if library loaded
+        window.onload = () => {
+            if (typeof lamejs !== 'undefined') {
+                log("LameJS library connected via CDN.");
+                if (currentFile) convertBtn.disabled = false;
+            } else {
+                log("CRITICAL ERROR: LameJS failed to load. Check internet connection.");
+                statusText.textContent = "CDN ERROR";
+            }
+        };
+
+        dropZone.onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            currentFile = e.target.files[0];
+            if (currentFile) {
+                dropZone.classList.add('hidden');
+                processZone.classList.remove('hidden');
+                log(`Loaded file: ${currentFile.name}`);
+
+                if (typeof lamejs !== 'undefined') {
+                    convertBtn.disabled = false;
+                    convertBtn.textContent = "ENCODE TO MP3";
+                }
+            }
+        };
+
+        convertBtn.onclick = async () => {
+            if (typeof lamejs === 'undefined') {
+                log("Cannot proceed: LameJS library missing.");
+                return;
+            }
+
+            convertBtn.disabled = true;
+            statusText.textContent = "DECODING AUDIO...";
+            log("Analyzing video stream...");
+
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const arrayBuffer = await currentFile.arrayBuffer();
+
+                // Decode the MP4 audio track into raw PCM data
+                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+                statusText.textContent = "ENCODING MP3...";
+                log(`Sample Rate: ${audioBuffer.sampleRate}Hz | Channels: ${audioBuffer.numberOfChannels}`);
+
+                const channels = audioBuffer.numberOfChannels;
+                const sampleRate = audioBuffer.sampleRate;
+
+                // Create Encoder Instance (channels, sampleRate, bitrate)
+                const mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, 128);
+
+                const samplesL = audioBuffer.getChannelData(0);
+                const samplesR = channels > 1 ? audioBuffer.getChannelData(1) : samplesL;
+
+                const block = 1152;
+                const mp3Data = [];
+
+                for (let i = 0; i < samplesL.length; i += block) {
+                    const leftChunk = samplesL.subarray(i, i + block);
+                    const rightChunk = samplesR.subarray(i, i + block);
+
+                    const leftInt = new Int16Array(leftChunk.length);
+                    const rightInt = new Int16Array(rightChunk.length);
+
+                    // Audio samples are -1.0 to 1.0; LameJS needs 16-bit Integers
+                    for (let j = 0; j < leftChunk.length; j++) {
+                        leftInt[j] = leftChunk[j] < 0 ? leftChunk[j] * 0x8000 : leftChunk[j] * 0x7FFF;
+                        rightInt[j] = rightChunk[j] < 0 ? rightChunk[j] * 0x8000 : rightChunk[j] * 0x7FFF;
+                    }
+
+                    const mp3buf = mp3encoder.encodeBuffer(leftInt, rightInt);
+                    if (mp3buf.length > 0) mp3Data.push(mp3buf);
+
+                    if (i % (block * 10) === 0) {
+                        const perc = Math.floor((i / samplesL.length) * 100);
+                        bar.style.width = perc + "%";
+                    }
+                }
+
+                const end = mp3encoder.flush();
+                if (end.length > 0) mp3Data.push(end);
+
+                log("Finalizing stream...");
+                const blob = new Blob(mp3Data, { type: 'audio/mp3' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = currentFile.name.replace(/\.[^/.]+$/, "") + ".mp3";
+                a.click();
+
+                statusText.textContent = "SUCCESS";
+                bar.style.width = "100%";
+                log("File saved to downloads.");
+                convertBtn.disabled = false;
+                convertBtn.textContent = "START NEW CONVERSION";
+                convertBtn.onclick = () => location.reload();
+
+            } catch (err) {
+                log("DECODE ERROR: " + err.message);
+                statusText.textContent = "FAILED";
+                convertBtn.disabled = false;
+                convertBtn.textContent = "RETRY";
+            }
+        };
+    </script>
+</body>
+
+</html>

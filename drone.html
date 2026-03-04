@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FPV-TERMINAL // DRONE SIMULATOR</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Orbitron:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --accent: #00ff66;
+            /* DJI-style green-line safety */
+            --accent-dim: rgba(0, 255, 102, 0.15);
+            --danger: #ff0044;
+            --warning: #ffcc00;
+            --surface: #111;
+            --text: #ffffff;
+            --font-main: 'JetBrains Mono', monospace;
+            --font-display: 'Orbitron', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text);
+            font-family: var(--font-main);
+            overflow: hidden;
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- FPV OVERLAYS --- */
+        #hud-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px;
+            pointer-events: none;
+            z-index: 10;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+        .hud-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .hud-row.bottom {
+            align-items: flex-end;
+        }
+
+        /* Telemetry Elements */
+        .telemetry-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .tag {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 2px solid var(--accent);
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .tag.warning {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .big-val {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            letter-spacing: -1px;
+        }
+
+        .unit {
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-left: 4px;
+        }
+
+        /* Center HUD Gauges */
+        #aim-scope {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ladder {
+            position: absolute;
+            width: 200px;
+            border-top: 1px solid var(--accent-dim);
+            border-bottom: 1px solid var(--accent-dim);
+            height: 2px;
+            transition: transform 0.05s linear;
+        }
+
+        .crosshair {
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+
+        .crosshair::before,
+        .crosshair::after {
+            content: '';
+            position: absolute;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .crosshair::before {
+            width: 100%;
+            height: 1px;
+            top: 50%;
+            left: 0;
+        }
+
+        .crosshair::after {
+            height: 100%;
+            width: 1px;
+            left: 50%;
+            top: 0;
+        }
+
+        /* Dynamic Compass Strip */
+        #compass-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 30px;
+            overflow: hidden;
+            border-bottom: 1px solid var(--accent-dim);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        #compass-strip {
+            display: flex;
+            white-space: nowrap;
+            transition: transform 0.05s linear;
+            font-size: 10px;
+            align-items: center;
+        }
+
+        /* --- GAME WORLD --- */
+        #world {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #vhs-glitch {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0px, rgba(0, 0, 0, 0.05) 1px, transparent 1px, transparent 2px);
+            opacity: 0.4;
+        }
+
+        .controls-card {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 16px;
+            font-size: 0.65rem;
+            color: #888;
+            border: 1px solid #222;
+            display: flex;
+            gap: 15px;
+            z-index: 11;
+        }
+
+        kbd {
+            color: var(--accent);
+            font-weight: bold;
+            border: 1px solid #444;
+            padding: 0 4px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="world"></canvas>
+    <div id="vhs-glitch"></div>
+
+    <div id="hud-container">
+        <div class="hud-row">
+            <div class="telemetry-group">
+                <div class="tag">FLIGHT MODE: <span style="color:var(--accent)">GPS-STABILIZED</span></div>
+                <div class="tag">SAT: 21 | HDOP: 0.8</div>
+            </div>
+
+            <div id="compass-container">
+                <div id="compass-strip">
+                    N · · · 30 · · · 60 · · · E · · · 120 · · · 150 · · · S · · · 210 · · · 240 · · · W · · · 300 · · ·
+                    330 · · · N
+                </div>
+            </div>
+
+            <div class="telemetry-group" style="align-items: flex-end;">
+                <div class="tag warning">REC <span id="timer">00:00:00</span></div>
+                <div class="tag">BAT: <span id="bat-val">98%</span></div>
+            </div>
+        </div>
+
+        <div id="aim-scope">
+            <div class="ladder" id="pitch-ladder"></div>
+            <div class="crosshair"></div>
+        </div>
+
+        <div class="hud-row bottom">
+            <div class="telemetry-group">
+                <div class="label">ALTITUDE</div>
+                <div class="big-val"><span id="alt">0.0</span><span class="unit">M</span></div>
+                <div class="tag" style="border:none; padding-left:0;">V.SPD: <span id="vspd">0.0</span> m/s</div>
+            </div>
+
+            <div class="telemetry-group" style="align-items: flex-end; text-align: right;">
+                <div class="label">DISTANCE</div>
+                <div class="big-val"><span id="dist">0</span><span class="unit">M</span></div>
+                <div class="tag"
+                    style="border:none; padding-right:0; border-right: 2px solid var(--accent); border-left:0;">H.SPD:
+                    <span id="hspd">0.0</span> km/h</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls-card">
+        <div><kbd>W</kbd><kbd>S</kbd> PITCH</div>
+        <div><kbd>A</kbd><kbd>D</kbd> ROLL</div>
+        <div><kbd>↑</kbd><kbd>↓</kbd> THROTTLE</div>
+        <div><kbd>←</kbd><kbd>→</kbd> YAW</div>
+    </div>
+
+    <script>
+        /**
+         * FPV DRONE CORE
+         */
+        const canvas = document.getElementById('world');
+        const ctx = canvas.getContext('2d');
+
+        // Flight State
+        const drone = {
+            x: 0, y: 5, z: 0,
+            pitch: 0, // Tilt forward/back
+            roll: 0,  // Tilt left/right
+            yaw: 0,   // Rotation
+            velX: 0, velY: 0, velZ: 0,
+            battery: 98,
+            startTime: Date.now()
+        };
+
+        const keys = {};
+        const worldObjects = [];
+        const worldSize = 3000;
+
+        function init() {
+            resize();
+            window.addEventListener('resize', resize);
+            window.addEventListener('keydown', e => keys[e.code] = true);
+            window.addEventListener('keyup', e => keys[e.code] = false);
+
+            // Generate "Cityscape"
+            for (let i = 0; i < 60; i++) {
+                worldObjects.push({
+                    x: (Math.random() - 0.5) * worldSize,
+                    z: (Math.random() - 0.5) * worldSize,
+                    w: 30 + Math.random() * 60,
+                    h: 40 + Math.random() * 300,
+                    color: `hsla(${140 + Math.random() * 40}, 100%, 50%, 0.3)`
+                });
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function updatePhysics() {
+            const drag = 0.97;
+            const gravity = 0.12;
+
+            // 1. Inputs
+            // Throttle (Up/Down)
+            if (keys['ArrowUp']) drone.velY += 0.3;
+            if (keys['ArrowDown']) drone.velY -= 0.2;
+
+            // Yaw (Turning)
+            if (keys['ArrowLeft']) drone.yaw -= 0.04;
+            if (keys['ArrowRight']) drone.yaw += 0.04;
+
+            // Pitch/Roll (Tilt-based movement)
+            let targetPitch = 0;
+            let targetRoll = 0;
+            if (keys['KeyW']) targetPitch = 0.45;
+            if (keys['KeyS']) targetPitch = -0.45;
+            if (keys['KeyA']) targetRoll = -0.45;
+            if (keys['KeyD']) targetRoll = 0.45;
+
+            // Smooth tilt interpolation
+            drone.pitch += (targetPitch - drone.pitch) * 0.1;
+            drone.roll += (targetRoll - drone.roll) * 0.1;
+
+            // Convert Tilt + Yaw into Vector force
+            // Pitch moves us forward relative to where we face
+            drone.velX += Math.sin(drone.yaw) * drone.pitch * 1.8;
+            drone.velZ += Math.cos(drone.yaw) * drone.pitch * 1.8;
+
+            // Roll moves us sideways relative to where we face
+            drone.velX += Math.cos(drone.yaw) * drone.roll * 1.2;
+            drone.velZ -= Math.sin(drone.yaw) * drone.roll * 1.2;
+
+            // 2. Physics Engine
+            drone.velY -= gravity; // Always pulling down
+
+            drone.x += drone.velX;
+            drone.y += drone.velY;
+            drone.z += drone.velZ;
+
+            // Air Resistance
+            drone.velX *= drag;
+            drone.velY *= drag;
+            drone.velZ *= drag;
+
+            // Ground Collision
+            if (drone.y < 0) {
+                drone.y = 0;
+                drone.velY = 0;
+                // Bounce friction
+                drone.velX *= 0.8;
+                drone.velZ *= 0.8;
+            }
+
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('alt').innerText = drone.y.toFixed(1);
+            document.getElementById('dist').innerText = Math.floor(Math.sqrt(drone.x ** 2 + drone.z ** 2));
+            document.getElementById('vspd').innerText = (drone.velY * 10).toFixed(1);
+
+            const speed = Math.sqrt(drone.velX ** 2 + drone.velZ ** 2);
+            document.getElementById('hspd').innerText = (speed * 25).toFixed(1);
+
+            // Pitch Ladder Tilt
+            const ladder = document.getElementById('pitch-ladder');
+            ladder.style.transform = `rotate(${-drone.roll * 30}deg) translateY(${drone.pitch * 120}px)`;
+
+            // Compass Strip
+            const compass = document.getElementById('compass-strip');
+            const yawDeg = (drone.yaw * (180 / Math.PI)) % 360;
+            compass.style.transform = `translateX(${-yawDeg * 2}px)`;
+
+            // Timer
+            const elapsed = Math.floor((Date.now() - drone.startTime) / 1000);
+            const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+            const s = String(elapsed % 60).padStart(2, '0');
+            document.getElementById('timer').innerText = `00:${m}:${s}`;
+        }
+
+        function draw() {
+            // Clear with a faint trail for motion blur
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.8)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const fov = 800;
+
+            function project(x, y, z) {
+                // First-Person Camera Transformation
+                // 1. Translate world to drone center
+                let tx = x - drone.x;
+                let ty = y - drone.y;
+                let tz = z - drone.z;
+
+                // 2. Rotate world around drone by YAW
+                let rx = tx * Math.cos(-drone.yaw) - tz * Math.sin(-drone.yaw);
+                let rz = tx * Math.sin(-drone.yaw) + tz * Math.cos(-drone.yaw);
+
+                // 3. Simple Tilt (Pitch/Roll) for visual effect on horizon
+                // Note: True 3D rotation would involve a full matrix, 
+                // but for FPV feel, we shift the projected points.
+
+                if (rz < 10) return null; // Clipping plane
+
+                let scale = fov / rz;
+                return {
+                    x: cx + rx * scale,
+                    y: cy - (ty * scale) + (drone.pitch * 200), // Pitch shift
+                    s: scale
+                };
+            }
+
+            // Draw Ground Grid
+            ctx.strokeStyle = 'rgba(0, 255, 102, 0.1)';
+            ctx.lineWidth = 1;
+            const step = 100;
+            const startX = Math.floor(drone.x / step) * step - 1000;
+            const startZ = Math.floor(drone.z / step) * step - 1000;
+
+            ctx.beginPath();
+            for (let x = startX; x <= startX + 2000; x += step) {
+                for (let z = startZ; z <= startZ + 2000; z += step) {
+                    const p1 = project(x, 0, z);
+                    const p2 = project(x + step, 0, z);
+                    const p3 = project(x, 0, z + step);
+                    if (p1 && p2) { ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); }
+                    if (p1 && p3) { ctx.moveTo(p1.x, p1.y); ctx.lineTo(p3.x, p3.y); }
+                }
+            }
+            ctx.stroke();
+
+            // Draw Buildings
+            worldObjects.forEach(obj => {
+                const pBase = project(obj.x, 0, obj.z);
+                if (!pBase) return;
+
+                // Simple Box Drawing logic
+                const drawLine = (x1, y1, z1, x2, y2, z2) => {
+                    const a = project(x1, y1, z1);
+                    const b = project(x2, y2, z2);
+                    if (a && b) { ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); }
+                };
+
+                ctx.beginPath();
+                ctx.strokeStyle = obj.color;
+
+                // Front face
+                drawLine(obj.x, 0, obj.z, obj.x + obj.w, 0, obj.z);
+                drawLine(obj.x + obj.w, 0, obj.z, obj.x + obj.w, obj.h, obj.z);
+                drawLine(obj.x + obj.w, obj.h, obj.z, obj.x, obj.h, obj.z);
+                drawLine(obj.x, obj.h, obj.z, obj.x, 0, obj.z);
+
+                // Back face
+                drawLine(obj.x, 0, obj.z + obj.w, obj.x + obj.w, 0, obj.z + obj.w);
+                drawLine(obj.x + obj.w, 0, obj.z + obj.w, obj.x + obj.w, obj.h, obj.z + obj.w);
+                drawLine(obj.x + obj.w, obj.h, obj.z + obj.w, obj.x, obj.h, obj.z + obj.w);
+                drawLine(obj.x, obj.h, obj.z + obj.w, obj.x, 0, obj.z + obj.w);
+
+                // Connectors
+                drawLine(obj.x, 0, obj.z, obj.x, 0, obj.z + obj.w);
+                drawLine(obj.x + obj.w, 0, obj.z, obj.x + obj.w, 0, obj.z + obj.w);
+                drawLine(obj.x + obj.w, obj.h, obj.z, obj.x + obj.w, obj.h, obj.z + obj.w);
+                drawLine(obj.x, obj.h, obj.z, obj.x, obj.h, obj.z + obj.w);
+
+                ctx.stroke();
+            });
+        }
+
+        function gameLoop() {
+            updatePhysics();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

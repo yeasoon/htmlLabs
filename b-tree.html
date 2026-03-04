@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-Tree Interactive Explorer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0e17;
+            --surface: #111827;
+            --surface2: #1a2235;
+            --accent: #00e5ff;
+            --accent2: #ff6b35;
+            --accent3: #a78bfa;
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --node-bg: #1e2d42;
+            --node-border: #2d4a6e;
+            --node-highlight: #00e5ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Grain texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.4;
+        }
+
+        header {
+            padding: 2rem 3rem 1rem;
+            border-bottom: 1px solid #1e3a5f;
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--accent), var(--accent3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 0.7rem;
+            color: var(--muted);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .order-badge {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .order-badge select {
+            background: var(--surface2);
+            border: 1px solid var(--node-border);
+            color: var(--accent);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .main {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 0;
+            height: calc(100vh - 72px);
+        }
+
+        /* Tree Canvas */
+        .canvas-area {
+            position: relative;
+            overflow: auto;
+            padding: 2rem;
+            background: radial-gradient(ellipse at 30% 20%, #0d1f3c 0%, var(--bg) 70%);
+        }
+
+        #tree-svg {
+            min-width: 100%;
+            min-height: 400px;
+            transition: all 0.3s ease;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            border-left: 1px solid #1e3a5f;
+            background: var(--surface);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel {
+            padding: 1.5rem;
+            border-bottom: 1px solid #1e3a5f;
+        }
+
+        .panel-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            background: var(--surface2);
+            border: 1px solid var(--node-border);
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--accent);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #33eeff;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #ef444420;
+        }
+
+        .btn-neutral {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--node-border);
+        }
+
+        .btn-neutral:hover {
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .preset-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .preset-btn {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.65rem;
+            border-radius: 3px;
+            background: var(--surface2);
+            border: 1px solid var(--node-border);
+            color: var(--muted);
+            cursor: pointer;
+            font-family: 'Space Mono', monospace;
+            transition: all 0.15s;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        /* Log */
+        .log-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 1.5rem;
+        }
+
+        .log-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .log-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .log-area::-webkit-scrollbar-thumb {
+            background: var(--node-border);
+            border-radius: 2px;
+        }
+
+        .log-entry {
+            font-size: 0.7rem;
+            line-height: 1.8;
+            color: var(--muted);
+            border-left: 2px solid transparent;
+            padding-left: 0.75rem;
+            margin-bottom: 0.25rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .log-entry.insert {
+            border-color: var(--success);
+            color: #6ee7b7;
+        }
+
+        .log-entry.search {
+            border-color: var(--accent);
+            color: #7dd3fc;
+        }
+
+        .log-entry.delete {
+            border-color: var(--accent2);
+            color: #fdba74;
+        }
+
+        .log-entry.split {
+            border-color: var(--accent3);
+            color: #c4b5fd;
+        }
+
+        .log-entry.info {
+            border-color: var(--muted);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* SVG styles */
+        .node-rect {
+            fill: var(--node-bg);
+            stroke: var(--node-border);
+            stroke-width: 1.5;
+            transition: all 0.4s ease;
+            rx: 6;
+        }
+
+        .node-rect.highlighted {
+            fill: #0d2744;
+            stroke: var(--accent);
+            stroke-width: 2;
+            filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4));
+        }
+
+        .node-rect.found {
+            fill: #0a2e1a;
+            stroke: var(--success);
+            stroke-width: 2;
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
+        }
+
+        .node-rect.split-node {
+            stroke: var(--accent3);
+            stroke-width: 2;
+            filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.4));
+        }
+
+        .key-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            fill: var(--text);
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+
+        .key-text.highlighted {
+            fill: var(--accent);
+            font-weight: 700;
+        }
+
+        .key-text.found {
+            fill: var(--success);
+            font-weight: 700;
+        }
+
+        .divider {
+            stroke: var(--node-border);
+            stroke-width: 1;
+        }
+
+        .edge {
+            stroke: var(--node-border);
+            stroke-width: 1.5;
+            fill: none;
+            transition: stroke 0.4s ease;
+        }
+
+        .edge.highlighted {
+            stroke: var(--accent);
+            stroke-width: 2;
+            opacity: 0.7;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .stat-box {
+            background: var(--surface2);
+            border: 1px solid var(--node-border);
+            border-radius: 4px;
+            padding: 0.6rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.55rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.2rem;
+        }
+
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+        }
+
+        .tag {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            border: 1px solid;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .tag-green {
+            color: var(--success);
+            border-color: var(--success);
+            background: #10b98110;
+        }
+
+        .tag-blue {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: #00e5ff10;
+        }
+
+        .tag-purple {
+            color: var(--accent3);
+            border-color: var(--accent3);
+            background: #a78bfa10;
+        }
+
+        .tag-orange {
+            color: var(--accent2);
+            border-color: var(--accent2);
+            background: #ff6b3510;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.75rem;
+            padding: 4rem 2rem;
+            line-height: 2;
+        }
+
+        .empty-state .big {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .search-result {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            margin-top: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .result-found {
+            background: #10b98120;
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .result-not-found {
+            background: #ef444420;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <h1>B-Tree Explorer</h1>
+            <p class="subtitle">Interactive Data Structure Visualizer</p>
+        </div>
+        <div class="order-badge">
+            <span>Order (t):</span>
+            <select id="order-select">
+                <option value="2">2 (min 1 key)</option>
+                <option value="3" selected>3 (min 2 keys)</option>
+                <option value="4">4 (min 3 keys)</option>
+                <option value="5">5 (min 4 keys)</option>
+            </select>
+            <button class="btn btn-neutral" onclick="resetTree()" style="margin-left:0.5rem;">Reset</button>
+        </div>
+    </header>
+
+    <div class="main">
+        <div class="canvas-area">
+            <svg id="tree-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+
+        <div class="sidebar">
+            <!-- Operations -->
+            <div class="panel">
+                <div class="panel-title">Operations</div>
+
+                <div class="input-row">
+                    <input type="number" id="val-input" placeholder="Enter value..." min="0" max="999" />
+                </div>
+                <div class="input-row">
+                    <button class="btn btn-primary btn-full" onclick="insertValue()">Insert</button>
+                    <button class="btn btn-neutral" onclick="searchValue()">Search</button>
+                    <button class="btn btn-danger" onclick="deleteValue()">Delete</button>
+                </div>
+                <div id="search-result-display"></div>
+
+                <div class="preset-row">
+                    <span style="font-size:0.6rem;color:var(--muted);width:100%;margin-bottom:0.2rem;">Quick
+                        insert:</span>
+                    <button class="preset-btn" onclick="loadPreset([10,20,30,40,50,60,70,80,90])">Sequential</button>
+                    <button class="preset-btn" onclick="loadPreset([50,25,75,12,37,62,87,6,18,31,43])">Balanced</button>
+                    <button class="preset-btn" onclick="loadPreset([5,3,8,1,4,7,9,2,6])">Small</button>
+                    <button class="preset-btn" onclick="loadRandom()">Random (12)</button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="panel">
+                <div class="panel-title">Tree Statistics</div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-keys">0</div>
+                        <div class="stat-label">Total Keys</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-height">0</div>
+                        <div class="stat-label">Height</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-nodes">0</div>
+                        <div class="stat-label">Nodes</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-order">3</div>
+                        <div class="stat-label">Order (t)</div>
+                    </div>
+                </div>
+                <div class="feature-tags">
+                    <span class="tag tag-blue">Balanced</span>
+                    <span class="tag tag-green">O(log n) ops</span>
+                    <span class="tag tag-purple">Self-splitting</span>
+                    <span class="tag tag-orange">Sorted keys</span>
+                </div>
+            </div>
+
+            <!-- Log -->
+            <div class="panel" style="border-bottom:none;padding-bottom:0.5rem;">
+                <div class="panel-title" style="margin-bottom:0;">Operation Log</div>
+            </div>
+            <div class="log-area" id="log-area">
+                <div class="log-entry info">→ Ready. Insert values to begin.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ─── B-Tree Implementation ─────────────────────────────────────────────────
+
+        class BTreeNode {
+            constructor(isLeaf = true) {
+                this.keys = [];
+                this.children = [];
+                this.isLeaf = isLeaf;
+                this.id = Math.random().toString(36).substr(2, 9);
+            }
+        }
+
+        class BTree {
+            constructor(t = 3) {
+                this.t = t; // minimum degree
+                this.root = new BTreeNode(true);
+            }
+
+            search(k, node = this.root) {
+                let i = 0;
+                while (i < node.keys.length && k > node.keys[i]) i++;
+                if (i < node.keys.length && k === node.keys[i]) return { node, index: i };
+                if (node.isLeaf) return null;
+                return this.search(k, node.children[i]);
+            }
+
+            searchPath(k, node = this.root, path = []) {
+                let i = 0;
+                while (i < node.keys.length && k > node.keys[i]) i++;
+                path.push({ node, keyIndex: i < node.keys.length && k === node.keys[i] ? i : -1 });
+                if (i < node.keys.length && k === node.keys[i]) return path;
+                if (node.isLeaf) return path;
+                return this.searchPath(k, node.children[i], path);
+            }
+
+            insert(k) {
+                const root = this.root;
+                if (root.keys.length === 2 * this.t - 1) {
+                    const newRoot = new BTreeNode(false);
+                    newRoot.children.push(this.root);
+                    this.splitChild(newRoot, 0, this.root);
+                    this.root = newRoot;
+                    this.insertNonFull(this.root, k);
+                } else {
+                    this.insertNonFull(root, k);
+                }
+            }
+
+            insertNonFull(node, k) {
+                let i = node.keys.length - 1;
+                if (node.isLeaf) {
+                    node.keys.push(null);
+                    while (i >= 0 && k < node.keys[i]) {
+                        node.keys[i + 1] = node.keys[i];
+                        i--;
+                    }
+                    node.keys[i + 1] = k;
+                } else {
+                    while (i >= 0 && k < node.keys[i]) i--;
+                    i++;
+                    if (node.children[i].keys.length === 2 * this.t - 1) {
+                        this.splitChild(node, i, node.children[i]);
+                        if (k > node.keys[i]) i++;
+                    }
+                    this.insertNonFull(node.children[i], k);
+                }
+            }
+
+            splitChild(parent, i, child) {
+                const t = this.t;
+                const newNode = new BTreeNode(child.isLeaf);
+                newNode.keys = child.keys.splice(t, t - 1);
+                if (!child.isLeaf) {
+                    newNode.children = child.children.splice(t, t);
+                }
+                const midKey = child.keys.pop();
+                parent.keys.splice(i, 0, midKey);
+                parent.children.splice(i + 1, 0, newNode);
+            }
+
+            delete(k) {
+                if (!this.root.keys.length) return false;
+                const result = this._delete(this.root, k);
+                if (this.root.keys.length === 0 && !this.root.isLeaf) {
+                    this.root = this.root.children[0];
+                }
+                return result;
+            }
+
+            _delete(node, k) {
+                const t = this.t;
+                let i = 0;
+                while (i < node.keys.length && k > node.keys[i]) i++;
+
+                if (i < node.keys.length && k === node.keys[i]) {
+                    if (node.isLeaf) {
+                        node.keys.splice(i, 1);
+                        return true;
+                    } else {
+                        if (node.children[i].keys.length >= t) {
+                            const pred = this.getPredecessor(node.children[i]);
+                            node.keys[i] = pred;
+                            return this._delete(node.children[i], pred);
+                        } else if (node.children[i + 1].keys.length >= t) {
+                            const succ = this.getSuccessor(node.children[i + 1]);
+                            node.keys[i] = succ;
+                            return this._delete(node.children[i + 1], succ);
+                        } else {
+                            this.merge(node, i);
+                            return this._delete(node.children[i], k);
+                        }
+                    }
+                } else {
+                    if (node.isLeaf) return false;
+                    if (node.children[i].keys.length < t) {
+                        this.fill(node, i);
+                        // Recalculate i after fill
+                        i = 0;
+                        while (i < node.keys.length && k > node.keys[i]) i++;
+                    }
+                    return this._delete(node.children[i], k);
+                }
+            }
+
+            getPredecessor(node) {
+                while (!node.isLeaf) node = node.children[node.children.length - 1];
+                return node.keys[node.keys.length - 1];
+            }
+
+            getSuccessor(node) {
+                while (!node.isLeaf) node = node.children[0];
+                return node.keys[0];
+            }
+
+            merge(parent, i) {
+                const left = parent.children[i];
+                const right = parent.children[i + 1];
+                left.keys.push(parent.keys[i]);
+                left.keys = left.keys.concat(right.keys);
+                left.children = left.children.concat(right.children);
+                parent.keys.splice(i, 1);
+                parent.children.splice(i + 1, 1);
+            }
+
+            fill(parent, i) {
+                const t = this.t;
+                if (i !== 0 && parent.children[i - 1].keys.length >= t) {
+                    this.borrowFromPrev(parent, i);
+                } else if (i !== parent.keys.length && parent.children[i + 1].keys.length >= t) {
+                    this.borrowFromNext(parent, i);
+                } else {
+                    if (i !== parent.keys.length) this.merge(parent, i);
+                    else this.merge(parent, i - 1);
+                }
+            }
+
+            borrowFromPrev(parent, i) {
+                const child = parent.children[i];
+                const sibling = parent.children[i - 1];
+                child.keys.unshift(parent.keys[i - 1]);
+                if (!sibling.isLeaf) child.children.unshift(sibling.children.pop());
+                parent.keys[i - 1] = sibling.keys.pop();
+            }
+
+            borrowFromNext(parent, i) {
+                const child = parent.children[i];
+                const sibling = parent.children[i + 1];
+                child.keys.push(parent.keys[i]);
+                if (!sibling.isLeaf) child.children.push(sibling.children.shift());
+                parent.keys[i] = sibling.keys.shift();
+            }
+
+            getStats() {
+                let keys = 0, nodes = 0, height = 0;
+                const traverse = (node, depth) => {
+                    if (!node) return;
+                    nodes++;
+                    keys += node.keys.length;
+                    height = Math.max(height, depth);
+                    node.children.forEach(c => traverse(c, depth + 1));
+                };
+                traverse(this.root, 1);
+                return { keys, nodes, height };
+            }
+        }
+
+        // ─── Global State ──────────────────────────────────────────────────────────
+
+        let tree = new BTree(3);
+        let highlightedNodes = new Set();
+        let foundNode = null;
+        let foundIndex = -1;
+
+        // ─── Rendering ────────────────────────────────────────────────────────────
+
+        const NODE_KEY_W = 36;
+        const NODE_H = 36;
+        const LEVEL_GAP = 70;
+        const NODE_PAD = 6;
+
+        function renderTree() {
+            const svg = document.getElementById('tree-svg');
+            svg.innerHTML = '';
+
+            if (!tree.root.keys.length) {
+                renderEmpty(svg);
+                return;
+            }
+
+            const layout = computeLayout(tree.root);
+            const totalWidth = Math.max(800, layout.width + 100);
+            const totalHeight = Math.max(300, (getHeight(tree.root)) * (NODE_H + LEVEL_GAP) + 80);
+            svg.setAttribute('viewBox', `0 0 ${totalWidth} ${totalHeight}`);
+            svg.setAttribute('width', totalWidth);
+            svg.setAttribute('height', totalHeight);
+
+            // Defs
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            defs.innerHTML = `
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  `;
+            svg.appendChild(defs);
+
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            svg.appendChild(g);
+
+            drawNode(g, tree.root, totalWidth / 2, 50, totalWidth / 2);
+            updateStats();
+        }
+
+        function getHeight(node) {
+            if (node.isLeaf) return 1;
+            return 1 + getHeight(node.children[0]);
+        }
+
+        function computeLayout(node) {
+            if (node.isLeaf) {
+                return { width: node.keys.length * NODE_KEY_W + NODE_PAD * 2 };
+            }
+            let totalWidth = 0;
+            node.children.forEach(c => { totalWidth += computeLayout(c).width + 20; });
+            return { width: Math.max(totalWidth, node.keys.length * NODE_KEY_W + NODE_PAD * 2) };
+        }
+
+        function drawNode(g, node, cx, cy, subtreeWidth, parentX = null, parentY = null) {
+            const keyCount = node.keys.length;
+            const nodeW = keyCount * NODE_KEY_W + (keyCount - 1) * 2 + NODE_PAD * 2;
+            const nodeH = NODE_H;
+            const x = cx - nodeW / 2;
+            const y = cy;
+
+            // Draw edge to parent
+            if (parentX !== null) {
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const mx = (cx + parentX) / 2;
+                const my = (y + parentY + nodeH) / 2;
+                line.setAttribute('d', `M ${parentX} ${parentY + nodeH} C ${parentX} ${my}, ${cx} ${my}, ${cx} ${y}`);
+                const isHighlighted = highlightedNodes.has(node.id);
+                line.setAttribute('class', 'edge' + (isHighlighted ? ' highlighted' : ''));
+                g.insertBefore(line, g.firstChild);
+            }
+
+            // Node background
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', x);
+            rect.setAttribute('y', y);
+            rect.setAttribute('width', nodeW);
+            rect.setAttribute('height', nodeH);
+            rect.setAttribute('rx', 6);
+
+            let rectClass = 'node-rect';
+            if (foundNode === node) rectClass += ' found';
+            else if (highlightedNodes.has(node.id)) rectClass += ' highlighted';
+            rect.setAttribute('class', rectClass);
+            g.appendChild(rect);
+
+            // Keys and dividers
+            node.keys.forEach((key, ki) => {
+                const kx = x + NODE_PAD + ki * (NODE_KEY_W + 2) + NODE_KEY_W / 2;
+                const ky = y + nodeH / 2;
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', kx);
+                text.setAttribute('y', ky);
+                let textClass = 'key-text';
+                if (foundNode === node && foundIndex === ki) textClass += ' found';
+                else if (highlightedNodes.has(node.id)) textClass += ' highlighted';
+                text.setAttribute('class', textClass);
+                text.textContent = key;
+                g.appendChild(text);
+
+                // Divider between keys
+                if (ki < node.keys.length - 1) {
+                    const divLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    const dx = x + NODE_PAD + (ki + 1) * (NODE_KEY_W + 2) - 1;
+                    divLine.setAttribute('x1', dx);
+                    divLine.setAttribute('y1', y + 6);
+                    divLine.setAttribute('x2', dx);
+                    divLine.setAttribute('y2', y + nodeH - 6);
+                    divLine.setAttribute('class', 'divider');
+                    g.appendChild(divLine);
+                }
+            });
+
+            // Draw children
+            if (!node.isLeaf && node.children.length) {
+                const childY = cy + NODE_H + LEVEL_GAP;
+                const childCount = node.children.length;
+                const childSpacing = subtreeWidth / childCount;
+
+                node.children.forEach((child, ci) => {
+                    const childCX = cx - subtreeWidth / 2 + childSpacing * ci + childSpacing / 2;
+                    drawNode(g, child, childCX, childY, childSpacing, cx, cy);
+                });
+            }
+        }
+
+        function renderEmpty(svg) {
+            svg.setAttribute('viewBox', '0 0 600 300');
+            svg.setAttribute('width', '600');
+            svg.setAttribute('height', '300');
+            const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+            fo.setAttribute('x', '0'); fo.setAttribute('y', '0');
+            fo.setAttribute('width', '600'); fo.setAttribute('height', '300');
+            fo.innerHTML = `<div xmlns="http://www.w3.org/1999/xhtml" class="empty-state">
+    <span class="big">◈</span>
+    Insert values to build the B-Tree<br>or use a preset to get started
+  </div>`;
+            svg.appendChild(fo);
+        }
+
+        function updateStats() {
+            const stats = tree.getStats();
+            document.getElementById('stat-keys').textContent = stats.keys;
+            document.getElementById('stat-height').textContent = stats.height;
+            document.getElementById('stat-nodes').textContent = stats.nodes;
+            document.getElementById('stat-order').textContent = tree.t;
+        }
+
+        // ─── Operations ───────────────────────────────────────────────────────────
+
+        function log(msg, type = 'info') {
+            const area = document.getElementById('log-area');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const now = new Date().toLocaleTimeString('en', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            entry.textContent = `[${now}] ${msg}`;
+            area.appendChild(entry);
+            area.scrollTop = area.scrollHeight;
+            // Keep max 50 entries
+            while (area.children.length > 50) area.removeChild(area.firstChild);
+        }
+
+        function insertValue() {
+            const input = document.getElementById('val-input');
+            const val = parseInt(input.value);
+            if (isNaN(val) || val < 0 || val > 9999) {
+                log('Invalid value. Use 0–9999.', 'info');
+                return;
+            }
+
+            const before = tree.getStats().keys;
+            highlightedNodes.clear();
+            foundNode = null;
+
+            // Check for duplicate
+            if (tree.search(val)) {
+                log(`Key ${val} already exists in tree.`, 'info');
+                input.value = '';
+                return;
+            }
+
+            const prevNodeCount = tree.getStats().nodes;
+            tree.insert(val);
+            const after = tree.getStats();
+
+            if (after.nodes > prevNodeCount) {
+                log(`Inserted ${val} → node split occurred (height: ${after.height})`, 'split');
+            } else {
+                log(`Inserted ${val} → ${after.keys} keys, height ${after.height}`, 'insert');
+            }
+
+            input.value = '';
+            renderTree();
+            input.focus();
+        }
+
+        function searchValue() {
+            const input = document.getElementById('val-input');
+            const val = parseInt(input.value);
+            if (isNaN(val)) { log('Enter a value to search.', 'info'); return; }
+
+            highlightedNodes.clear();
+            foundNode = null;
+            foundIndex = -1;
+
+            const path = tree.searchPath(val);
+            const resultDiv = document.getElementById('search-result-display');
+
+            if (path.length > 0) {
+                const last = path[path.length - 1];
+                if (last.keyIndex !== -1) {
+                    // Found
+                    path.forEach(p => highlightedNodes.add(p.node.id));
+                    foundNode = last.node;
+                    foundIndex = last.keyIndex;
+                    log(`Found ${val} — depth ${path.length}, traversed ${path.length} node(s)`, 'search');
+                    resultDiv.innerHTML = `<span class="search-result result-found">✓ Found: ${val} at depth ${path.length}</span>`;
+                } else {
+                    path.forEach(p => highlightedNodes.add(p.node.id));
+                    log(`Key ${val} not found — searched ${path.length} node(s)`, 'info');
+                    resultDiv.innerHTML = `<span class="search-result result-not-found">✗ Not found: ${val}</span>`;
+                }
+            }
+
+            renderTree();
+
+            setTimeout(() => {
+                highlightedNodes.clear();
+                foundNode = null;
+                foundIndex = -1;
+                resultDiv.innerHTML = '';
+                renderTree();
+            }, 2500);
+        }
+
+        function deleteValue() {
+            const input = document.getElementById('val-input');
+            const val = parseInt(input.value);
+            if (isNaN(val)) { log('Enter a value to delete.', 'info'); return; }
+
+            highlightedNodes.clear();
+            foundNode = null;
+
+            const success = tree.delete(val);
+            if (success) {
+                const stats = tree.getStats();
+                log(`Deleted ${val} → ${stats.keys} keys remain, height ${stats.height}`, 'delete');
+            } else {
+                log(`Key ${val} not found — nothing deleted`, 'info');
+            }
+
+            input.value = '';
+            renderTree();
+        }
+
+        function resetTree() {
+            tree = new BTree(parseInt(document.getElementById('order-select').value));
+            highlightedNodes.clear();
+            foundNode = null;
+            document.getElementById('search-result-display').innerHTML = '';
+            log('Tree reset.', 'info');
+            renderTree();
+        }
+
+        function loadPreset(values) {
+            resetTree();
+            values.forEach((v, i) => {
+                setTimeout(() => {
+                    tree.insert(v);
+                    renderTree();
+                    if (i === values.length - 1) log(`Loaded ${values.length} preset values.`, 'insert');
+                }, i * 80);
+            });
+        }
+
+        function loadRandom() {
+            const vals = new Set();
+            while (vals.size < 12) vals.add(Math.floor(Math.random() * 99) + 1);
+            loadPreset([...vals]);
+        }
+
+        // ─── Event Listeners ──────────────────────────────────────────────────────
+
+        document.getElementById('val-input').addEventListener('keydown', e => {
+            if (e.key === 'Enter') insertValue();
+        });
+
+        document.getElementById('order-select').addEventListener('change', () => {
+            resetTree();
+        });
+
+        // ─── Init ─────────────────────────────────────────────────────────────────
+
+        renderTree();
+    </script>
+</body>
+
+</html>
