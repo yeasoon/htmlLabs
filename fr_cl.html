@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Français Interactif</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0d1b2a;
+            --gold: #c9a84c;
+            --cream: #f5f0e8;
+            --white: #fefefe;
+            --gray: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--navy);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0d1b2a, #1a2a3a 60%, #0a1520);
+            border-bottom: 2px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: 'FR';
+            position: absolute;
+            right: -30px;
+            top: -30px;
+            font-family: 'Playfair Display', serif;
+            font-size: 240px;
+            font-weight: 700;
+            color: rgba(201, 168, 76, 0.05);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px 36px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .flag {
+            display: flex;
+            width: 50px;
+            height: 33px;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .flag div {
+            flex: 1;
+        }
+
+        .flag .bl {
+            background: #002395;
+        }
+
+        .flag .wh {
+            background: #fff;
+        }
+
+        .flag .rd {
+            background: #ED2939;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .hero h1 em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero p {
+            color: #8a9bb0;
+            font-size: 0.87rem;
+            margin-top: 4px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 12px;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(201, 168, 76, 0.1);
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            border-radius: 8px;
+            padding: 10px 16px;
+            text-align: center;
+        }
+
+        .stat .n {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .stat .l {
+            font-size: 0.66rem;
+            color: #8a9bb0;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 2px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #0b1622;
+            border-bottom: 1px solid #1a2d40;
+            overflow-x: auto;
+            scrollbar-width: none;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            padding: 13px 20px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #5a7088;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.84rem;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--cream);
+        }
+
+        .tab-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 20px 80px;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .sec-hdr {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .sec-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold), #a07830);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .sec-hdr h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--cream);
+        }
+
+        .sec-hdr p {
+            font-size: 0.78rem;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .ch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .ch-card {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ch-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .ch-card .num {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+        }
+
+        .ch-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: var(--cream);
+            margin: 4px 0 5px;
+        }
+
+        .ch-card .sub {
+            font-size: 0.75rem;
+            color: #5a7088;
+        }
+
+        .ch-card .desc {
+            font-size: 0.72rem;
+            color: #3a5068;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+
+        .ch-card .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 9px;
+        }
+
+        .tag {
+            background: rgba(201, 168, 76, 0.1);
+            border: 1px solid rgba(201, 168, 76, 0.2);
+            color: var(--gold);
+            font-size: 0.62rem;
+            padding: 2px 7px;
+            border-radius: 99px;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .search-bar {
+            margin-bottom: 14px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 8px;
+            padding: 10px 16px;
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--gold);
+        }
+
+        .search-bar input::placeholder {
+            color: #3a5068;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .fbtn {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 6px;
+            padding: 5px 12px;
+            color: #5a7088;
+            font-size: 0.76rem;
+            cursor: pointer;
+            transition: all 0.18s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .fbtn:hover,
+        .fbtn.on {
+            background: rgba(201, 168, 76, 0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .vgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 10px;
+        }
+
+        .vcard {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 10px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            position: relative;
+        }
+
+        .vcard:hover {
+            border-color: #2a4060;
+        }
+
+        .vcard.on {
+            border-color: var(--gold);
+        }
+
+        .vcard .vfr {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--cream);
+        }
+
+        .vcard .ven {
+            font-size: 0.8rem;
+            color: #3a5068;
+            margin-top: 3px;
+            transition: color 0.2s;
+        }
+
+        .vcard.on .ven {
+            color: #8a9bb0;
+        }
+
+        .vcard .vch {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            font-size: 0.62rem;
+            color: var(--gold);
+            font-family: 'DM Mono', monospace;
+            opacity: 0.7;
+        }
+
+        .glist {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .gitem {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .ghdr {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 18px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .ghdr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .gnum {
+            background: rgba(201, 168, 76, 0.15);
+            color: var(--gold);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.73rem;
+            padding: 3px 8px;
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        .ghdr h3 {
+            font-size: 0.94rem;
+            color: var(--cream);
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .gch {
+            font-size: 0.66rem;
+            color: #3a5068;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .garrow {
+            color: #3a5068;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .gitem.open .garrow {
+            transform: rotate(90deg);
+            color: var(--gold);
+        }
+
+        .gbody {
+            display: none;
+            padding: 0 18px 18px;
+            border-top: 1px solid #1a2d40;
+        }
+
+        .gitem.open .gbody {
+            display: block;
+        }
+
+        .gbody p {
+            color: #7a8fa0;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            margin-top: 14px;
+        }
+
+        .ctable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 0.84rem;
+        }
+
+        .ctable th {
+            background: rgba(201, 168, 76, 0.08);
+            color: var(--gold);
+            padding: 7px 12px;
+            text-align: left;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ctable td {
+            padding: 7px 12px;
+            border-bottom: 1px solid #1a2d40;
+            color: var(--cream);
+        }
+
+        .ctable td:first-child {
+            color: #5a7088;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.78rem;
+        }
+
+        .ctable tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ebox {
+            background: rgba(201, 168, 76, 0.05);
+            border-left: 3px solid var(--gold);
+            border-radius: 0 8px 8px 0;
+            padding: 10px 14px;
+            margin-top: 12px;
+        }
+
+        .ebox .ef {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--cream);
+            font-size: 0.9rem;
+        }
+
+        .ebox .ee {
+            color: #5a7088;
+            font-size: 0.78rem;
+            margin-top: 3px;
+        }
+
+        .qcontrols {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .qcontrols select {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 8px;
+            padding: 9px 13px;
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: var(--gold);
+            color: var(--navy);
+            border: none;
+            border-radius: 8px;
+            padding: 9px 20px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.87rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #d4b05c;
+        }
+
+        .btn.sec {
+            background: #0f1e2e;
+            color: var(--cream);
+            border: 1px solid #1a2d40;
+        }
+
+        .btn.sec:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .pbar {
+            width: 100%;
+            height: 3px;
+            background: #1a2d40;
+            border-radius: 99px;
+            margin-bottom: 22px;
+            overflow: hidden;
+        }
+
+        .pfill {
+            height: 100%;
+            background: var(--gold);
+            border-radius: 99px;
+            transition: width 0.3s;
+        }
+
+        .qcard {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        .qlabel {
+            font-size: 0.68rem;
+            color: #3a5068;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: 'DM Mono', monospace;
+            margin-bottom: 12px;
+        }
+
+        .qword {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.85rem;
+            color: var(--cream);
+            font-style: italic;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .qhint {
+            color: #3a5068;
+            font-size: 0.78rem;
+            margin-bottom: 22px;
+        }
+
+        .qopts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-bottom: 16px;
+        }
+
+        .qopt {
+            background: #0a1620;
+            border: 1px solid #1a2d40;
+            border-radius: 9px;
+            padding: 12px;
+            color: var(--cream);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.18s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .qopt:hover:not(:disabled) {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .qopt.correct {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .qopt.wrong {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .qscore {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.78rem;
+            color: #5a7088;
+        }
+
+        .qscore span {
+            color: var(--cream);
+            font-weight: 600;
+        }
+
+        .pgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 11px;
+        }
+
+        .pcard {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .pcat {
+            font-size: 0.64rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: 'DM Mono', monospace;
+            margin-bottom: 6px;
+        }
+
+        .pfr {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--cream);
+            margin-bottom: 3px;
+        }
+
+        .pen {
+            font-size: 0.78rem;
+            color: #5a7088;
+        }
+
+        .ngrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+            gap: 8px;
+        }
+
+        .ncard {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .nval {
+            font-family: 'DM Mono', monospace;
+            font-size: 1.3rem;
+            color: var(--gold);
+        }
+
+        .nfr {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85rem;
+            color: var(--cream);
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        .cgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+            gap: 13px;
+        }
+
+        .ccard {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .cchdr {
+            background: linear-gradient(135deg, #1a3a5c, #0d2035);
+            padding: 17px;
+            border-bottom: 1px solid #1a2d40;
+        }
+
+        .cicon {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+
+        .cchdr h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.02rem;
+            color: var(--cream);
+        }
+
+        .ccbody {
+            padding: 14px;
+        }
+
+        .ccbody p {
+            font-size: 0.82rem;
+            color: #7a8fa0;
+            line-height: 1.6;
+        }
+
+        .chatbox {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        .chatmsgs {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 12px;
+            padding: 18px;
+            min-height: 240px;
+            max-height: 380px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .cmsg .crole {
+            font-size: 0.66rem;
+            font-family: 'DM Mono', monospace;
+            margin-bottom: 3px;
+        }
+
+        .cmsg.ai .crole {
+            color: var(--gold);
+        }
+
+        .cmsg.user .crole {
+            color: #5a7088;
+        }
+
+        .cmsg .ctext {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            white-space: pre-wrap;
+        }
+
+        .cmsg.ai .ctext {
+            color: #c0d0dc;
+        }
+
+        .cmsg.user .ctext {
+            color: var(--cream);
+        }
+
+        .chatinput {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .chatinput input {
+            flex: 1;
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 8px;
+            padding: 11px 15px;
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.87rem;
+            outline: none;
+        }
+
+        .chatinput input:focus {
+            border-color: var(--gold);
+        }
+
+        .chatinput input::placeholder {
+            color: #3a5068;
+        }
+
+        .prompts {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #0f1e2e;
+            border: 1px solid #1a2d40;
+            border-radius: 16px;
+            padding: 26px;
+            max-width: 510px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-box h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            color: var(--cream);
+            margin-bottom: 4px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 13px;
+            right: 13px;
+            background: none;
+            border: none;
+            color: #5a7088;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .dsec {
+            margin-top: 15px;
+        }
+
+        .dsec h4 {
+            font-size: 0.66rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: 'DM Mono', monospace;
+            margin-bottom: 6px;
+        }
+
+        .dsec ul {
+            list-style: none;
+        }
+
+        .dsec ul li {
+            color: #7a8fa0;
+            font-size: 0.83rem;
+            padding: 4px 0;
+            border-bottom: 1px solid #1a2d40;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .dsec ul li::before {
+            content: '›';
+            color: var(--gold);
+        }
+
+        .dsec ul li:last-child {
+            border-bottom: none;
+        }
+
+        .mbtns {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        @media(max-width:600px) {
+            .hero h1 {
+                font-size: 1.7rem;
+            }
+
+            .hero-stats {
+                margin-left: 0;
+            }
+
+            .qopts {
+                grid-template-columns: 1fr;
+            }
+
+            .qword {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="hero-inner">
+            <div class="flag">
+                <div class="bl"></div>
+                <div class="wh"></div>
+                <div class="rd"></div>
+            </div>
+            <div>
+                <h1>Français <em>Interactif</em></h1>
+                <p>University of Texas at Austin · COERLL · 4th Edition 2019</p>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="n">13</div>
+                    <div class="l">Chapters</div>
+                </div>
+                <div class="stat">
+                    <div class="n">300+</div>
+                    <div class="l">Vocab</div>
+                </div>
+                <div class="stat">
+                    <div class="n">30+</div>
+                    <div class="l">Grammar</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+
+    <div class="main">
+        <div id="panel-chapters" class="panel active">
+            <div class="sec-hdr">
+                <div class="sec-icon">📚</div>
+                <div>
+                    <h2>All Chapters</h2>
+                    <p>Click any chapter to explore its content</p>
+                </div>
+            </div>
+            <div class="ch-grid" id="ch-grid"></div>
+        </div>
+        <div id="panel-vocab" class="panel">
+            <div class="sec-hdr">
+                <div class="sec-icon">💬</div>
+                <div>
+                    <h2>Vocabulary</h2>
+                    <p>Click a card to reveal the translation</p>
+                </div>
+            </div>
+            <div class="search-bar"><input type="text" id="vsearch" placeholder="Search French or English…"></div>
+            <div class="filter-row" id="vfilters"></div>
+            <div class="vgrid" id="vgrid"></div>
+        </div>
+        <div id="panel-grammar" class="panel">
+            <div class="sec-hdr">
+                <div class="sec-icon">📝</div>
+                <div>
+                    <h2>Grammar Reference</h2>
+                    <p>Click any point to expand it</p>
+                </div>
+            </div>
+            <div class="glist" id="glist"></div>
+        </div>
+        <div id="panel-quiz" class="panel">
+            <div class="sec-hdr">
+                <div class="sec-icon">🧠</div>
+                <div>
+                    <h2>Vocabulary Quiz</h2>
+                    <p>Translate French to English</p>
+                </div>
+            </div>
+            <div class="qcontrols">
+                <select id="qchapter">
+                    <option value="all">All Chapters</option>
+                </select>
+                <button class="btn" id="newquiz-btn">New Quiz</button>
+            </div>
+            <div class="pbar">
+                <div class="pfill" id="pfill" style="width:0%"></div>
+            </div>
+            <div class="qcard" id="qcard">
+                <div class="qlabel" id="qlabel">Question 1 of 10</div>
+                <div class="qword" id="qword">Loading…</div>
+                <div class="qhint" id="qhint"></div>
+                <div class="qopts" id="qopts"></div>
+                <div class="qscore">Correct: <span id="sc">0</span> &nbsp; Wrong: <span id="sw">0</span></div>
+            </div>
+        </div>
+        <div id="panel-phrases" class="panel">
+            <div class="sec-hdr">
+                <div class="sec-icon">🗣️</div>
+                <div>
+                    <h2>Phrasebook</h2>
+                    <p>Essential phrases for everyday conversation</p>
+                </div>
+            </div>
+            <div class="pgrid" id="pgrid"></div>
+        </div>
+        <div id="panel-numbers" class="panel">
+            <div class="sec-hdr">
+                <div class="sec-icon">🔢</div>
+                <div>
+                    <h2>Numbers</h2>
+                    <p>French cardinal numbers</p>
+                </div>
+            </div>
+            <div class="ngrid" id="ngrid"></div>
+        </div>
+        <div id="panel-culture" class="panel">
+            <div class="sec-hdr">
+                <div class="sec-icon">🗼</div>
+                <div>
+                    <h2>Culture Notes</h2>
+                    <p>Understanding French life and customs</p>
+                </div>
+            </div>
+            <div class="cgrid" id="cgrid"></div>
+        </div>
+        <div id="panel-ai" class="panel">
+            <div class="sec-hdr">
+                <div class="sec-icon">✨</div>
+                <div>
+                    <h2>AI French Tutor</h2>
+                    <p>Ask anything about French grammar, vocabulary, or culture</p>
+                </div>
+            </div>
+            <div class="chatbox">
+                <div class="chatmsgs" id="chatmsgs">
+                    <div class="cmsg ai">
+                        <div class="crole">TUTOR</div>
+                        <div class="ctext">Bonjour! I am your AI French tutor based on the Français Interactif textbook.
+                            Ask me anything — verb conjugations, vocabulary, grammar rules, or cultural questions!</div>
+                    </div>
+                </div>
+                <div class="chatinput">
+                    <input type="text" id="chatinput" placeholder="Ask a question in English or French…">
+                    <button class="btn" id="sendbtn">Envoyer →</button>
+                </div>
+                <div class="prompts" id="prompts"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <button class="modal-close" id="modal-close">✕</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        var TABS = [
+            { id: "chapters", label: "📚 Chapters" },
+            { id: "vocab", label: "💬 Vocabulary" },
+            { id: "grammar", label: "📝 Grammar" },
+            { id: "quiz", label: "🧠 Quiz" },
+            { id: "phrases", label: "🗣️ Phrasebook" },
+            { id: "numbers", label: "🔢 Numbers" },
+            { id: "culture", label: "🗼 Culture" },
+            { id: "ai", label: "✨ AI Tutor" }
+        ];
+
+        var CHAPTERS = [
+            { num: "0", title: "Bienvenue!", en: "Welcome!", desc: "Intro to Français Interactif. Meet UT students studying abroad in Lyon, France.", vocab: ["Self-introductions", "Academic subjects", "Animals in French"], grammar: ["Course overview", "Basic phrases"], topics: ["Introductions", "Subjects", "Animals"] },
+            { num: "1", title: "Bonjour!", en: "Hello!", desc: "Learn to greet people, introduce yourself, and navigate the classroom.", vocab: ["Salutations", "Introductions", "Classroom objects", "Numbers 1–69", "Calendar & dates"], grammar: ["Subject pronouns", "être (to be)", "Nouns", "Definite articles", "Indefinite articles", "Gender: masculine/feminine"], topics: ["Greetings", "Classroom", "Numbers", "Dates"] },
+            { num: "2", title: "Me voici!", en: "Here I am!", desc: "Talk about yourself, your family, pastimes, nationalities, and how to tell time.", vocab: ["Personal ID", "Family", "Hobbies", "Time", "Countries & nationalities"], grammar: ["avoir (to have)", "-er verbs (present)", "Possessive determiners", "Negation ne…pas", "Adjectives intro"], topics: ["Identity", "Family", "Pastimes", "Time"] },
+            { num: "3", title: "Les vacances en France", en: "Vacation in France", desc: "Discuss vacation plans, seasons, weather, and transportation around France.", vocab: ["Vacation vocab", "Seasons", "Weather expressions", "Transportation"], grammar: ["-ir verbs", "-re verbs", "aller + infinitive (near future)", "Days/months"], topics: ["Travel", "Weather", "Seasons", "Transport"] },
+            { num: "4", title: "Les gens", en: "People", desc: "Describe physical appearance and personalities in French.", vocab: ["Personality adjectives", "Physical descriptions", "Professions"], grammar: ["Adjective agreement", "Irregular adjectives", "venir de"], topics: ["Descriptions", "Personality", "Professions"] },
+            { num: "5", title: "Bon appétit!", en: "Enjoy your meal!", desc: "Talk about food, eating out at cafés, and shopping for groceries.", vocab: ["Fruits & vegetables", "Meats", "At the café", "Quantities"], grammar: ["Partitive article", "prendre & boire", "Imperative mood"], topics: ["Food", "Restaurants", "Shopping"] },
+            { num: "6", title: "La ville", en: "The city", desc: "Navigate a French city, ask for directions, and discuss geography.", vocab: ["City places", "Directions", "Prepositions of place", "Numbers 70–1000"], grammar: ["savoir vs connaître", "Pronoun y", "Large numbers"], topics: ["Directions", "City places", "Geography"] },
+            { num: "7", title: "Les fêtes", en: "Celebrations", desc: "Talk about holidays, parties, and past events using the passé composé.", vocab: ["Celebrations", "Holidays", "Past time expressions"], grammar: ["Passé composé with avoir", "Passé composé with être", "Past participle agreement"], topics: ["Holidays", "Parties", "Past tense"] },
+            { num: "8", title: "La maison", en: "The house", desc: "Describe your home, furniture, and household chores.", vocab: ["Rooms", "Furniture", "Household items", "Chores"], grammar: ["Imparfait introduction", "Direct object pronouns", "depuis"], topics: ["Home", "Furniture", "Chores"] },
+            { num: "9", title: "Médias et communications", en: "Media & Communications", desc: "Discuss technology, social media, and how the French communicate.", vocab: ["Technology", "Media types", "Communication verbs"], grammar: ["Indirect object pronouns", "Object pronoun order", "Relative pronouns qui/que"], topics: ["Technology", "Internet", "TV"] },
+            { num: "10", title: "Mode, forme et santé", en: "Fashion, fitness & health", desc: "Talk about clothing, sports, the human body, and staying healthy.", vocab: ["Clothing", "Body parts", "Health", "Sports & activities"], grammar: ["Reflexive verbs", "Imparfait vs passé composé", "Conditional intro"], topics: ["Clothing", "Health", "Sports"] },
+            { num: "11", title: "Les études", en: "Studies", desc: "Discuss university life, academic subjects, and future plans.", vocab: ["University vocabulary", "Academic subjects", "Study abroad"], grammar: ["Future tense (futur simple)", "Si clauses", "Subjunctive introduction"], topics: ["University", "Academic life", "Future plans"] },
+            { num: "12", title: "La vie professionnelle", en: "Professional life", desc: "Prepare for job hunting, interviews, and workplace French.", vocab: ["Professions", "Work vocabulary", "Interview phrases", "CV/résumé"], grammar: ["Plus-que-parfait", "Passive voice intro", "Formal writing"], topics: ["Jobs", "Interviews", "Work life"] },
+            { num: "13", title: "L'amour et l'argent", en: "Love & money", desc: "Discuss relationships, banking, shopping, and life goals.", vocab: ["Love & relationships", "Money & banking", "Shopping"], grammar: ["Subjunctive mood", "Conditional mood", "Relative pronouns dont/où"], topics: ["Relationships", "Banking", "Shopping"] }
+        ];
+
+        var VOCAB = [
+            { fr: "Je me présente", en: "Let me introduce myself", ch: "0" },
+            { fr: "Je m'appelle…", en: "My name is…", ch: "0" },
+            { fr: "Je suis de…", en: "I am from…", ch: "0" },
+            { fr: "le commerce", en: "business", ch: "0" },
+            { fr: "la comptabilité", en: "accounting", ch: "0" },
+            { fr: "l'histoire", en: "history", ch: "0" },
+            { fr: "les mathématiques", en: "mathematics", ch: "0" },
+            { fr: "la biologie", en: "biology", ch: "0" },
+            { fr: "la chimie", en: "chemistry", ch: "0" },
+            { fr: "l'informatique", en: "computer science", ch: "0" },
+            { fr: "Bonjour", en: "Hello / Good day", ch: "1" },
+            { fr: "Bonsoir", en: "Good evening", ch: "1" },
+            { fr: "Au revoir", en: "Goodbye", ch: "1" },
+            { fr: "Salut", en: "Hi (informal)", ch: "1" },
+            { fr: "À bientôt", en: "See you soon", ch: "1" },
+            { fr: "À demain", en: "See you tomorrow", ch: "1" },
+            { fr: "Je vais très bien", en: "I am very well", ch: "1" },
+            { fr: "Pas mal", en: "Not bad", ch: "1" },
+            { fr: "Enchanté(e)", en: "Nice to meet you", ch: "1" },
+            { fr: "une chaise", en: "a chair", ch: "1" },
+            { fr: "un bureau", en: "a desk", ch: "1" },
+            { fr: "un stylo", en: "a pen", ch: "1" },
+            { fr: "un crayon", en: "a pencil", ch: "1" },
+            { fr: "un livre", en: "a book", ch: "1" },
+            { fr: "un cahier", en: "a notebook", ch: "1" },
+            { fr: "un sac à dos", en: "a backpack", ch: "1" },
+            { fr: "une fenêtre", en: "a window", ch: "1" },
+            { fr: "une porte", en: "a door", ch: "1" },
+            { fr: "un tableau", en: "a blackboard", ch: "1" },
+            { fr: "la famille", en: "the family", ch: "2" },
+            { fr: "le père", en: "the father", ch: "2" },
+            { fr: "la mère", en: "the mother", ch: "2" },
+            { fr: "le frère", en: "the brother", ch: "2" },
+            { fr: "la sœur", en: "the sister", ch: "2" },
+            { fr: "le mari", en: "the husband", ch: "2" },
+            { fr: "la femme", en: "the wife / woman", ch: "2" },
+            { fr: "les enfants", en: "the children", ch: "2" },
+            { fr: "le grand-père", en: "the grandfather", ch: "2" },
+            { fr: "la grand-mère", en: "the grandmother", ch: "2" },
+            { fr: "j'ai", en: "I have", ch: "2" },
+            { fr: "tu as", en: "you have (informal)", ch: "2" },
+            { fr: "nous avons", en: "we have", ch: "2" },
+            { fr: "habiter", en: "to live", ch: "2" },
+            { fr: "parler", en: "to speak", ch: "2" },
+            { fr: "étudier", en: "to study", ch: "2" },
+            { fr: "travailler", en: "to work", ch: "2" },
+            { fr: "aimer", en: "to love / like", ch: "2" },
+            { fr: "Quelle heure est-il?", en: "What time is it?", ch: "2" },
+            { fr: "Il est midi", en: "It is noon", ch: "2" },
+            { fr: "Il est minuit", en: "It is midnight", ch: "2" },
+            { fr: "les vacances", en: "vacation / holidays", ch: "3" },
+            { fr: "voyager", en: "to travel", ch: "3" },
+            { fr: "l'avion", en: "the airplane", ch: "3" },
+            { fr: "le train", en: "the train", ch: "3" },
+            { fr: "la voiture", en: "the car", ch: "3" },
+            { fr: "l'été", en: "summer", ch: "3" },
+            { fr: "l'hiver", en: "winter", ch: "3" },
+            { fr: "le printemps", en: "spring", ch: "3" },
+            { fr: "l'automne", en: "autumn / fall", ch: "3" },
+            { fr: "Il fait beau", en: "The weather is nice", ch: "3" },
+            { fr: "Il fait chaud", en: "It is hot", ch: "3" },
+            { fr: "Il fait froid", en: "It is cold", ch: "3" },
+            { fr: "Il pleut", en: "It is raining", ch: "3" },
+            { fr: "Il neige", en: "It is snowing", ch: "3" },
+            { fr: "grand(e)", en: "tall / big", ch: "4" },
+            { fr: "petit(e)", en: "short / small", ch: "4" },
+            { fr: "beau / belle", en: "handsome / beautiful", ch: "4" },
+            { fr: "sympathique", en: "nice / friendly", ch: "4" },
+            { fr: "timide", en: "shy", ch: "4" },
+            { fr: "intelligent(e)", en: "intelligent", ch: "4" },
+            { fr: "drôle", en: "funny", ch: "4" },
+            { fr: "un médecin", en: "a doctor", ch: "4" },
+            { fr: "un professeur", en: "a teacher", ch: "4" },
+            { fr: "un ingénieur", en: "an engineer", ch: "4" },
+            { fr: "le pain", en: "bread", ch: "5" },
+            { fr: "le fromage", en: "cheese", ch: "5" },
+            { fr: "le vin", en: "wine", ch: "5" },
+            { fr: "la viande", en: "meat", ch: "5" },
+            { fr: "le poulet", en: "chicken", ch: "5" },
+            { fr: "les légumes", en: "vegetables", ch: "5" },
+            { fr: "la pomme", en: "apple", ch: "5" },
+            { fr: "les fraises", en: "strawberries", ch: "5" },
+            { fr: "un café", en: "a coffee", ch: "5" },
+            { fr: "l'addition", en: "the check / bill", ch: "5" },
+            { fr: "Je voudrais…", en: "I would like…", ch: "5" },
+            { fr: "la pharmacie", en: "the pharmacy", ch: "6" },
+            { fr: "la boulangerie", en: "the bakery", ch: "6" },
+            { fr: "la bibliothèque", en: "the library", ch: "6" },
+            { fr: "la gare", en: "the train station", ch: "6" },
+            { fr: "Où est…?", en: "Where is…?", ch: "6" },
+            { fr: "Tournez à gauche", en: "Turn left", ch: "6" },
+            { fr: "Tournez à droite", en: "Turn right", ch: "6" },
+            { fr: "Tout droit", en: "Straight ahead", ch: "6" },
+            { fr: "Joyeux anniversaire!", en: "Happy birthday!", ch: "7" },
+            { fr: "Joyeux Noël!", en: "Merry Christmas!", ch: "7" },
+            { fr: "Bonne année!", en: "Happy New Year!", ch: "7" },
+            { fr: "j'ai mangé", en: "I ate", ch: "7" },
+            { fr: "j'ai bu", en: "I drank", ch: "7" },
+            { fr: "je suis allé(e)", en: "I went", ch: "7" },
+            { fr: "hier", en: "yesterday", ch: "7" },
+            { fr: "la chambre", en: "the bedroom", ch: "8" },
+            { fr: "la salle de bain", en: "the bathroom", ch: "8" },
+            { fr: "la cuisine", en: "the kitchen", ch: "8" },
+            { fr: "le salon", en: "the living room", ch: "8" },
+            { fr: "un lit", en: "a bed", ch: "8" },
+            { fr: "un canapé", en: "a sofa", ch: "8" },
+            { fr: "faire la vaisselle", en: "to do the dishes", ch: "8" },
+            { fr: "un ordinateur", en: "a computer", ch: "9" },
+            { fr: "un téléphone portable", en: "a cell phone", ch: "9" },
+            { fr: "envoyer un message", en: "to send a message", ch: "9" },
+            { fr: "la télévision", en: "television", ch: "9" },
+            { fr: "un journal", en: "a newspaper", ch: "9" },
+            { fr: "une chemise", en: "a shirt", ch: "10" },
+            { fr: "un pantalon", en: "pants / trousers", ch: "10" },
+            { fr: "une robe", en: "a dress", ch: "10" },
+            { fr: "des chaussures", en: "shoes", ch: "10" },
+            { fr: "se lever", en: "to get up", ch: "10" },
+            { fr: "se coucher", en: "to go to bed", ch: "10" },
+            { fr: "se brosser les dents", en: "to brush one's teeth", ch: "10" },
+            { fr: "l'université", en: "university", ch: "11" },
+            { fr: "les cours", en: "classes / courses", ch: "11" },
+            { fr: "une licence", en: "a bachelor's degree", ch: "11" },
+            { fr: "je ferai", en: "I will do", ch: "11" },
+            { fr: "j'irai", en: "I will go", ch: "11" },
+            { fr: "un entretien", en: "a job interview", ch: "12" },
+            { fr: "le salaire", en: "the salary", ch: "12" },
+            { fr: "un patron", en: "a boss", ch: "12" },
+            { fr: "postuler", en: "to apply for a job", ch: "12" },
+            { fr: "un CV", en: "a résumé / CV", ch: "12" },
+            { fr: "tomber amoureux", en: "to fall in love", ch: "13" },
+            { fr: "un compte bancaire", en: "a bank account", ch: "13" },
+            { fr: "dépenser", en: "to spend money", ch: "13" },
+            { fr: "économiser", en: "to save money", ch: "13" },
+            { fr: "se marier", en: "to get married", ch: "13" }
+        ];
+
+        var GRAMMAR = [
+            { num: "1.1", ch: 1, title: "Subject pronouns — Les pronoms sujets", exp: "French subject pronouns: je (I), tu (you inf.), il/elle/on (he/she/one), nous (we), vous (you formal/pl.), ils/elles (they).", table: { h: ["Pronom", "English"], r: [["je", "I"], ["tu", "you (informal)"], ["il / elle / on", "he / she / one"], ["nous", "we"], ["vous", "you (formal or plural)"], ["ils / elles", "they"]] }, ex: [{ f: "Je suis étudiant.", e: "I am a student." }, { f: "Elles sont françaises.", e: "They are French." }] },
+            { num: "1.2", ch: 1, title: "être — to be", exp: "Être is essential for identity, origin, and profession. Highly irregular.", table: { h: ["Pronom", "être"], r: [["je", "suis"], ["tu", "es"], ["il/elle/on", "est"], ["nous", "sommes"], ["vous", "êtes"], ["ils/elles", "sont"]] }, ex: [{ f: "Je suis américain(e).", e: "I am American." }, { f: "Nous sommes à Paris.", e: "We are in Paris." }] },
+            { num: "1.4", ch: 1, title: "Articles — definite & indefinite", exp: "Definite (the): le (masc.), la (fem.), l' (before vowel), les (plural). Indefinite (a/an): un (masc.), une (fem.), des (plural).", ex: [{ f: "le livre / la porte / les cahiers", e: "the book / the door / the notebooks" }, { f: "un stylo / une chaise / des livres", e: "a pen / a chair / some books" }] },
+            { num: "2.1", ch: 2, title: "avoir — to have", exp: "Avoir is essential for possession and for forming the passé composé.", table: { h: ["Pronom", "avoir"], r: [["je", "ai"], ["tu", "as"], ["il/elle/on", "a"], ["nous", "avons"], ["vous", "avez"], ["ils/elles", "ont"]] }, ex: [{ f: "J'ai deux sœurs.", e: "I have two sisters." }, { f: "Elle a un chat.", e: "She has a cat." }] },
+            { num: "2.2", ch: 2, title: "Regular -er verbs (present tense)", exp: "The most common group. Remove -er and add: -e, -es, -e, -ons, -ez, -ent.", table: { h: ["Pronom", "parler (to speak)"], r: [["je", "parle"], ["tu", "parles"], ["il/elle/on", "parle"], ["nous", "parlons"], ["vous", "parlez"], ["ils/elles", "parlent"]] }, ex: [{ f: "Je parle français.", e: "I speak French." }, { f: "Nous habitons à Lyon.", e: "We live in Lyon." }] },
+            { num: "2.5", ch: 2, title: "Negation — ne…pas", exp: "Place ne before the verb and pas after it. Ne becomes n' before a vowel.", ex: [{ f: "Je ne parle pas espagnol.", e: "I don't speak Spanish." }, { f: "Il n'est pas étudiant.", e: "He is not a student." }] },
+            { num: "2.7", ch: 2, title: "Adjective agreement", exp: "Adjectives agree with the noun in gender and number. Add -e for feminine, -s for plural. BAGS adjectives (Beauty, Age, Goodness, Size) usually precede the noun.", ex: [{ f: "un étudiant intelligent", e: "an intelligent male student" }, { f: "une étudiante intelligente", e: "an intelligent female student" }] },
+            { num: "3.x", ch: 3, title: "Near future — aller + infinitive", exp: "Use aller + infinitive to express what is going to happen. Same as 'going to' in English.", table: { h: ["Pronom", "aller"], r: [["je", "vais"], ["tu", "vas"], ["il/elle/on", "va"], ["nous", "allons"], ["vous", "allez"], ["ils/elles", "vont"]] }, ex: [{ f: "Je vais voyager en France.", e: "I am going to travel to France." }, { f: "Nous allons manger.", e: "We are going to eat." }] },
+            { num: "5.x", ch: 5, title: "Partitive article — du, de la, des", exp: "Expresses an unspecified quantity (some). Use du (masc.), de la (fem.), de l' (before vowel), des (plural). After negation, use de/d'.", ex: [{ f: "Je mange du pain.", e: "I eat (some) bread." }, { f: "Elle boit de la limonade.", e: "She drinks (some) lemonade." }] },
+            { num: "7.1", ch: 7, title: "Passé composé with avoir", exp: "Main conversational past tense. Formed with avoir + past participle. -er → -é, -ir → -i, -re → -u.", ex: [{ f: "J'ai mangé une pizza.", e: "I ate a pizza." }, { f: "Elle a fini ses devoirs.", e: "She finished her homework." }] },
+            { num: "7.2", ch: 7, title: "Passé composé with être", exp: "Verbs of motion (aller, venir, partir, arriver…) and reflexive verbs use être. Past participle agrees with subject.", ex: [{ f: "Je suis allé(e) au marché.", e: "I went to the market." }, { f: "Elle est arrivée hier.", e: "She arrived yesterday." }] },
+            { num: "10.x", ch: 10, title: "Reflexive verbs — se lever, se coucher…", exp: "Reflexive verbs use a reflexive pronoun (me, te, se, nous, vous, se) before the verb. Common for daily routines.", table: { h: ["Pronom", "se lever (to get up)"], r: [["je", "me lève"], ["tu", "te lèves"], ["il/elle", "se lève"], ["nous", "nous levons"], ["vous", "vous levez"], ["ils/elles", "se lèvent"]] }, ex: [{ f: "Je me lève à 7 heures.", e: "I get up at 7 o'clock." }, { f: "Elle se couche tard.", e: "She goes to bed late." }] },
+            { num: "11.x", ch: 11, title: "Future tense — le futur simple", exp: "Add endings to the infinitive: -ai, -as, -a, -ons, -ez, -ont. Irregular stems: aller→ir-, avoir→aur-, être→ser-, faire→fer-.", ex: [{ f: "Je parlerai français couramment.", e: "I will speak French fluently." }, { f: "Nous irons en France.", e: "We will go to France." }] },
+            { num: "13.x", ch: 13, title: "Subjunctive — le subjonctif", exp: "Used after verbs of wanting, emotion, doubt. Formed from ils/elles present stem + -e, -es, -e, -ions, -iez, -ent.", ex: [{ f: "Il faut que tu fasses tes devoirs.", e: "You must do your homework." }, { f: "Je veux qu'il vienne.", e: "I want him to come." }] }
+        ];
+
+        var PHRASES = [
+            { cat: "Greetings", fr: "Bonjour, Monsieur / Madame!", en: "Good day, Sir / Ma'am!" },
+            { cat: "Greetings", fr: "Bonsoir!", en: "Good evening!" },
+            { cat: "Greetings", fr: "Salut!", en: "Hi! (informal)" },
+            { cat: "Greetings", fr: "Comment allez-vous?", en: "How are you? (formal)" },
+            { cat: "Greetings", fr: "Comment vas-tu?", en: "How are you? (informal)" },
+            { cat: "Greetings", fr: "Je vais très bien, merci.", en: "I'm very well, thank you." },
+            { cat: "Greetings", fr: "Pas mal, merci.", en: "Not bad, thanks." },
+            { cat: "Introductions", fr: "Je m'appelle…", en: "My name is…" },
+            { cat: "Introductions", fr: "Je suis de…", en: "I'm from…" },
+            { cat: "Introductions", fr: "Je vous présente…", en: "I'd like to introduce… (formal)" },
+            { cat: "Introductions", fr: "Enchanté(e)!", en: "Nice to meet you!" },
+            { cat: "Classroom", fr: "Vous comprenez?", en: "Do you understand?" },
+            { cat: "Classroom", fr: "Oui, je comprends.", en: "Yes, I understand." },
+            { cat: "Classroom", fr: "Non, je ne comprends pas.", en: "No, I don't understand." },
+            { cat: "Classroom", fr: "Répétez, s'il vous plaît.", en: "Please repeat." },
+            { cat: "Classroom", fr: "Comment dit-on… en français?", en: "How do you say… in French?" },
+            { cat: "Restaurant", fr: "Une table pour deux, s'il vous plaît.", en: "A table for two, please." },
+            { cat: "Restaurant", fr: "Je voudrais commander…", en: "I would like to order…" },
+            { cat: "Restaurant", fr: "L'addition, s'il vous plaît!", en: "The check, please!" },
+            { cat: "Restaurant", fr: "C'est délicieux!", en: "It's delicious!" },
+            { cat: "Directions", fr: "Où est la gare?", en: "Where is the train station?" },
+            { cat: "Directions", fr: "Tournez à gauche.", en: "Turn left." },
+            { cat: "Directions", fr: "Tournez à droite.", en: "Turn right." },
+            { cat: "Directions", fr: "Continuez tout droit.", en: "Continue straight ahead." },
+            { cat: "Shopping", fr: "Combien ça coûte?", en: "How much does it cost?" },
+            { cat: "Shopping", fr: "C'est trop cher.", en: "It's too expensive." },
+            { cat: "Shopping", fr: "Je cherche…", en: "I'm looking for…" },
+            { cat: "Polite", fr: "S'il vous plaît.", en: "Please. (formal)" },
+            { cat: "Polite", fr: "Merci beaucoup!", en: "Thank you very much!" },
+            { cat: "Polite", fr: "De rien.", en: "You're welcome." },
+            { cat: "Polite", fr: "Excusez-moi.", en: "Excuse me. (formal)" },
+            { cat: "Time", fr: "Quelle heure est-il?", en: "What time is it?" },
+            { cat: "Time", fr: "Il est deux heures et demie.", en: "It is 2:30." },
+            { cat: "Time", fr: "Il est midi.", en: "It is noon." },
+            { cat: "Time", fr: "À quelle heure…?", en: "At what time…?" }
+        ];
+
+        var NUMBERS = [[0, "zéro"], [1, "un"], [2, "deux"], [3, "trois"], [4, "quatre"], [5, "cinq"], [6, "six"], [7, "sept"], [8, "huit"], [9, "neuf"], [10, "dix"], [11, "onze"], [12, "douze"], [13, "treize"], [14, "quatorze"], [15, "quinze"], [16, "seize"], [17, "dix-sept"], [18, "dix-huit"], [19, "dix-neuf"], [20, "vingt"], [21, "vingt et un"], [22, "vingt-deux"], [30, "trente"], [40, "quarante"], [50, "cinquante"], [60, "soixante"], [70, "soixante-dix"], [71, "soixante et onze"], [80, "quatre-vingts"], [81, "quatre-vingt-un"], [90, "quatre-vingt-dix"], [100, "cent"], [200, "deux cents"], [1000, "mille"]];
+
+        var CULTURE = [
+            { icon: "🥐", title: "La boulangerie", body: "Every French neighborhood has a boulangerie. The French buy fresh baguettes daily — sometimes twice a day. The baguette is so central to French culture it's protected by law: a true baguette can only contain flour, water, yeast, and salt." },
+            { icon: "🍷", title: "Le repas français", body: "French meals are social events with multiple courses: entrée (starter), plat principal (main), fromage (cheese), then dessert. Lunch can last 1–2 hours. Sunday meals are sacred family occasions. The aperitif — a pre-dinner drink — is a cherished ritual." },
+            { icon: "💋", title: "La bise", body: "The traditional French greeting is 'la bise' — a cheek kiss. The number varies by region: 2 in Paris, up to 4 in the south. Men typically shake hands, though close friends may do la bise. Everyone in a group gets greeted individually." },
+            { icon: "🗺️", title: "Lyon — Capitale gastronomique", body: "The UT French program is set in Lyon, France's gastronomic capital. Lyon is famous for its 'bouchons' — traditional restaurants serving local specialties. The city also has a stunning UNESCO-listed old town (Vieux Lyon)." },
+            { icon: "🏖️", title: "Les grandes vacances", body: "The French take vacation seriously. August ('août') is when much of France shuts down — Parisians flee to the coast or countryside. Most workers receive at least 5 weeks paid vacation. The return in September is called 'la rentrée.'" },
+            { icon: "🎓", title: "L'université française", body: "French public universities have very low tuition. The most prestigious institutions are the 'Grandes Écoles.' Students often live in 'cités universitaires.' The academic year begins with la rentrée in September." },
+            { icon: "☕", title: "Le café", body: "The French café is a social institution. You pay at the end, tables are small, and lingering is encouraged. 'Un express' (espresso) is the standard coffee. Café au lait is mainly a breakfast drink. A 'café allongé' is a longer, milder espresso." },
+            { icon: "🎭", title: "Les fêtes nationales", body: "Bastille Day (14 juillet) celebrates the French Revolution with fireworks and military parades. Other key celebrations: Noël (Christmas), Pâques (Easter), and the Fête de la Musique on 21 June — free concerts fill the streets across France." }
+        ];
+
+        var QUICK_PROMPTS = [
+            { label: "être conjugation", text: "How do I conjugate être in the present tense?" },
+            { label: "Greetings", text: "What are common French greetings?" },
+            { label: "Gender rules", text: "Explain French noun gender rules" },
+            { label: "Telling time", text: "How do I tell time in French?" },
+            { label: "Passé composé", text: "What is the passé composé and how do I form it?" }
+        ];
+
+        // ===================== STATE =====================
+        var vFilter = "all";
+        var qList = [], qIdx = 0, qCorrect = 0, qWrong = 0, qAnswered = false;
+        var chatHistory = [];
+
+        // ===================== UTILS =====================
+        function shuffle(arr) {
+            var a = arr.slice();
+            for (var i = a.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var t = a[i]; a[i] = a[j]; a[j] = t;
+            }
+            return a;
+        }
+
+        function esc(str) {
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        // ===================== TABS =====================
+        function buildTabs() {
+            var el = document.getElementById("tabs");
+            var html = "";
+            for (var i = 0; i < TABS.length; i++) {
+                html += '<button class="tab-btn' + (i === 0 ? " active" : "") + '" data-panel="' + TABS[i].id + '">' + TABS[i].label + '</button>';
+            }
+            el.innerHTML = html;
+            el.querySelectorAll(".tab-btn").forEach(function (btn) {
+                btn.addEventListener("click", function () { showPanel(btn.dataset.panel); });
+            });
+        }
+
+        function showPanel(id) {
+            document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("active"); });
+            var p = document.getElementById("panel-" + id);
+            if (p) p.classList.add("active");
+            document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.toggle("active", b.dataset.panel === id); });
+        }
+
+        // ===================== CHAPTERS =====================
+        function buildChapters() {
+            var g = document.getElementById("ch-grid");
+            var html = "";
+            CHAPTERS.forEach(function (c) {
+                var tags = c.topics.slice(0, 3).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join("");
+                html += '<div class="ch-card" data-num="' + c.num + '">' +
+                    '<div class="num">Chapitre ' + c.num + '</div>' +
+                    '<h3>' + esc(c.title) + '</h3>' +
+                    '<div class="sub">' + esc(c.en) + '</div>' +
+                    '<div class="desc">' + esc(c.desc) + '</div>' +
+                    '<div class="tags">' + tags + '</div>' +
+                    '</div>';
+            });
+            g.innerHTML = html;
+            g.querySelectorAll(".ch-card").forEach(function (card) {
+                card.addEventListener("click", function () { openModal(card.dataset.num); });
+            });
+        }
+
+        // ===================== MODAL =====================
+        function openModal(num) {
+            var c = CHAPTERS.find(function (x) { return x.num === num; });
+            if (!c) return;
+            var vHtml = c.vocab.map(function (v) { return "<li>" + esc(v) + "</li>"; }).join("");
+            var gHtml = c.grammar.map(function (g) { return "<li>" + esc(g) + "</li>"; }).join("");
+            var tHtml = c.topics.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
+            var mb = document.getElementById("modal-body");
+            mb.innerHTML =
+                '<div style="font-size:0.66rem;color:var(--gold);font-family:DM Mono,monospace;margin-bottom:4px;">CHAPITRE ' + c.num + '</div>' +
+                '<h2>' + esc(c.title) + '</h2>' +
+                '<p style="color:#7a8fa0;font-size:0.83rem;margin:6px 0 14px;">' + esc(c.desc) + '</p>' +
+                '<div class="dsec"><h4>Vocabulary Topics</h4><ul>' + vHtml + '</ul></div>' +
+                '<div class="dsec"><h4>Grammar Points</h4><ul>' + gHtml + '</ul></div>' +
+                '<div class="dsec"><h4>Key Themes</h4><ul>' + tHtml + '</ul></div>' +
+                '<div class="mbtns">' +
+                '<button class="btn" id="mbv">Study Vocab →</button>' +
+                '<button class="btn sec" id="mbq">Take Quiz →</button>' +
+                '</div>';
+            document.getElementById("mbv").addEventListener("click", function () {
+                closeModal(); filterVocab(c.num); showPanel("vocab");
+            });
+            document.getElementById("mbq").addEventListener("click", function () {
+                closeModal(); quizForChapter(c.num);
+            });
+            document.getElementById("modal").classList.add("open");
+        }
+
+        function closeModal() { document.getElementById("modal").classList.remove("open"); }
+
+        // ===================== VOCAB =====================
+        function buildVocabFilters() {
+            var row = document.getElementById("vfilters");
+            var html = '<button class="fbtn on" data-ch="all">All</button>';
+            CHAPTERS.forEach(function (c) {
+                html += '<button class="fbtn" data-ch="' + c.num + '">Ch ' + c.num + ': ' + esc(c.title) + '</button>';
+            });
+            row.innerHTML = html;
+            row.querySelectorAll(".fbtn").forEach(function (btn) {
+                btn.addEventListener("click", function () { filterVocab(btn.dataset.ch); });
+            });
+        }
+
+        function filterVocab(ch) {
+            if (ch !== undefined) vFilter = ch;
+            var search = document.getElementById("vsearch").value.toLowerCase();
+            var filtered = VOCAB.filter(function (v) {
+                var matchCh = vFilter === "all" || v.ch === vFilter;
+                var matchS = !search || v.fr.toLowerCase().indexOf(search) >= 0 || v.en.toLowerCase().indexOf(search) >= 0;
+                return matchCh && matchS;
+            });
+            document.querySelectorAll("#vfilters .fbtn").forEach(function (b) {
+                b.classList.toggle("on", b.dataset.ch === vFilter);
+            });
+            var g = document.getElementById("vgrid");
+            if (!filtered.length) {
+                g.innerHTML = '<div style="padding:40px;text-align:center;color:#3a5068;">No vocabulary found.</div>';
+                return;
+            }
+            g.innerHTML = filtered.map(function (v) {
+                return '<div class="vcard"><div class="vch">Ch ' + v.ch + '</div><div class="vfr">' + esc(v.fr) + '</div><div class="ven">Click to reveal</div></div>';
+            }).join("");
+            g.querySelectorAll(".vcard").forEach(function (card, i) {
+                card.addEventListener("click", function () {
+                    card.classList.toggle("on");
+                    card.querySelector(".ven").textContent = card.classList.contains("on") ? filtered[i].en : "Click to reveal";
+                });
+            });
+        }
+
+        // ===================== GRAMMAR =====================
+        function buildGrammar() {
+            var list = document.getElementById("glist");
+            var html = "";
+            GRAMMAR.forEach(function (g, i) {
+                var tableHtml = "";
+                if (g.table) {
+                    tableHtml = '<table class="ctable"><tr>' + g.table.h.map(function (h) { return '<th>' + esc(h) + '</th>'; }).join("") + '</tr>' +
+                        g.table.r.map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + esc(c) + '</td>'; }).join("") + '</tr>'; }).join("") + '</table>';
+                }
+                var exHtml = g.ex.map(function (e) {
+                    return '<div class="ebox"><div class="ef">' + esc(e.f) + '</div><div class="ee">' + esc(e.e) + '</div></div>';
+                }).join("");
+                html += '<div class="gitem" id="gi' + i + '">' +
+                    '<div class="ghdr" data-i="' + i + '">' +
+                    '<span class="gnum">' + esc(g.num) + '</span>' +
+                    '<h3>' + esc(g.title) + '</h3>' +
+                    '<span class="gch">Ch ' + g.ch + '</span>' +
+                    '<span class="garrow">›</span></div>' +
+                    '<div class="gbody"><p>' + esc(g.exp) + '</p>' + tableHtml + exHtml + '</div>' +
+                    '</div>';
+            });
+            list.innerHTML = html;
+            list.querySelectorAll(".ghdr").forEach(function (hdr) {
+                hdr.addEventListener("click", function () {
+                    document.getElementById("gi" + hdr.dataset.i).classList.toggle("open");
+                });
+            });
+        }
+
+        // ===================== QUIZ =====================
+        function buildQuizSelect() {
+            var sel = document.getElementById("qchapter");
+            CHAPTERS.forEach(function (c) {
+                var o = document.createElement("option");
+                o.value = c.num;
+                o.textContent = "Chapter " + c.num + ": " + c.title;
+                sel.appendChild(o);
+            });
+        }
+
+        function quizForChapter(ch) {
+            showPanel("quiz");
+            document.getElementById("qchapter").value = ch;
+            startQuiz();
+        }
+
+        function startQuiz() {
+            var ch = document.getElementById("qchapter").value;
+            var pool = ch === "all" ? VOCAB : VOCAB.filter(function (v) { return v.ch === ch; });
+            if (pool.length < 4) { pool = VOCAB; document.getElementById("qchapter").value = "all"; }
+            qList = shuffle(pool).slice(0, Math.min(10, pool.length));
+            qIdx = 0; qCorrect = 0; qWrong = 0;
+            updateScore();
+            // Reset card HTML in case it was replaced by complete screen
+            document.getElementById("qcard").innerHTML =
+                '<div class="qlabel" id="qlabel"></div>' +
+                '<div class="qword" id="qword"></div>' +
+                '<div class="qhint" id="qhint"></div>' +
+                '<div class="qopts" id="qopts"></div>' +
+                '<div class="qscore">Correct: <span id="sc">0</span> &nbsp; Wrong: <span id="sw">0</span></div>';
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            if (qIdx >= qList.length) { showComplete(); return; }
+            var q = qList[qIdx];
+            document.getElementById("qlabel").textContent = "Question " + (qIdx + 1) + " of " + qList.length;
+            document.getElementById("qword").textContent = q.fr;
+            document.getElementById("qhint").textContent = "Chapter " + q.ch;
+            document.getElementById("pfill").style.width = (qIdx / qList.length * 100) + "%";
+            var wrong = shuffle(VOCAB.filter(function (v) { return v.en !== q.en; })).slice(0, 3).map(function (v) { return v.en; });
+            var opts = shuffle([q.en].concat(wrong));
+            var od = document.getElementById("qopts");
+            od.innerHTML = opts.map(function (o) {
+                return '<button class="qopt" data-ans="' + esc(o) + '">' + esc(o) + '</button>';
+            }).join("");
+            qAnswered = false;
+            var btns = od.querySelectorAll(".qopt");
+            var correctEn = q.en;
+            btns.forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    if (qAnswered) return;
+                    qAnswered = true;
+                    btns.forEach(function (b) { b.disabled = true; });
+                    if (btn.dataset.ans === correctEn) {
+                        btn.classList.add("correct"); qCorrect++;
+                    } else {
+                        btn.classList.add("wrong");
+                        btns.forEach(function (b) { if (b.dataset.ans === correctEn) b.classList.add("correct"); });
+                        qWrong++;
+                    }
+                    updateScore();
+                    setTimeout(function () { qIdx++; nextQuestion(); }, 1200);
+                });
+            });
+        }
+
+        function updateScore() {
+            var sc = document.getElementById("sc");
+            var sw = document.getElementById("sw");
+            if (sc) sc.textContent = qCorrect;
+            if (sw) sw.textContent = qWrong;
+        }
+
+        function showComplete() {
+            var pct = Math.round(qCorrect / qList.length * 100);
+            var emoji = pct >= 80 ? "🏆" : pct >= 50 ? "👍" : "📚";
+            var msg = pct >= 80 ? "Excellent!" : pct >= 50 ? "Bon travail!" : "Continuez à pratiquer!";
+            document.getElementById("pfill").style.width = "100%";
+            document.getElementById("qcard").innerHTML =
+                '<div style="padding:20px 0;">' +
+                '<div style="font-size:3rem;margin-bottom:10px;">' + emoji + '</div>' +
+                '<div style="font-family:Playfair Display,serif;font-size:1.7rem;color:var(--cream);margin-bottom:8px;">' + pct + '% — ' + msg + '</div>' +
+                '<p style="color:#5a7088;margin-bottom:22px;">You got ' + qCorrect + ' of ' + qList.length + ' correct.</p>' +
+                '<button class="btn" id="tryagain">Try Again</button>' +
+                '</div>';
+            document.getElementById("tryagain").addEventListener("click", startQuiz);
+        }
+
+        // ===================== PHRASES =====================
+        function buildPhrases() {
+            document.getElementById("pgrid").innerHTML = PHRASES.map(function (p) {
+                return '<div class="pcard"><div class="pcat">' + esc(p.cat) + '</div><div class="pfr">' + esc(p.fr) + '</div><div class="pen">' + esc(p.en) + '</div></div>';
+            }).join("");
+        }
+
+        // ===================== NUMBERS =====================
+        function buildNumbers() {
+            document.getElementById("ngrid").innerHTML = NUMBERS.map(function (n) {
+                return '<div class="ncard"><div class="nval">' + n[0] + '</div><div class="nfr">' + esc(n[1]) + '</div></div>';
+            }).join("");
+        }
+
+        // ===================== CULTURE =====================
+        function buildCulture() {
+            document.getElementById("cgrid").innerHTML = CULTURE.map(function (c) {
+                return '<div class="ccard"><div class="cchdr"><div class="cicon">' + c.icon + '</div><h3>' + esc(c.title) + '</h3></div><div class="ccbody"><p>' + esc(c.body) + '</p></div></div>';
+            }).join("");
+        }
+
+        // ===================== AI CHAT =====================
+        function buildPrompts() {
+            var row = document.getElementById("prompts");
+            row.innerHTML = QUICK_PROMPTS.map(function (p) {
+                return '<button class="btn sec" data-prompt="' + esc(p.text) + '" style="font-size:0.74rem;padding:6px 11px;">' + esc(p.label) + '</button>';
+            }).join("");
+            row.querySelectorAll("[data-prompt]").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    document.getElementById("chatinput").value = btn.dataset.prompt;
+                    document.getElementById("chatinput").focus();
+                });
+            });
+        }
+
+        function addMsg(role, text) {
+            var box = document.getElementById("chatmsgs");
+            var div = document.createElement("div");
+            div.className = "cmsg " + role;
+            div.innerHTML = '<div class="crole">' + (role === "ai" ? "TUTOR" : "YOU") + '</div><div class="ctext"></div>';
+            div.querySelector(".ctext").textContent = text;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            return div;
+        }
+
+        async function sendChat() {
+            var input = document.getElementById("chatinput");
+            var msg = input.value.trim();
+            if (!msg) return;
+            input.value = "";
+            addMsg("user", msg);
+            chatHistory.push({ role: "user", content: msg });
+            var thinking = addMsg("ai", "…");
+            try {
+                var res = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 1000,
+                        system: "You are a friendly French tutor helping a student learn French using the Français Interactif textbook (University of Texas at Austin). The book covers 13 chapters: greetings, classroom, introductions, family, travel, weather, food, city navigation, holidays, home, media, fashion and health, university, professional life, and love and money. Grammar topics include être, avoir, -er/-ir/-re verbs, adjectives, passé composé, imparfait, reflexive verbs, future, subjunctive, and more. Give clear, encouraging answers with English translations for French words. Be concise.",
+                        messages: chatHistory.slice(-10)
+                    })
+                });
+                var data = await res.json();
+                var reply = (data.content || []).map(function (b) { return b.text || ""; }).join("") || "Sorry, I could not get a response.";
+                thinking.querySelector(".ctext").textContent = reply;
+                chatHistory.push({ role: "assistant", content: reply });
+            } catch (e) {
+                thinking.querySelector(".ctext").textContent = "Connection error. Please try again.";
+            }
+        }
+
+        // ===================== INIT =====================
+        buildTabs();
+        buildChapters();
+        buildVocabFilters();
+        filterVocab("all");
+        buildGrammar();
+        buildQuizSelect();
+        startQuiz();
+        buildPhrases();
+        buildNumbers();
+        buildCulture();
+        buildPrompts();
+
+        document.getElementById("newquiz-btn").addEventListener("click", startQuiz);
+        document.getElementById("qchapter").addEventListener("change", startQuiz);
+        document.getElementById("sendbtn").addEventListener("click", sendChat);
+        document.getElementById("chatinput").addEventListener("keydown", function (e) { if (e.key === "Enter") sendChat(); });
+        document.getElementById("modal-close").addEventListener("click", closeModal);
+        document.getElementById("modal").addEventListener("click", function (e) { if (e.target === this) closeModal(); });
+        document.getElementById("vsearch").addEventListener("input", function () { filterVocab(); });
+    </script>
+</body>
+
+</html>
