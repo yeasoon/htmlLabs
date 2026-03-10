@@ -21,6 +21,7 @@
             --green: #27ae60;
             --card-bg: #162439;
             --text-muted: #8a9bb0;
+            --custom-accent: #7b4fd4;
         }
 
         * {
@@ -40,37 +41,36 @@
         /* HEADER */
         header {
             text-align: center;
-            padding: 3rem 1rem 2rem;
-            position: relative;
+            padding: 2.2rem 1rem 1.5rem;
             border-bottom: 1px solid rgba(201, 148, 58, 0.2);
         }
 
         header::before {
             content: '🇫🇷';
-            font-size: 2rem;
+            font-size: 1.8rem;
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
 
         header h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-size: clamp(1.8rem, 4vw, 3rem);
             color: var(--gold);
             letter-spacing: 0.02em;
         }
 
         header p {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-top: 0.5rem;
+            font-size: 0.88rem;
+            margin-top: 0.3rem;
         }
 
-        /* STATS BAR */
+        /* STATS */
         .stats {
             display: flex;
             justify-content: center;
             gap: 2rem;
-            padding: 1rem 2rem;
+            padding: 0.85rem 2rem;
             background: rgba(255, 255, 255, 0.03);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
@@ -80,23 +80,23 @@
         }
 
         .stat-num {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--gold);
         }
 
         .stat-label {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.08em;
         }
 
-        /* MAIN LAYOUT */
+        /* LAYOUT */
         .app {
             display: grid;
-            grid-template-columns: 280px 1fr;
-            height: calc(100vh - 180px);
+            grid-template-columns: 290px 1fr;
+            height: calc(100vh - 175px);
             min-height: 500px;
         }
 
@@ -104,36 +104,29 @@
         .sidebar {
             background: rgba(0, 0, 0, 0.3);
             border-right: 1px solid rgba(255, 255, 255, 0.06);
-            overflow-y: auto;
-            padding: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(201, 148, 58, 0.3);
-            border-radius: 2px;
+        .sidebar-top {
+            padding: 0.9rem 0.9rem 0;
+            flex-shrink: 0;
         }
 
         .sidebar-search {
-            margin: 0 1rem 1rem;
             position: relative;
+            margin-bottom: 0.6rem;
         }
 
         .sidebar-search input {
             width: 100%;
-            padding: 0.6rem 0.8rem 0.6rem 2.2rem;
+            padding: 0.55rem 0.8rem 0.55rem 2rem;
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             color: var(--cream);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             outline: none;
             transition: border-color 0.2s;
         }
@@ -145,25 +138,74 @@
         .sidebar-search::before {
             content: '🔍';
             position: absolute;
-            left: 0.6rem;
+            left: 0.55rem;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+        }
+
+        .add-map-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.55rem;
+            background: rgba(123, 79, 212, 0.15);
+            border: 1px dashed rgba(123, 79, 212, 0.5);
+            border-radius: 8px;
+            color: #b89ee0;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-bottom: 0.6rem;
+        }
+
+        .add-map-btn:hover {
+            background: rgba(123, 79, 212, 0.25);
+            border-color: #7b4fd4;
+            color: #c9b8f0;
+        }
+
+        .map-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 1rem;
+        }
+
+        .map-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .map-list::-webkit-scrollbar-thumb {
+            background: rgba(201, 148, 58, 0.3);
+            border-radius: 2px;
+        }
+
+        .map-section-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            padding: 0.7rem 1.2rem 0.3rem;
+            opacity: 0.7;
         }
 
         .map-btn {
             display: flex;
             align-items: center;
-            gap: 0.7rem;
+            gap: 0.6rem;
             width: 100%;
-            padding: 0.65rem 1.2rem;
+            padding: 0.6rem 1.1rem;
             background: none;
             border: none;
             color: var(--cream);
             cursor: pointer;
             text-align: left;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             transition: all 0.15s;
             border-left: 3px solid transparent;
         }
@@ -179,20 +221,27 @@
             font-weight: 500;
         }
 
+        .map-btn.custom-map.active {
+            background: rgba(123, 79, 212, 0.12);
+            border-left-color: var(--custom-accent);
+            color: #c9b8f0;
+        }
+
         .map-btn .map-num {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
-            min-width: 30px;
+            min-width: 28px;
             font-family: monospace;
         }
 
         .map-btn .map-count {
             margin-left: auto;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
             background: rgba(255, 255, 255, 0.06);
             padding: 0.1rem 0.4rem;
             border-radius: 10px;
+            flex-shrink: 0;
         }
 
         .map-btn.active .map-count {
@@ -200,31 +249,43 @@
             color: var(--gold);
         }
 
-        /* MAIN CONTENT */
+        .map-btn.custom-map.active .map-count {
+            background: rgba(123, 79, 212, 0.25);
+            color: #c9b8f0;
+        }
+
+        .custom-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--custom-accent);
+            flex-shrink: 0;
+        }
+
+        /* MAIN */
         .main {
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* MODE TABS */
         .mode-bar {
             display: flex;
             gap: 0.5rem;
-            padding: 1rem 1.5rem;
+            padding: 0.9rem 1.3rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             flex-shrink: 0;
         }
 
         .mode-btn {
-            padding: 0.5rem 1.1rem;
+            padding: 0.45rem 1rem;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             background: none;
             color: var(--text-muted);
             cursor: pointer;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             transition: all 0.2s;
         }
 
@@ -240,11 +301,11 @@
             font-weight: 600;
         }
 
-        /* BROWSE MODE */
+        /* BROWSE */
         #browse-view {
             flex: 1;
             overflow-y: auto;
-            padding: 1.5rem;
+            padding: 1.3rem 1.5rem;
         }
 
         #browse-view::-webkit-scrollbar {
@@ -256,62 +317,155 @@
             border-radius: 2px;
         }
 
+        .browse-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .map-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            color: var(--gold);
+        }
+
+        .map-subtitle {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        .browse-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .action-btn {
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .action-btn:hover {
+            border-color: rgba(201, 148, 58, 0.4);
+            color: var(--cream);
+        }
+
+        .action-btn.danger:hover {
+            border-color: rgba(192, 57, 43, 0.5);
+            color: #ff8a80;
+            background: rgba(192, 57, 43, 0.08);
+        }
+
         .vocab-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 0.8rem;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 0.75rem;
         }
 
         .vocab-card {
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.07);
             border-radius: 12px;
-            padding: 1.1rem 1.2rem;
+            padding: 1rem 1.1rem;
             transition: all 0.2s;
-            cursor: default;
+            position: relative;
         }
 
         .vocab-card:hover {
             border-color: rgba(201, 148, 58, 0.3);
             transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        .vocab-card.custom-card {
+            border-color: rgba(123, 79, 212, 0.2);
+        }
+
+        .vocab-card.custom-card:hover {
+            border-color: rgba(123, 79, 212, 0.5);
         }
 
         .vocab-fr {
             font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: var(--cream);
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.25rem;
+            padding-right: 1.5rem;
         }
 
         .vocab-en {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             font-style: italic;
         }
 
-        .map-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            color: var(--gold);
-            margin-bottom: 0.3rem;
+        .card-del-btn {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.7rem;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-size: 0.85rem;
+            line-height: 1;
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: none;
         }
 
-        .map-subtitle {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 1.2rem;
+        .vocab-card:hover .card-del-btn {
+            display: block;
         }
 
-        /* FLASHCARD MODE */
+        .card-del-btn:hover {
+            color: var(--red);
+            background: rgba(192, 57, 43, 0.15);
+        }
+
+        .add-word-card {
+            background: rgba(123, 79, 212, 0.07);
+            border: 1px dashed rgba(123, 79, 212, 0.35);
+            border-radius: 12px;
+            padding: 1rem 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            color: rgba(123, 79, 212, 0.7);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            min-height: 72px;
+        }
+
+        .add-word-card:hover {
+            background: rgba(123, 79, 212, 0.15);
+            border-color: rgba(123, 79, 212, 0.6);
+            color: #c9b8f0;
+        }
+
+        /* FLASHCARD */
         #flashcard-view {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
-            gap: 1.5rem;
+            padding: 1.5rem;
+            gap: 1.2rem;
         }
 
         #flashcard-view.hidden,
@@ -321,14 +475,14 @@
         }
 
         .fc-progress {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
         }
 
         .fc-card {
             width: 100%;
-            max-width: 520px;
-            height: 220px;
+            max-width: 500px;
+            height: 210px;
             perspective: 1000px;
             cursor: pointer;
         }
@@ -350,12 +504,12 @@
             position: absolute;
             inset: 0;
             backface-visibility: hidden;
-            border-radius: 20px;
+            border-radius: 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 1.8rem;
             text-align: center;
         }
 
@@ -371,41 +525,41 @@
         }
 
         .fc-label {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 0.8rem;
+            color: rgba(255, 255, 255, 0.45);
+            margin-bottom: 0.7rem;
         }
 
         .fc-text {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(1.1rem, 3vw, 1.6rem);
+            font-size: clamp(1rem, 3vw, 1.5rem);
             color: var(--cream);
             line-height: 1.4;
         }
 
         .fc-hint {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.35);
-            margin-top: 1rem;
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 0.8rem;
         }
 
         .fc-controls {
             display: flex;
-            gap: 1rem;
+            gap: 0.8rem;
             align-items: center;
         }
 
         .fc-btn {
-            padding: 0.7rem 1.8rem;
-            border-radius: 12px;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             background: rgba(255, 255, 255, 0.06);
             color: var(--cream);
             cursor: pointer;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             transition: all 0.2s;
         }
 
@@ -427,8 +581,8 @@
         .fc-opt {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.82rem;
+            gap: 1rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
 
@@ -439,61 +593,71 @@
             gap: 0.4rem;
         }
 
-        /* QUIZ MODE */
+        /* QUIZ */
         #quiz-view {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 1.5rem;
+            gap: 1.2rem;
+        }
+
+        .quiz-score {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            display: flex;
             gap: 1.5rem;
+        }
+
+        .score-correct {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .score-wrong {
+            color: var(--red);
+            font-weight: 600;
         }
 
         .quiz-question {
             text-align: center;
-            max-width: 560px;
+            max-width: 540px;
             width: 100%;
         }
 
         .quiz-q-label {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
 
         .quiz-q-text {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-size: clamp(1.1rem, 3vw, 1.7rem);
             color: var(--cream);
-            margin-bottom: 0.3rem;
-        }
-
-        .quiz-direction {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-style: italic;
         }
 
         .quiz-choices {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-            max-width: 560px;
+            gap: 0.7rem;
+            max-width: 540px;
             width: 100%;
         }
 
         .choice-btn {
-            padding: 0.9rem 1rem;
+            padding: 0.85rem 1rem;
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             color: var(--cream);
             cursor: pointer;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             text-align: left;
             transition: all 0.2s;
             line-height: 1.3;
@@ -520,33 +684,16 @@
             cursor: default;
         }
 
-        .quiz-score {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .score-correct {
-            color: var(--green);
-            font-weight: 600;
-        }
-
-        .score-wrong {
-            color: var(--red);
-            font-weight: 600;
-        }
-
         .quiz-next {
             display: none;
-            padding: 0.7rem 2.5rem;
+            padding: 0.65rem 2.2rem;
             background: var(--gold);
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             color: var(--navy);
             font-weight: 700;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             cursor: pointer;
             transition: background 0.2s;
         }
@@ -555,16 +702,227 @@
             background: var(--gold-light);
         }
 
-        /* ALL MODE */
-        #all-banner {
-            padding: 1rem 1.5rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            flex-shrink: 0;
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            backdrop-filter: blur(4px);
         }
 
-        /* Responsive */
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal {
+            background: #162439;
+            border: 1px solid rgba(201, 148, 58, 0.25);
+            border-radius: 18px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            margin-bottom: 0.3rem;
+            font-size: 1.35rem;
+        }
+
+        .modal-sub {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            margin-bottom: 1rem;
+        }
+
+        .form-row label {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-row input,
+        .form-row textarea {
+            width: 100%;
+            padding: 0.65rem 0.9rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            color: var(--cream);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border-color 0.2s;
+            resize: vertical;
+        }
+
+        .form-row input:focus,
+        .form-row textarea:focus {
+            border-color: var(--gold);
+        }
+
+        .form-row textarea {
+            min-height: 130px;
+        }
+
+        .form-hint {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+            opacity: 0.8;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.7rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .btn-cancel {
+            padding: 0.6rem 1.3rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+        }
+
+        .btn-cancel:hover {
+            color: var(--cream);
+        }
+
+        .btn-save {
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            background: var(--gold);
+            color: var(--navy);
+            font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background: var(--gold-light);
+        }
+
+        .btn-save.purple {
+            background: var(--custom-accent);
+            color: white;
+        }
+
+        .btn-save.purple:hover {
+            background: #9b6fd4;
+        }
+
+        .error-msg {
+            color: #ff8a80;
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
+            display: none;
+        }
+
+        .words-preview {
+            margin-top: 0.7rem;
+        }
+
+        .word-pair-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.82rem;
+        }
+
+        .word-pair-row .wp-fr {
+            color: var(--cream);
+            flex: 1;
+        }
+
+        .word-pair-row .wp-en {
+            color: var(--text-muted);
+            flex: 1;
+            font-style: italic;
+        }
+
+        .word-pair-row .wp-del {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+        }
+
+        .word-pair-row .wp-del:hover {
+            color: var(--red);
+        }
+
+        .parsed-count {
+            font-size: 0.75rem;
+            color: var(--green);
+            margin-top: 0.5rem;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1e3450;
+            border: 1px solid rgba(201, 148, 58, 0.3);
+            border-radius: 10px;
+            padding: 0.7rem 1.4rem;
+            font-size: 0.85rem;
+            color: var(--cream);
+            z-index: 2000;
+            transition: transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state .es-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .empty-state p {
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
         @media (max-width: 700px) {
             .app {
                 grid-template-columns: 1fr;
@@ -573,7 +931,7 @@
             }
 
             .sidebar {
-                height: 200px;
+                height: 220px;
                 border-right: none;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             }
@@ -585,6 +943,10 @@
             .stats {
                 gap: 1rem;
             }
+
+            .fc-card {
+                height: 180px;
+            }
         }
     </style>
 </head>
@@ -593,7 +955,7 @@
 
     <header>
         <h1>Vocabulaire Français</h1>
-        <p>1,483 words across 98 topic maps — from your course vocabulary</p>
+        <p id="header-sub">1,483 words across 98 topic maps — plus your custom maps</p>
     </header>
 
     <div class="stats">
@@ -616,15 +978,16 @@
     </div>
 
     <div class="app">
-        <!-- SIDEBAR -->
         <aside class="sidebar">
-            <div class="sidebar-search">
-                <input type="text" id="map-search" placeholder="Filter topics..." oninput="filterMaps()">
+            <div class="sidebar-top">
+                <div class="sidebar-search">
+                    <input type="text" id="map-search" placeholder="Filter topics…" oninput="filterMaps()">
+                </div>
+                <button class="add-map-btn" onclick="openAddMapModal()">＋ New Custom Map</button>
             </div>
-            <div id="map-list"></div>
+            <div class="map-list" id="map-list"></div>
         </aside>
 
-        <!-- MAIN -->
         <main class="main">
             <div class="mode-bar">
                 <button class="mode-btn active" onclick="setMode('browse')">📖 Browse</button>
@@ -632,17 +995,20 @@
                 <button class="mode-btn" onclick="setMode('quiz')">✏️ Quiz</button>
             </div>
 
-            <!-- BROWSE -->
             <div id="browse-view">
-                <div class="map-title" id="browse-title">Select a topic</div>
-                <div class="map-subtitle" id="browse-subtitle"></div>
+                <div class="browse-header">
+                    <div>
+                        <div class="map-title" id="browse-title">Select a topic</div>
+                        <div class="map-subtitle" id="browse-subtitle">Choose a word map from the sidebar.</div>
+                    </div>
+                    <div class="browse-actions" id="browse-actions" style="display:none"></div>
+                </div>
                 <div class="vocab-grid" id="vocab-grid"></div>
             </div>
 
-            <!-- FLASHCARD -->
             <div id="flashcard-view" class="hidden">
                 <div class="fc-progress" id="fc-progress">Card 1 of 1</div>
-                <div class="fc-card" onclick="flipCard()" id="fc-card">
+                <div class="fc-card" onclick="flipCard()">
                     <div class="fc-inner" id="fc-inner">
                         <div class="fc-front">
                             <div class="fc-label">French</div>
@@ -661,11 +1027,10 @@
                 </div>
                 <div class="fc-opt">
                     <label><input type="checkbox" id="fc-shuffle" onchange="fcShuffle()"> Shuffle</label>
-                    <label style="margin-left:1rem"><input type="checkbox" id="fc-reverse"> English → French</label>
+                    <label><input type="checkbox" id="fc-reverse"> English → French</label>
                 </div>
             </div>
 
-            <!-- QUIZ -->
             <div id="quiz-view" class="hidden">
                 <div class="quiz-score">
                     <span>✅ <span class="score-correct" id="q-correct">0</span></span>
@@ -675,7 +1040,6 @@
                 <div class="quiz-question">
                     <div class="quiz-q-label" id="q-label">Translate to English</div>
                     <div class="quiz-q-text" id="q-text">—</div>
-                    <div class="quiz-direction" id="q-dir"></div>
                 </div>
                 <div class="quiz-choices" id="q-choices"></div>
                 <button class="quiz-next" id="quiz-next" onclick="nextQuestion()">Next →</button>
@@ -683,55 +1047,208 @@
         </main>
     </div>
 
-    <script>
-        const VOCAB = [{ "map": 1, "items": [["Je m'appelle ...", "My name is ..."], ["Je suis de ...", "I am from ..."], ["Je suis étudiant en ... (français, maths, etc.)", "I am a student (male) in ... (French, math, etc.)"], ["Je suis étudiante en...(français, maths, etc.)", "I am a student (female) in ... (French, math, etc.)"], ["Il/Elle s'appelle ...", "His/Her name is ..."], ["Il/Elle est de ...", "He/She is from ..."], ["Il est étudiant en ... (français, maths, etc.)", "He is a student (male) in ... (French, math, etc.)"], ["Elle est étudiante en ... (français, maths, etc.)", "She is a student (female) in ... (French, math, etc.)"]], "label": "Introductions" }, { "map": 2, "items": [["le commerce", "business"], ["la comptabilité", "accounting"], ["les langues (f)", "languages"], ["l'anglais (m)", "English"], ["le français", "French"], ["l'espagnol (m)", "Spanish"], ["la littérature", "literature"], ["l'histoire (f)", "history"], ["la géographie", "geography"], ["les sciences politiques", "political science"], ["les mathématiques/les maths (f)", "math"], ["les sciences (f)", "sciences"], ["la biologie", "biology"], ["la chimie", "chemistry"], ["l'informatique (f)", "computer science"], ["la musique", "music"], ["la philosophie", "philosophy"], ["la psychologie", "psychology"]], "label": "Academic Subjects" }, { "map": 4, "items": [["le cafard", "cockroach"], ["le chat / la chatte / la minette", "cat / female cat / kitty"], ["l'écureuil", "squirrel"], ["l'escargot", "snail"], ["la fourmi", "ant"], ["le tatou", "armadillo"]], "label": "Animals" }, { "map": 5, "items": [["Monsieur", "Sir"], ["Madame", "Ma'am (Mrs.)"], ["Mademoiselle", "Miss"], ["Bonjour, Monsieur", "Good day (Hello), Sir"], ["Bonsoir", "Good evening"], ["Au revoir", "Goodbye"], ["Salut!", "Hi!"], ["À tout à l'heure!", "See you in a little while."], ["À ce soir.", "See you this evening."], ["À demain.", "See you tomorrow."], ["À bientôt.", "See you soon."], ["Comment vous appelez-vous?", "What's your name? (formal)"], ["Comment tu t'appelles? (Comment t'appelles-tu?)", "What's your name? (informal)"], ["Je m'appelle ...", "My name is ..."], ["Comment allez-vous?", "How are you? (formal)"], ["Comment vas-tu?", "How are you? (informal)"], ["Je vais très bien, merci.", "I am very well, thank you."], ["Je vais bien, merci.", "I am fine, thank you."], ["Pas mal, merci.", "Not bad, thank you."], ["Comment ça va?", "How are things going?"], ["Bien, merci!", "Great, thanks!"], ["Ça va (bien)?", "Are things going (well)?"], ["Ça va bien.", "Things are going (well)."], ["Et vous? Vous êtes d'où?", "And you? Where are you from? (formal)"], ["Et toi? Tu es d'où?", "And you? Where are you from? (informal)"]], "label": "Greetings" }, { "map": 6, "items": [["Monsieur, je vous présente ...", "Sir, I would like to introduce to you ... (formal)"], ["Je te présente ...", "This is ... (informal)"], ["Voici ...", "This is ..."], ["Qui est-ce?", "Who is it?"], ["C'est ...", "It's ..."], ["Ce sont ...", "They are ..."], ["Comment s'appelle-t-il/elle?", "What's his/her name?"], ["Il/Elle s'appelle ...", "His/Her name is ..."], ["Il/Elle est de ...", "He/She is from ..."], ["Comment s'appellent-ils/elles?", "What are their names?"], ["Ils/Elles s'appellent ...", "Their names are ..."], ["Qu'est-ce qu'il/elle fait?", "What does he/she do?"], ["Qu'est-ce qu'ils/elles font?", "What do they do?"], ["Il est ... Elle est ...", "He/She is a/an ..."], ["acteur / actrice", "actor / actress"], ["architecte", "architect"], ["chanteur / chanteuse", "singer"], ["coiffeur / coiffeuse", "hair dresser"], ["dentiste", "dentist"], ["ingénieur", "engineer"], ["journaliste", "journalist"], ["médecin", "doctor"], ["professeur", "teacher, professor"], ["retraité / retraitée", "retired man/woman"], ["stagiaire", "intern"]], "label": "Introductions & Professions" }, { "map": 7, "items": [["Qu'est-ce que c'est?", "What is it?"], ["C'est ...", "It's ..."], ["C'est une salle de classe.", "It's a classroom."], ["Dans la salle de classe, il y a ...", "In the classroom, there is ..."], ["une porte", "door"], ["une fenêtre", "window"], ["un tableau (noir)", "blackboard"], ["une télévision", "television"], ["une carte (du monde)", "map (of the world)"], ["une affiche", "poster"], ["une chaise", "chair"], ["un bureau", "desk"], ["Sur le bureau, il y a ...", "On the desk, there is ..."], ["une craie", "chalk"], ["un crayon", "pencil"], ["un stylo", "pen"], ["un cahier", "notebook"], ["un livre", "book"], ["un dictionnaire", "dictionary"], ["un sac à dos", "backpack"], ["Au labo, il y a ...", "In the lab, there are ..."], ["des ordinateurs (m)", "computers"], ["Les étudiants travaillent!", "The students work!"], ["des devoirs (m)", "homework"], ["un exercice", "exercise"], ["un examen", "test"]], "label": "Classroom Objects" }, { "map": 8, "items": [["Écoutez.", "Listen."], ["Écrivez.", "Write."], ["Levez le doigt.", "Raise your finger (hand)."], ["Répétez.", "Repeat."], ["Ouvrez vos livres.", "Open your books."], ["Ouvrez le livre à la page ...", "Turn to page ..."], ["s'il vous plaît", "please"], ["Vous comprenez?", "Do you understand?"], ["Oui, je comprends.", "Yes, I understand."], ["Non, je ne comprends pas.", "No, I don't understand."], ["Que veut dire ...?", "What does ... mean?"], ["Comment dit-on ...?", "How do you say ...?"], ["Voici ...", "Here is ... (here are ...)"], ["Voilà ...", "There is ... (there are ...)"], ["Il y a ...", "There is, there are ..."], ["Il y a combien de ...?", "There are how many ...?"]], "label": "Classroom Commands" }, { "map": 10, "items": [["le calendrier", "calendar"], ["le jour", "day"], ["Quels sont les jours de la semaine?", "What are the days of the week?"], ["lundi", "Monday"], ["mardi", "Tuesday"], ["mercredi", "Wednesday"], ["jeudi", "Thursday"], ["vendredi", "Friday"], ["samedi", "Saturday"], ["dimanche", "Sunday"], ["C'est quel jour?", "What day is it?"], ["C'est lundi.", "It's Monday."], ["aujourd'hui", "today"], ["demain", "tomorrow"], ["la semaine", "week"], ["la semaine prochaine", "next week"], ["la semaine dernière", "last week"], ["Quelle est la date?", "What's the date?"], ["C'est le premier septembre.", "It's September 1st."], ["C'est le deux octobre.", "It's October 2nd."], ["C'est le 30 août.", "It's August 30th."], ["le mois", "month"], ["Quels sont les mois de l'année?", "What are the months of the year?"], ["janvier", "January"], ["février", "February"], ["mars", "March"], ["avril", "April"], ["mai", "May"], ["juin", "June"], ["juillet", "July"], ["août", "August"], ["septembre", "September"], ["octobre", "October"], ["novembre", "November"], ["décembre", "December"]], "label": "Days & Months" }, { "map": 11, "items": [["Nom (de famille)", "last name"], ["Prénom(s)", "first (and middle) name(s)"], ["Age", "age"], ["Nationalité", "nationality"], ["Résidence actuelle", "current address"], ["Profession", "profession"], ["Passe-temps préférés", "pastimes"]], "label": "Personal Info" }, { "map": 12, "items": [["Comment vous appelez-vous?", "What is your name?"], ["Quel âge avez-vous?", "How old are you?"], ["Quelle est votre nationalité?", "What is your nationality?"], ["Vous êtes d'où?", "Where are you from?"], ["Où habitez-vous?", "Where do you live?"], ["Que faites-vous dans la vie?", "What do you do for a living?"], ["Quels sont vos passe-temps préférés?", "What are your favorite pastimes?"]], "label": "Questions About You" }, { "map": 13, "items": [["un homme", "man"], ["une femme", "woman, wife"], ["un mari", "husband"], ["un fiancé / une fiancée", "fiancé / fiancée"], ["des parents", "parents, relatives"], ["un père", "father"], ["une mère", "mother"], ["un/une enfant", "child"], ["un fils", "son"], ["une fille", "daughter"], ["un fils unique", "only child (male)"], ["une fille unique", "only child (female)"], ["un frère", "brother"], ["une soeur", "sister"], ["des grands-parents (m)", "grandparents"], ["un grand-père", "grandfather"], ["une grand-mère", "grandmother"], ["un petit-enfant", "grandchild"], ["un oncle", "uncle"], ["une tante", "aunt"], ["un neveu", "nephew"], ["une nièce", "niece"]], "label": "Family" }, { "map": 14, "items": [["un ami / une amie", "friend"], ["un/une camarade", "friend"], ["un copain / une copine", "friend; boyfriend / girlfriend"]], "label": "Friends" }, { "map": 16, "items": [["l'heure (f)", "the time"], ["Quelle heure est-il?", "What time is it?"], ["Il est huit heures.", "It's 8 o'clock."], ["Il est huit heures dix.", "It's ten after 8."], ["Il est huit heures et quart.", "It's quarter after 8."], ["Il est huit heures vingt-cinq.", "It's twenty-five after 8."], ["Il est huit heures et demie.", "It's eight-thirty."], ["Il est neuf heures moins vingt.", "It's twenty to nine."], ["Il est neuf heures moins le quart.", "It's quarter to nine."], ["Il est midi.", "It's noon."], ["Il est midi et demi.", "It's twelve-thirty."], ["Il est minuit.", "It's midnight."], ["Il est trois heures...", "It's three o'clock..."], ["du matin", "in the morning (3 a.m.)"], ["de l'après-midi", "in the afternoon (3 p.m.)"], ["Il est sept heures...", "It's seven o'clock..."], ["du soir", "in the evening (7 p.m.)"]], "label": "Telling Time" }, { "map": 17, "items": [["Il est 10h.", "It's 10 a.m."], ["Il est 12h05.", "It's 12:05 p.m."], ["Il est 13h15.", "It's 1:15 p.m."], ["Il est 15h35.", "It's 3:35 p.m."], ["Il est 18h45.", "It's 6:45 p.m."], ["Il est 22h59.", "It's 10:59 p.m."]], "label": "24h Time" }, { "map": 18, "items": [["avoir", "to have"], ["avoir besoin de...", "to need"], ["avoir envie de...", "to feel like (to want to)"], ["avoir l'intention de...", "to intend (to)"], ["chercher", "to look for"], ["trouver", "to find"], ["(Qui cherche, trouve!)", "(Who looks for (searches), finds!)"], ["tomber amoureux (de) /amoureuse (de)", "to fall in love"], ["embrasser", "to kiss"], ["écouter...", "to listen to..."], ["de la musique", "music"], ["chanter", "to sing"], ["danser", "to dance"], ["aimer", "to like, to love"], ["la musique classique / le jazz /", "classical music / jazz /"], ["le hip-hop / la techno /", "hip-hop / techno /"], ["le sport / le tennis / le football /", "sports / tennis / soccer /"], ["le basket / le golf / le footing", "basketball / golf / running"], ["préférer", "to prefer"], ["adorer", "to adore"], ["détester", "to detest"], ["habiter", "to live"], ["rester à la maison", "to stay at home"], ["étudier", "to study"], ["lire", "to read *"], ["oublier", "to forget"], ["regarder la télévision", "to watch television"], ["téléphoner à", "to telephone"], ["parler", "to speak"], ["jouer...", "to play..."], ["au foot / au tennis / aux cartes", "soccer / tennis / cards"], ["de la guitare / du piano", "guitar / piano"], ["nager", "to swim"], ["rencontrer", "to meet"], ["rêver", "to dream"], ["travailler", "to work"], ["voyager", "to travel"]], "label": "Activities & Hobbies" }, { "map": 19, "items": [["aussi", "also"], ["maintenant", "now"], ["plus tard", "later"], ["beaucoup", "a lot"], ["peu / un peu", "little / a little"], ["rarement", "rarely"], ["parfois", "at times"], ["quelquefois", "sometimes"], ["souvent", "often"], ["toujours", "always"], ["ne ... jamais", "never *"]], "label": "Adverbs of Frequency" }, { "map": 20, "items": [["un continent", "continent"], ["un pays", "country"], ["l'Afrique (f) / africain (e)", "Africa / African"], ["l'Algérie (f) / algérien(ne)", "Algeria / Algerian"], ["le Maroc / marocain(e)", "Morocco / Moroccan"], ["le Sénégal / sénégalais(e)", "Senegal / Senegalese"], ["la Tunisie / tunisien(ne)", "Tunisia / Tunisian"], ["l'Amérique du Nord", "North America"], ["le Canada / canadien(ne)", "Canada / Canadian"], ["les Etats-Unis / américain(e)", "United States / American"], ["le Mexique / mexicain(e)", "Mexico / Mexican"], ["l'Amérique du Sud", "South America"], ["la Guyane française / guyanais(e)", "French Guyana / Guyanese"], ["l'Asie (f) / asiatique", "Asia / Asian"], ["la Chine / chinois(e)", "China / Chinese"], ["le Japon / japonais(e)", "Japan / Japanese"], ["le Vietnam / vietnamien(ne)", "Vietnam / Vietnamese"], ["l'Océanie", "Oceania (the South Sea Islands)"], ["l'Australie (f) / australien(ne)", "Australia / Australian"], ["l'Europe (f) / européen(ne)", "Europe / European"], ["l'Allemagne (f) / allemand(e)", "Germany / German"], ["l'Angleterre (f) / anglais(e)", "England / English"], ["la Belgique / belge", "Belgium / Belgian"], ["l'Espagne (f) / espagnol(e)", "Spain / Spanish"], ["la France / français(e)", "France / French"], ["l'Italie (f) / italien(ne)", "Italy / Italian"], ["la Suisse / suisse", "Switzerland / Swiss"]], "label": "Countries & Nationalities" }, { "map": 21, "items": [["Quel temps fait-il?", "What's the weather?"], ["Il fait beau.", "It's nice."], ["Il fait chaud.", "It's hot."], ["Il fait du soleil. / Il y a du soleil.", "It's sunny."], ["Il fait frais.", "It's cool."], ["Il fait mauvais.", "It's bad."], ["Il fait froid.", "It's cold."], ["Il fait du brouillard. / Il y a du brouillard.", "It's foggy."], ["Il fait du vent. / Il y a du vent.", "It's windy."], ["Il y a des nuages.", "It's cloudy."], ["Il y a des orages.", "There are storms."], ["Il pleut.", "It's raining."], ["Il neige.", "It's snowing."]], "label": "Weather" }, { "map": 22, "items": [["le printemps / au printemps", "spring / in the spring"], ["l'été (m) / en été", "summer / in the summer"], ["l'automne (m) / en automne", "fall / in the fall"], ["l'hiver (m) / en hiver", "winter / in the winter"]], "label": "Seasons" }, { "map": 23, "items": [["la campagne", "countryside"], ["la ville", "town, city"], ["une province", "province"], ["une région", "region"], ["un lac", "lake"], ["un fleuve", "major river (that flows to the sea)"], ["la Loire", "the Loire (river)"], ["la Garonne", "the Garonne (river)"], ["le Rhône", "the Rhône (river)"], ["la Seine", "the Seine (river)"], ["la mer", "sea"], ["la mer Méditerranée", "the Mediterranean Sea"], ["l'océan (m)", "ocean"], ["l'océan Atlantique", "the Atlantic Ocean"], ["la Manche", "the English Channel"], ["la plage", "beach"], ["une forêt", "forest"], ["la montagne", "mountain"], ["les Alpes (f)", "the Alps"], ["le Jura", "the Jura (mountains)"], ["les Pyrénées (f)", "the Pyrenees"], ["le Massif Central", "the Massif Central"], ["les Vosges (f)", "the Vosges"]], "label": "French Geography" }, { "map": 24, "items": [["dans le nord / au nord", "in the north"], ["dans le sud / au sud", "in the south"], ["dans l'est / à l'est", "in the east"], ["dans l'ouest / à l'ouest", "in the west"], ["au centre", "in the center"], ["sur la côte", "on the coast"]], "label": "Directions" }, { "map": 25, "items": [["l'Alsace (f)", "Alsace"], ["la Bourgogne", "Burgundy"], ["la Bretagne", "Brittany"], ["la Côte d'Azur", "the Riviera"], ["la Corse", "Corsica"], ["l'Ile de France (f)", "Ile de France"], ["(la région parisienne)", "(Parisian region)"], ["la Lorraine", "Lorraine"], ["la Normandie", "Normandy"], ["la Provence", "Provence"], ["la Vallée de la Loire", "the Loire Valley"]], "label": "French Regions" }, { "map": 26, "items": [["aller", "to go"], ["aller au cinéma", "to go to the movies"], ["aller en boîte", "to go clubbing"], ["aller au concert", "to go to a concert"], ["aller à l'université", "to go to the university"], ["aller au parc", "to go to the park"], ["faire de la bicyclette", "to go bicycle riding"], ["faire du bateau", "to go boating"], ["faire de la planche à voile", "to go windsurfing"], ["faire des randonnées", "to go hiking"], ["faire du ski", "to go skiing"], ["faire du vélo", "to go cycling"], ["faire de la voile", "to go sailing"], ["faire une promenade", "to take a walk"], ["passer les vacances (f pl)", "spend a vacation"], ["visiter... (un lieu, pas une personne)", "to visit... (a place, not a person)"], ["une cathédrale", "a cathedral"], ["un château", "a castle"], ["une exposition", "an exhibition, show"], ["un monument", "a monument"], ["un musée", "a museum"]], "label": "Activities & Travel" }, { "map": 27, "items": [["Comment voyagez-vous?", "How do you travel?"], ["Je voyage...", "I travel..."], ["en avion / un avion", "by plane / plane"], ["en bateau / un bateau", "by boat / boat"], ["en train / un train", "by train / train"], ["en car / un car", "by tour bus (from city to city) / tour bus"], ["en voiture / une voiture", "by car / car"], ["Comment allez-vous... (à l'université, chez vos parents, au travail, etc.)?", "How do you go... (to the university, to your parents' house, to work, etc.) ?"], ["Je vais...", "I go..."], ["en métro / le métro", "by subway / subway"], ["en bus / un bus", "by bus / bus"], ["en taxi / un taxi", "by taxi / taxi"], ["à moto / une moto", "by motorcycle / motorcycle"], ["à vélo / un vélo", "by bicycle / bicycle"], ["à pied", "on foot"]], "label": "Transportation" }, { "map": 28, "items": [["acheter", "to buy"], ["amener", "to bring somebody (along)"], ["changer", "to change"], ["dormir", "to sleep"], ["emmener", "to take somebody (along)"], ["espérer", "to hope"], ["essayer", "to try"], ["manger", "to eat"], ["nager", "to swim"], ["partager", "to share"], ["partir", "to leave"], ["sortir", "to go out"]], "label": "Verbs" }, { "map": 30, "items": [["la tête", "head"], ["les cheveux (m)", "hair"], ["le front", "forehead"], ["les sourcils (m)", "eyebrows"], ["les yeux (m)", "eyes"], ["le nez", "nose"], ["les joues (f)", "cheeks"], ["les oreilles (f)", "ears"], ["la bouche", "mouth"], ["les dents (f)", "teeth"], ["le menton", "chin"], ["le cou", "neck"]], "label": "Body – Head" }, { "map": 31, "items": [["blanc / blanche", "white"], ["bleu / bleue", "blue"], ["gris / grise", "gray"], ["jaune", "yellow"], ["marron (invariable)", "brown"], ["noir / noire", "black"], ["orange (invariable)", "orange"], ["rouge", "red"], ["vert / verte", "green"], ["violet / violette", "purple"]], "label": "Colors" }, { "map": 32, "items": [["Quelle est votre taille (f)?", "What's your height?"], ["Je fais 1 m. 60.", "I'm one meter 60."], ["de taille moyenne", "of medium height"], ["Combien pesez-vous?", "How much do you weigh?"], ["Je fais 55 kilos.", "I weigh 55 kilos."], ["maigre", "thin, skinny"], ["mince", "thin, slender"], ["De quelle couleur sont vos cheveux?", "What color is your hair?"], ["J'ai les cheveux blonds / bruns / châtain (invariable) / roux.", "I have blond / brown / light brown, chestnut / red hair."], ["Il est... Elle est...", "He is... She is..."], ["blond. blonde.", "a blond."], ["brun. brune.", "a brunette."], ["roux. rousse.", "a red-head."], ["Comment est-il coiffé?", "What is his hair like?"], ["Il a les cheveux longs / courts / bouclés / raides.", "He has long / short / curly / straight hair. _______________"], ["De quelle couleur sont vos yeux?", "What color are your eyes?"], ["J'ai les yeux marron.", "I have brown eyes."], ["Quelle est la forme de son visage?", "What's the shape of his face?"], ["Il a le visage carré / long / rond.", "He has a square / long / round face."], ["Il a le nez retroussé / pointu.", "He has a snub / pointed nose."], ["Il a de grandes oreilles.", "He has big ears."], ["Il/Elle a...", "He/She has..."], ["des lunettes (f)", "glasses"], ["une cicatrice", "scar"], ["un piercing", "body piercing"], ["un tatouage", "tattoo"]], "label": "Appearance & Description" }, { "map": 33, "items": [["actif / active", "active"], ["agréable", "pleasant"], ["ambitieux / ambitieuse", "ambitious"], ["amusant / amusante", "funny"], ["arrogant / arrogante", "arrogant"], ["calme", "calm"], ["compétitif / compétitive", "competitive"], ["créatif / créative", "creative"], ["curieux / curieuse", "curious"], ["débrouillard / débrouillarde", "resourceful"], ["désagréable", "unpleasant"], ["drôle", "funny"], ["égoïste", "selfish"], ["ennuyeux / ennuyeuse", "boring"], ["enthousiaste", "enthusiastic"], ["être de bonne humeur", "to be in a good mood"], ["être de mauvaise humeur", "to be in a bad mood"], ["fou / folle", "crazy"], ["franc / franche", "frank"], ["généreux / généreuse", "generous"], ["gentil / gentille", "kind, nice"], ["heureux / heureuse", "happy"], ["honnête", "honest"], ["hypocrite", "hypocritical"], ["idéaliste", "idealistic"], ["incapable", "incapable, incompetent"], ["indifférent / indifférente", "indifferent"], ["intelligent / intelligente", "intelligent"], ["intéressant / intéressante", "interesting"], ["malhonnête", "dishonest"], ["mignon / mignonne", "cute"], ["naïf / naïve", "naive"], ["nerveux / nerveuse", "nervous"], ["optimiste", "optimistic"], ["paresseux / paresseuse", "lazy"], ["patient / patiente", "patient"], ["pessimiste", "pessimistic"], ["prétentieux / prétentieuse", "pretentious"], ["réaliste", "realistic"], ["réservé / réservée", "reserved"], ["sensible", "sensitive"], ["sérieux / sérieuse", "serious"], ["sincère", "sincere"], ["sociable", "sociable"], ["sportif / sportive", "athletic"], ["têtu / têtue", "stubborn"], ["timide", "shy, timid"], ["tolérant / tolérante", "tolerant"], ["travailleur / travailleuse", "hard-working"]], "label": "Personality Adjectives" }, { "map": 34, "items": [["autre", "other"], ["beau / bel / belle", "beautiful"], ["bon / bonne", "good"], ["grand / grande", "tall, big"], ["gros / grosse", "big, fat"], ["jeune", "young"], ["joli / jolie", "pretty"], ["long / longue", "long"], ["mauvais / mauvaise", "bad"], ["nouveau / nouvel / nouvelle", "new"], ["petit / petite", "little"], ["vieux / vieil / vieille", "old"]], "label": "Common Adjectives" }, { "map": 35, "items": [["se réveiller", "to wake up"], ["se lever", "to get up"], ["se laver", "to wash (oneself)"], ["s'habiller", "to dress (oneself)"], ["se brosser les dents", "to brush your teeth"], ["se brosser les cheveux", "to brush your hair"], ["se maquiller", "to put on make-up"], ["se raser", "to shave"], ["se coucher", "to go to bed"], ["s'amuser", "to have fun"], ["s'ennuyer", "to be bored"], ["se dépêcher", "to hurry"], ["se promener", "to take a walk"], ["se reposer", "to rest"], ["se fâcher", "to get angry"]], "label": "Daily Routine" }, { "map": 36, "items": [["un verre", "glass"], ["une tasse", "cup"], ["un bol", "bowl"], ["une assiette", "plate"], ["un couteau", "knife"], ["une fourchette", "fork"], ["une cuillère *", "spoon"], ["la cuisine", "kitchen, cooking"], ["un repas", "meal"], ["le petit déjeuner", "breakfast"], ["le déjeuner", "lunch"], ["le goûter", "snack"], ["le dîner", "dinner, supper"]], "label": "Meals & Tableware" }, { "map": 37, "items": [["des fruits (m)", "fruits"], ["des bananes (f)", "bananas"], ["des cerises (f)", "cherries"], ["des citrons (m)", "lemons"], ["des fraises (f)", "strawberries"], ["des framboises (f)", "raspberries"], ["des oranges (f)", "oranges"], ["des pamplemousses (m)", "grapefruit"], ["des pêches (f)", "peaches"], ["des poires (f)", "pears"], ["des pommes (f)", "apples"], ["du raisin", "grapes"], ["des légumes (m)", "vegetables"], ["de l'ail (m)", "garlic"], ["des asperges (f)", "asparagus"], ["des aubergines (f)", "eggplants"], ["des carottes (f)", "carrots"], ["des champignons (m)", "mushrooms"], ["des choux (m)", "cabbage"], ["des concombres (m)", "cucumbers"], ["des courgettes (f)", "zucchini"], ["des épinards (m)", "spinach"], ["des haricots verts (m)", "green beans"], ["une/de la laitue", "lettuce"], ["des oignons (m)", "onions"], ["des petits pois (m)", "peas"], ["des poireaux (m)", "leeks"], ["des poivrons verts (m)", "green peppers"], ["des pommes de terre (f)", "potatoes"], ["de la salade", "salad, lettuce"], ["des tomates (f)", "tomatoes"]], "label": "Fruits & Vegetables" }, { "map": 38, "items": [["Chez le boucher, on achète ...", "At the butcher's, you buy ..."], ["de la viande", "meat"], ["du boeuf", "beef"], ["du porc", "pork"], ["du veau", "veal"], ["du canard", "duck"], ["de la dinde", "turkey"], ["du poulet", "chicken"]], "label": "Meat" }, { "map": 39, "items": [["Chez le charcutier, on achète ...", "At the pork butcher's, you buy ..."], ["du jambon", "ham"], ["du pâté", "pâté"], ["des saucisses (f)", "sausages"], ["du saucisson", "hard sausage"]], "label": "Charcuterie" }, { "map": 40, "items": [["Chez le poissonnier, on achète ...", "At the fish merchant's, you buy ..."], ["du poisson", "fish"], ["du saumon", "salmon"], ["de la sole", "sole"], ["du thon", "tuna"]], "label": "Fish" }, { "map": 41, "items": [["Chez l'épicier, on trouve ...", "At the grocer's, you find ..."], ["des céréales (m)", "cereal"], ["un oeuf, des oeufs", "eggs"], ["des noix (f)", "walnuts"], ["des produits laitiers", "dairy products"], ["du beurre", "butter"], ["du lait", "milk"], ["du fromage", "cheese"], ["du yaourt", "yogurt"], ["de la glace", "ice cream"], ["des épices (f)", "spices"], ["du sel", "salt"], ["du poivre", "pepper"], ["de l'huile (f)", "oil"], ["du vinaigre", "vinegar"], ["de la mayonnaise", "mayonnaise"], ["de la moutarde", "mustard"]], "label": "Grocery Items" }, { "map": 42, "items": [["Chez le boulanger, on trouve ...", "At the baker's, you find ..."], ["du pain", "bread"], ["une baguette", "baguette"], ["une brioche", "brioche"], ["un croissant", "croissant"], ["un petit pain", "roll"], ["Chez le patissier, on trouve ...", "At the pastry chef's, you find ..."], ["des pâtisseries (f)", "pastries"], ["un gâteau", "cake"], ["un gâteau au chocolat", "chocolate cake"], ["une tarte", "tart"], ["une tarte aux pommes", "apple tart"], ["une tarte au citron", "lemon tart"], ["une tarte à la fraise", "strawberry tart"]], "label": "Bakery & Pastry" }, { "map": 43, "items": [["Au café, on commande ...", "At the café, you order ..."], ["des boissons non-alcoolisées", "non-alcoholic beverages"], ["du café", "coffee"], ["du thé", "tea"], ["du coca-cola", "cola"], ["de l'eau (f)", "water"], ["de l'eau minérale", "mineral water"], ["du jus de fruit", "fruit juice"], ["des boissons alcoolisées", "alcoholic beverages"], ["de la bière", "beer"], ["du champagne", "champagne"], ["du vin", "wine"], ["du vin blanc (du blanc)", "white wine"], ["du vin rosé (du rosé)", "rosé wine"], ["du vin rouge (du rouge)", "red wine"], ["un sandwich jambon beurre", "sandwich with ham and butter"], ["un croque-monsieur", "toasted cheese sandwich with ham"], ["un croque-madame", "croque-monsieur with a fried egg"], ["une quiche (lorraine, au saumon, etc.)", "quiche (lorraine, salmon, etc.)"], ["une omelette (aux fines herbes, au fromage)", "omelette (with herbs, cheese)"]], "label": "Café & Drinks" }, { "map": 44, "items": [["Au restaurant, on commande ...", "At the restaurant, you order ..."], ["un apéritif (m)", "before dinner drink"], ["une entrée (f)", "appetizer / first course"], ["un plat principal", "main course"], ["un dessert", "dessert"], ["une boisson", "drink, beverage"]], "label": "Restaurant" }, { "map": 45, "items": [["des entrées", "appetizers"], ["des crudités (f)", "raw vegetables plus vinaigrette"], ["une salade (avec des lardons, des noix, etc.)", "salad (with bacon, nuts, etc.)"], ["de la soupe à l'oignon", "onion soup"], ["des plats principaux", "main courses"], ["du boeuf bourguignon", "beef stewed in red wine"], ["du coq au vin", "chicken (rooster) stewed in red wine"], ["un steak-frites", "steak and French fries"], ["des desserts", "desserts"], ["de la mousse au chocolat", "chocolate mousse"], ["de la crème caramel", "caramel custard"], ["de la crème brûlée", "crème brûlée"], ["du fondant au chocolat", "rich chocolate flourless cake"]], "label": "Restaurant Menu" }, { "map": 46, "items": [["un peu de", "a little"], ["assez de", "enough"], ["beaucoup de", "a lot"], ["trop de", "too much (too many)"], ["une cuillère de", "a spoonful of"], ["une bouteille de", "a bottle of"], ["un pichet de", "a pitcher of"], ["un litre de", "a liter of"], ["50 grammes de", "50 grams of"], ["un kilo de", "a kilo of"], ["un morceau de", "a piece of"], ["une tranche de", "a slice of"], ["une boîte de", "a can of"], ["un rôti de boeuf", "a beef roast"], ["une côtelette de porc", "a pork chop"], ["une douzaine d'oeufs", "a dozen eggs"]], "label": "Food Quantities" }, { "map": 47, "items": [["délicieux / délicieuse", "delicious"], ["frais / fraîche", "fresh"], ["épicé(e)", "spicy"], ["grillé(e)", "grilled"], ["hâché(e)", "chopped"], ["salé(e)", "salty"], ["sucré(e)", "sweet"]], "label": "Food Adjectives" }, { "map": 48, "items": [["avoir faim / avoir soif", "to be hungry / to be thirsty"], ["boire", "to drink"], ["déjeuner", "to have lunch"], ["dîner", "to have dinner"], ["faire le marché", "to go grocery shopping"], ["faire la cuisine", "to cook"], ["prendre un repas", "to have a meal"], ["faire la vaisselle", "to do the dishes"], ["grossir", "to gain weight"], ["faire un régime", "to be on a diet"], ["maigrir", "to lose weight"], ["choisir", "to choose"], ["finir", "to finish"], ["grandir", "to grow up"], ["obéir à", "to obey"], ["réfléchir à", "to reflect (on)"], ["réussir à", "to succeed"], ["croire", "to believe"], ["prendre", "to take"], ["(apprendre à quelqu'un)", "to learn"], ["apprendre", "(to teach someone)"], ["comprendre", "to understand"], ["surprendre", "to surprise"]], "label": "Food Verbs" }, { "map": 49, "items": [["une place", "public square"], ["une rue", "street"], ["un boulevard", "boulevard"], ["une avenue", "avenue"], ["un quartier", "neighborhood"], ["l'arrondissement (m)", "administrative district in a large city (e.g. Paris)"], ["le centre-ville", "downtown"], ["la banlieue", "suburbs"], ["un bâtiment", "building"], ["un bureau", "office"], ["un immeuble", "apartment building"], ["une maison", "house"], ["un hôtel", "hotel"], ["une boutique", "boutique"], ["un magasin (de musique, de vidéo, etc.)", "store (music, video, etc.)"], ["un centre commercial", "shopping center, mall"], ["un supermarché", "supermarket"], ["un café", "café"], ["un restaurant", "restaurant"], ["un musée", "museum"], ["un cinéma", "movie theater"], ["une boîte de nuit / une discothèque", "a nightclub, dance club"], ["un théâtre", "theater"], ["un stade", "stadium"], ["un parking", "parking lot"], ["un parc", "park"], ["un jardin public", "park, large garden"], ["un fleuve", "river"], ["un pont", "bridge"], ["une banque", "bank"], ["un bureau de poste", "post office"], ["une boîte aux lettres", "mailbox"], ["une cabine téléphonique", "phone booth"], ["une laverie", "launderette"], ["lhôtel de ville (m)", "city hall, mayors office"], ["la mairie", "city hall, mayors office"], ["l'office du tourisme (m)", "chamber of commerce"], ["un hôpital", "hospital"], ["un aéroport", "airport"], ["une gare", "train station"], ["une école (6 ans à 11 ans)", "school"], ["un collège (11 ans à 15 ans)", "junior high, middle school"], ["un lycée (15 ans à 18 ans)", "high school"], ["une université", "university"], ["une bibliothèque", "library"], ["une église", "church"], ["une cathédrale", "cathedral"], ["une mosquée", "mosque"], ["une synagogue", "synagogue"], ["un temple", "temple"]], "label": "City Vocabulary" }, { "map": 50, "items": [["une épicerie", "grocery store"], ["une boucherie", "butcher shop"], ["une charcuterie", "pork butchers shop, deli"], ["un traiteur", "deli, catering shop"], ["une boulangerie", "bakery"], ["une pâtisserie", "pastry shop"], ["un bureau de tabac", "tobacco shop"], ["une librairie", "bookstore"], ["une papeterie", "paper/stationery store"], ["une pharmacie", "pharmacy"]], "label": "Shops" }, { "map": 51, "items": [["Où se trouve... ?", "Where is... ?"], ["(Où se trouve la poste?)", "(Where is the post office?)"], ["à côté (de)", "beside, next to"], ["à deux pas (de)", "just a step from"], ["à droite (de)", "on the right"], ["à gauche (de)", "on the left"], ["au bout (de)", "at the far end of"], ["au carrefour (de)", "at the intersection of"], ["au centre", "in the center"], ["au coin (de)", "at the corner of"], ["chez", "at someones house"], ["derrière", "behind"], ["devant", "in front of"], ["en face (de)", "facing, opposite"], ["en ville", "in the city"], ["loin (de)", "far"], ["près (de)", "near, close"], ["sous", "under"], ["sur", "on"], ["sur votre droite/gauche", "on your right/left"], ["tout droit", "straight ahead"], ["tout près", "nearby"]], "label": "Giving Directions" }, { "map": 52, "items": [["premier, première", "first"], ["deuxième", "second"], ["troisième", "third"], ["quatrième", "fourth"], ["cinquième", "fifth"], ["sixième", "sixth"], ["septième", "seventh"], ["huitième", "eighth"], ["neuvième", "ninth"], ["dixième", "tenth"], ["onzième", "eleventh"], ["douzième", "twelfth"], ["treizième", "thirteenth"], ["quatorzième", "fourteenth"], ["quinzième", "fifteenth"], ["seizième", "sixteenth"], ["dix-septième", "seventeenth"], ["dix-huitième", "eighteenth"], ["dix-neuvième", "nineteenth"], ["vingtième", "twentieth"]], "label": "Ordinal Numbers" }, { "map": 53, "items": [["aller", "to go"], ["sortir", "to go out"], ["partir", "to leave"], ["rentrer", "to go home, to go back"], ["retourner", "to return"], ["arriver", "to arrive"], ["entrer", "to enter"], ["rester", "to stay"], ["monter", "to go up, to go upstairs, to climb"], ["descendre", "to go down, to go downstairs"], ["tomber", "to fall"], ["passer", "to pass, to go by (intransitive)"], ["naître", "to be born"], ["mourir", "to die"]], "label": "Movement Verbs" }, { "map": 54, "items": [["se déplacer (en ville)", "to get around (town)"], ["prendre le métro, un taxi, etc.", "to take the metro, a taxi, etc."], ["aller à pied", "to go on foot"], ["marcher", "to walk"], ["tourner", "to turn"], ["traverser", "to cross"], ["continuer", "to continue"], ["demander", "to ask (for)"], ["se trouver", "to be found, to be located"], ["attendre", "to wait for"], ["entendre", "to hear"], ["perdre", "to lose"], ["rendre", "to hand in, give back"], ["rendre visite à quelqu'un", "to visit someone"], ["répondre", "to answer"], ["vendre", "to sell"]], "label": "Getting Around" }, { "map": 55, "items": [["avoir: j'ai eu ...", "boire: j'ai bu ..."], ["être: j'ai été ...", "croire: j'ai cru ..."], ["faire: j'ai fait ...", "voir: j'ai vu ..."], ["prendre: j'ai pris ...", "mourir: il est mort / elle est mort(e) ..."], ["mettre: j'ai mis ...", "naître: il est né / elle est né(e) ..."]], "label": "Irregular Past Participles" }, { "map": 56, "items": [["les jours fériés", "national holidays (see * below)"], ["le Jour de l'An, le premier janvier *", "New Year's Day"], ["la Chandeleur, le 2 février", "Candlemas"], ["la Saint-Valentin, le 14 février", "Valentine's Day"], ["le Carnaval (Mardi Gras)", "Mardi Gras, Carnival"], ["La pâque juive / Pessach", "Passover"], ["Pâques *", "Easter"], ["le premier avril", "April Fool's Day"], ["la fête du Travail, le 1er mai *", "Labor Day"], ["le 8 mai, la fête de la Victoire *", "VE Day (Victory in Europe)"], ["l'Ascension (f) *", "Ascension Day"], ["la fête des mères", "Mother's Day"], ["la fête des pères", "Father's Day"], ["la Pentecôte", "Pentecost"], ["la fête nationale, le 14 juillet *", "Bastille Day, French National Day"], ["le 15 août, l'Assomption (f) *", "the feast of the Assumption"], ["Halloween", "Halloween"], ["Yom Kippour", "Yom Kippur"], ["Rosh Hashana", "Rosh Hashana"], ["la Toussaint, le 1er novembre *", "All Saints' Day"], ["l'Armistice (m), le 11 novembre *", "Armistice Day"], ["le Ramadan", "Ramadan"], ["Hanouka", "Hannukah"], ["Noël (m), le 25 décembre *", "Christmas"], ["la Saint-Sylvestre, le 31 décembre", "New Year's Eve"]], "label": "Holidays & Celebrations" }, { "map": 58, "items": [["le réveillon", "Xmas or New Year's Eve party"], ["des feux d'artifice (m)", "fireworks"], ["un défilé (militaire)", "(military) parade"], ["une fête", "saint's day, celebration, party"], ["un anniversaire", "birthday, anniversary"], ["un gâteau", "cake"], ["une bougie", "candle"], ["un cadeau", "gift"], ["les noces (f pl)", "wedding"], ["un anniversaire de mariage", "wedding anniversary"], ["une cérémonie", "ceremony"], ["le champagne", "champagne"], ["le muguet", "lily of the valley"], ["des blagues (f)", "jokes"], ["des costumes (m)", "costumes"], ["des crêpes (f)", "crepes"], ["un pique-nique", "picnic"], ["la bûche de Noël", "Yule log (+ cake shaped like Yule log)"], ["une carte de voeux", "greeting card"], ["le gui", "mistletoe"], ["le Père Noël", "Santa Claus"], ["le sapin de Noël", "Christmas tree"], ["la crèche", "nativity"], ["la messe", "mass"], ["le sabbat / le shabbat", "sabbath"]], "label": "Party Vocabulary" }, { "map": 59, "items": [["célébrer", "to celebrate"], ["faire la fête", "to party"], ["fêter", "to celebrate"], ["réveillonner", "to celebrate Xmas / New Year’s Eve"], ["inviter", "to invite"], ["offrir", "to give"], ["donner", "to give"], ["recevoir", "to receive"], ["ouvrir", "to open"], ["souffler", "to blow out (candles)"], ["plaisanter", "to joke"], ["faire un poisson d’avril", "to play a joke (on someone)"], ["faire le pont", "literally 'to make a bridge' *"], ["* The French often take an extra day off from work when a holiday falls on Tuesday or Thursday.", "If the holiday falls on Tuesday, they take Monday off, and if the holiday falls on Thursday, they take Friday off ..."]], "label": "Celebration Verbs" }, { "map": 60, "items": [["une maison", "house"], ["un appartement", "apartment"], ["une résidence universitaire", "university dorm"], ["une pièce", "a room (general term)"], ["une fenêtre", "window"], ["un meuble / des meubles", "a piece of furniture / furniture"], ["le rez-de-chaussée", "ground floor, first floor"], ["un escalier", "staircase, stairs"], ["un balcon", "balcony"], ["une terrasse", "terrace"], ["un jardin", "garden, yard"]], "label": "Housing" }, { "map": 61, "items": [["une entrée", "entranceway"], ["un hall d'entrée", "foyer"], ["un séjour / un living / un salon / une salle de séjour", "living room"], ["une salle à manger", "dining room"], ["une cuisine", "kitchen"], ["un couloir", "hallway"], ["une chambre", "bedroom"], ["une salle de bains", "bathroom"], ["des toilettes (f pl) / des W.C. (m pl)", "toilet"], ["une buanderie", "laundry room"], ["un grenier", "attic"], ["une cave", "cellar, wine cellar"], ["un garage", "garage"]], "label": "Rooms of the House" }, { "map": 62, "items": [["un lit", "bed"], ["une table de nuit", "nightstand"], ["une armoire", "armoire"], ["une commode", "chest of drawers"], ["un bureau", "desk"], ["une étagère", "bookcase"], ["une lampe", "lamp"], ["un placard", "closet"], ["de la moquette", "carpet (wall to wall)"], ["un lecteur DVD / MP3", "DVD / MP3 player"], ["un ordinateur", "computer"], ["un téléphone", "telephone"]], "label": "Bedroom Furniture" }, { "map": 63, "items": [["une baignoire", "bathtub"], ["une douche", "shower"], ["un lavabo", "sink"], ["un miroir", "mirror"]], "label": "Bathroom" }, { "map": 64, "items": [["un canapé / un sofa", "couch"], ["un fauteuil", "armchair"], ["une table basse", "coffee table"], ["une télévision", "television"], ["un tableau / des tableaux", "painting / paintings"], ["un tapis", "area rug or carpet"]], "label": "Living Room" }, { "map": 65, "items": [["une table", "table"], ["une chaise", "chair"], ["un buffet", "hutch, buffet"]], "label": "Dining Room" }, { "map": 66, "items": [["un réfrigérateur / un frigo", "refrigerator / fridge"], ["un congélateur", "freezer"], ["une cuisinière", "stove"], ["un four", "oven"], ["un four à micro-ondes", "microwave"], ["un lave-vaisselle", "dishwasher"], ["un évier", "sink"], ["un placard", "cabinet"], ["une poubelle", "trash can"]], "label": "Kitchen & Chores" }, { "map": 67, "items": [["un lave-linge", "washing machine"], ["un sèche-linge", "dryer"]], "label": "Laundry" }, { "map": 66, "items": [["faire des achats", "to go shopping"], ["faire le marché", "to do the grocery shopping"], ["faire des courses (f pl)", "to do errands"], ["faire le ménage", "to do housework"], ["faire la cuisine", "to cook"], ["faire la vaisselle", "to do the dishes"], ["ranger", "to straighten up"], ["faire le lit", "to make the bed"], ["passer l'aspirateur (m)", "to pass the vacuum cleaner"], ["faire la lessive", "to do laundry"], ["repasser", "to iron"], ["bricoler", "to make home repairs or improvements"]], "label": "Kitchen & Chores" }, { "map": 69, "items": [["ancien(ne)", "old"], ["moderne", "modern"], ["sombre", "dark"], ["clair(e)", "bright, full of light"], ["en désordre", "messy"], ["en ordre", "straightened up"], ["propre", "clean"], ["sale", "dirty"], ["pratique", "practical"], ["confortable", "comfortable"]], "label": "Describing a Home" }, { "map": 70, "items": [["déménager", "to move (change residences)"]], "label": "Moving" }, { "map": 71, "items": [["s'amuser", "to have fun"], ["s'ennuyer", "to be bored"], ["se dépêcher", "to hurry"], ["s'inquiéter", "to worry"], ["se fâcher", "to get angry"]], "label": "Emotions" }, { "map": 72, "items": [["se disputer", "to argue (with one another)"], ["s'entendre", "to get along (with one another)"], ["se parler", "to talk to (one another)"]], "label": "Relationships" }, { "map": 73, "items": [["la télé", "TV"], ["la télécommande", "remote control"], ["une chaîne", "channel"], ["un programme", "television schedule"], ["un feuilleton", "series / soap opera"], ["une série", "series"], ["une émission", "show"], ["un dessin animé", "cartoon"], ["un documentaire", "documentary"], ["une émission de variétés", "variety show"], ["un jeu télévisé", "game show"], ["la télé-réalité", "reality television"], ["un magazine d'actualités (à la télévision)", "news show"], ["les informations (f pl) / les infos (f pl) / le journal", "news"], ["l'actualité (f)", "current events"], ["la météo", "weather report"], ["un reporter /  un journaliste", "reporter / journalist"], ["une interview", "interview"], ["une publicité / une pub", "commercial"], ["un concert", "concert"], ["un film", "movie"], ["un film d'amour", "romantic movie"], ["un film de science-fiction", "science-fiction movie"], ["un film d'horreur", "horror movie"], ["un film d'action / un film d'aventures", "action film / adventure film"], ["un film policier", "detective/police movie"], ["un drame", "drama"], ["une comédie", "comedy (movie, play)"], ["un (film) musical", "musical"], ["une comédie musicale", "musical comedy"], ["un western", "western"], ["en VO / en VF", "original version / French version"], ["avec / sans sous-titres", "with / without subtitles"], ["un acteur / une actrice", "actor / actress"], ["une célébrité", "celebrity"], ["une star / une vedette", "star (refers to men or women)"], ["une personnalité (de la télévision, du cinéma, de la radio...)", "celebrity"], ["le méchant", "the bad guy"]], "label": "TV & Film" }, { "map": 74, "items": [["un kiosque (à journaux)", "news stand"], ["un journal (national, régional)", "newspaper (national, regional)"], ["une bande-dessinée", "comic strip"], ["une petite annonce", "classified ad"], ["un magazine", "magazine"], ["un livre", "book"], ["un roman", "novel"]], "label": "Press & Media" }, { "map": 75, "items": [["une station", "radio station"], ["une chanson", "song"], ["un chanteur / une chanteuse", "singer"], ["un groupe", "a  band"]], "label": "Radio & Music" }, { "map": 76, "items": [["un ordinateur", "computer"], ["un portable", "laptop"], ["le web", "the web"], ["un site", "website"], ["une page d'accueil", "homepage"], ["un forum", "bulletin board, newsgroup"], ["un moteur de recherche", "search engine"], ["un mot de passe", "password"], ["un email / un courriel", "e-mail"], ["en ligne", "online"], ["un lien", "link"]], "label": "Internet & Technology" }, { "map": 77, "items": [["un (téléphone) portable", "cell phone"], ["un répondeur / une boîte vocale", "voicemail"], ["un texto", "text message"]], "label": "Mobile Phones" }, { "map": 78, "items": [["Allô...", "Hello..."], ["T'es où?", "Where are you at / what are you doing?"], ["Est-ce que je peux parler à...", "May I speak to..."], ["Je voudrais un renseignement.", "I would like some information."], ["Un instant s'il vous plaît.", "Please hold. / One moment please."], ["Ne quittez pas.", "Stay on the line."], ["Je vous le / la passe.", "I'm putting you through to him / her. / I'm connecting you to him / her."], ["Quel est votre numéro de téléphone?", "What is your phone number?"], ["Est-ce que vous voulez laisser un message?", "Do you want to leave a message?"], ["Pouvez-vous rappeler à 15h?", "Could you call back at 3 p.m.?"], ["Qui est à l'appareil?", "Who's on the phone?"]], "label": "Phone Expressions" }, { "map": 79, "items": [["célèbre", "famous"], ["amusant(e) / comique / marrant(e) / drôle", "funny"], ["doublé(e)", "dubbed"], ["effrayant(e)", "frightening"], ["ennuyeux / ennuyeuse", "boring"], ["étranger / étrangère", "foreign"], ["gratuit(e)", "free"], ["optimiste", "optimistic / hopeful"], ["pessimiste", "pessimistic"], ["réaliste", "realistic"], ["satirique", "satirical"], ["tragique", "tragic"], ["triste", "sad"], ["violent(e)", "violent"]], "label": "Media Adjectives" }, { "map": 80, "items": [["surfer / aller (sur internet)", "to surf (the web)"], ["cliquer", "to click"], ["télécharger", "to download"], ["décrire", "to describe"], ["dire", "to say"], ["écrire", "to write"], ["durer", "to last"], ["lire", "to read"], ["montrer", "to show"], ["passer (du temps)", "to spend (time)"]], "label": "Media Verbs" }, { "map": 102, "items": [["Qu'est-ce qui se passe?", "What is going on?"], ["Qu'est-ce qui t'intéresse?", "What interests you?"], ["Qu'est-ce qui t'énerve?", "What bothers you?"], ["Qu'est-ce qui te fait peur?", "What scares you?"], ["Qu'est-ce qui te fait plaisir?", "What pleases you?"], ["Qu'est-ce qui t'amuse?", "What amuses you?"]], "label": "Horoscope Signs" }, { "map": 81, "items": [["un défilé de mode", "fashion show"], ["une marque", "brand"], ["un chapeau", "hat"], ["une casquette", "cap"], ["des vêtements (m)", "clothes"], ["un survêtement / un jogging", "tracksuit"], ["des sous-vêtements", "underwear"], ["un soutien-gorge", "bra"], ["un slip", "briefs"], ["une culotte", "panties"], ["un caleçon / boxer", "boxers"], ["une chemise", "man's shirt"], ["un chemisier", "blouse"], ["un polo", "polo shirt"], ["un tee-shirt", "T-shirt"], ["un pull", "sweater"], ["un pantalon", "(a pair of) pants"], ["un jean (sing.)", "jeans"], ["un short (sing.)", "(shorter) shorts"], ["un bermuda", "(longer) shorts"], ["une ceinture", "belt"], ["des chaussettes (f pl)", "socks"], ["des chaussures (f pl)", "shoes"], ["des baskets (f pl)", "basketball shoes"], ["des bottes (f pl)", "boots"], ["des sandales (f pl)", "sandals"], ["des tennis (f pl)", "tennis shoes"], ["des tongs", "flip-flops"], ["des talons (m) / des chaussures à talons", "high-heels"], ["une robe", "dress"], ["une jupe", "skirt"], ["un tailleur", "woman's suit"], ["un costume", "man's suit"], ["une cravate", "tie"], ["des lunettes (f) de soleil", "sunglasses"], ["un maillot de bain", "swimsuit"], ["un blouson", "short jacket, leather jacket"], ["une veste", "jacket"], ["un manteau", "coat"], ["un anorak", "parka"], ["un imperméable", "raincoat"], ["une écharpe", "scarf"], ["des gants (m)", "gloves"]], "label": "Clothing" }, { "map": 82, "items": [["la course à pied / faire de la course à pied", "running / to go running"], ["le footing / le jogging / faire du footing / du jogging", "jogging / to go jogging"], ["le roller / faire du roller", "roller blading / to go roller blading"], ["le cyclisme / faire du cyclisme", "cycling / to go cycling"], ["l'escalade (f) / faire de l'escalade", "rock-climbing / to go rock-climbing"], ["la musculation / faire de la musculation", "weight training / to train with weights"], ["la natation / faire de la natation", "swimming / to go swimming"], ["le canoë / faire du canoë", "canoeing / to go canoeing"], ["le kayak / faire du kayak", "kayaking / to go kayaking"], ["la peinture / faire de la peinture", "painting / to paint (art)"], ["les échecs (m) / jouer aux échecs", "chess / to play chess"], ["le yoga / faire du yoga", "yoga"], ["le surf / faire du surf", "surfing"], ["le cheval / faire du cheval", "horseback riding"]], "label": "Sports & Leisure" }, { "map": 83, "items": [["une allergie", "allergy"], ["la grippe", "the flu"], ["une migraine", "migraine headache"], ["un rhume", "a cold"], ["des médicaments (m)", "medicine"], ["des vitamines (f)", "vitamins"], ["un somnifère", "sleeping pill"]], "label": "Health & Illness" }, { "map": 84, "items": [["la gorge", "throat"], ["le bras", "arm"], ["le coude", "elbow"], ["le poignet", "wrist"], ["la main", "hand"], ["le doigt", "finger"], ["la poitrine", "chest"], ["le ventre", "stomach"], ["le dos", "back"], ["le derrière", "rear, behind"], ["les fesses (f)", "buttocks"], ["la jambe", "leg"], ["le genou / les genoux", "knee / knees"], ["la cheville", "ankle"], ["le pied", "foot"], ["les orteils (m)", "toes"]], "label": "Body Parts" }, { "map": 85, "items": [["à la mode / branché(e)", "in fashion"], ["démodé(e)", "out of style"], ["décontracté(e)", "casual"], ["habillé(e)", "dressy"], ["discipliné(e)", "disciplined"], ["sportif / sportive", "athletic"], ["stressé(e)", "stressed"], ["malade", "sick"]], "label": "Lifestyle Adjectives" }, { "map": 86, "items": [["s'habiller", "to get dressed"], ["mettre", "to put (on)"], ["porter", "to wear"], ["aller bien / aller mal", "to fit well/poorly"], ["grossir", "to gain weight"], ["être au régime / faire un régime", "to be on a diet"], ["faire du sport", "to exercise"], ["mincir", "to lose weight"], ["être en forme", "to be in shape"], ["tomber malade", "to get sick"], ["tousser", "to cough"], ["avoir mal à...", "to hurt (body part)"], ["(avoir mal à la tête, au dos, aux pieds, etc)", "(to have a headache, a backache, sore feet, etc)"], ["se reposer", "to rest"], ["se détendre", "to relax"], ["fumer", "to smoke"], ["être en bonne santé", "to be in good health"]], "label": "Health Verbs" }, { "map": 87, "items": [["Il faut + infinitif", "It is necessary (to)"], ["Il vaut mieux + infinitif", "It is advisable (to), It is better (to)"], ["Il est important de + infinitif", "It is important (to)"], ["Il est nécessaire de + infinitif", "It is necessary (to)"], ["Il est essentiel de + infinitif", "It is essential (to)"], ["Il est indispensable de + infinitif", "It is essential (to)"], ["Il est amusant de ...", "It is fun (to) ..."], ["Il est difficile de ...", "It is difficult (to) ..."], ["Il est facile de ...", "It is easy (to) ..."], ["Il est fatigant de ...", "It is tiring/annoying (to) ..."]], "label": "Impersonal Expressions" }, { "map": 88, "items": [["la rentrée", "beginning of school year"], ["le collège", "junior high, middle school"], ["le lycée", "high school"], ["un lycéen / une lycéenne", "high school student"], ["la seconde", "first year of high school"], ["la première", "second year of high school"], ["la terminale", "final year of high school"], ["le baccalauréat / le bac", "baccalaureate exam"], ["un bachelier / une bachelière", "student who has passed the bac"], ["un concours (d'entrée)", "competitive entrance exam"], ["la fac", "college, university"], ["la Faculté des Beaux-Arts", "school of fine arts"], ["la Faculté de Lettres et des Sciences Humaines", "school of humanities/liberal arts"], ["la Faculté de Médecine", "school of medicine"], ["la Faculté de Pharmacie", "school of pharmacy"], ["la Faculté des Sciences", "school of sciences"], ["la Faculté de Droit", "law school"], ["L'Ecole de Commerce (f)", "business school"], ["les Grandes Écoles (f)", "elite professional schools"], ["une résidence universitaire", "dormitory"], ["un restaurant universitaire (un restau-U)", "university cafeteria"], ["une cafétéria", "cafeteria"], ["un amphithéâtre / un amphi", "amphitheater"], ["une salle de classe", "classroom"], ["un cours (de maths...)", "a class (math class...)"], ["un cours magistral (des cours magistraux)", "large lecture class"], ["un laboratoire / un labo", "laboratory / lab"], ["une bibliothèque", "library"], ["les devoirs (m)", "homework"], ["une copie", "student paper"], ["un exposé oral", "oral presentation"], ["un examen", "test, exam"], ["une note", "grade"], ["les résultats", "results, grades"], ["un bulletin de notes", "grade report"], ["un emploi du temps", "schedule"], ["une carte d'étudiant", "student ID card"], ["un stage", "internship"], ["un diplôme", "a diploma, degree"]], "label": "University" }, { "map": 89, "items": [["l'architecture (f)", "architecture"], ["l'art (m)", "art"], ["le dessin", "drawing, design"], ["la musique", "music"], ["la peinture", "painting"], ["la communication", "communications"], ["la comptabilité", "accounting"], ["le droit", "law"], ["l'économie (f)", "economics"], ["la géographie", "geography"], ["l'histoire (f)", "history"], ["l'informatique (f)", "computer science"], ["les langues (f)", "languages"], ["le chinois", "Chinese"], ["l'allemand (m)", "German"], ["l'anglais (m)", "English"], ["l'espagnol (m)", "Spanish"], ["le français", "French"], ["l'italien (m)", "Italian"], ["le latin", "Latin"], ["la linguistique", "linguistics"], ["la littérature", "literature"], ["les mathématiques (f) / les maths", "math"], ["la médecine", "medicine"], ["la pharmacie", "pharmacy"], ["la philosophie", "philosophy"], ["la psychologie", "psychology"], ["la biologie", "biology"], ["la chimie", "chemistry"], ["la physique", "physics"], ["les sciences politiques (f)", "political science"], ["la sociologie", "sociology"]], "label": "Academic Subjects II" }, { "map": 90, "items": [["chargé(e)", "full, busy (referring to schedule)"], ["occupé(e)", "busy"], ["prochain(e)", "next"], ["dernier / dernière", "last"]], "label": "University Life" }, { "map": 90, "items": [["s’inscrire (à la fac, au ciné-club…)", "to register, enroll (in)"], ["régler (les frais d’inscription)", "to pay (one’s tuition/fees)"], ["En quelle matiére est-ce que tu te spécialises?", "What's your major?"], ["suivre", "to take (a course), to follow"], ["aller en cours", "to attend class"], ["faire ses devoirs", "to do one’s homework"], ["faire un effort", "to make an effort"], ["faire des progrès", "to improve"], ["se renseigner", "to find out about, to get information"], ["apprendre", "to learn"], ["comprendre", "to understand"], ["passer un examen", "to take an exam"], ["réussir (à) un examen", "to pass (an exam), to succeed (in)"], ["réussir à + infinitif", "to succeed at ..."], ["avoir la moyenne", "to receive a passing grade"], ["recevoir son diplôme", "to graduate, to complete one’s studies"], ["être bonne / bon en ...", "to be good in/at ..."], ["être mauvais(e) en ...", "to be bad in/at ..."], ["être nul(le) en… [slang]", "to suck in/at ..."], ["se décourager", "to be discouraged"], ["sécher un cours", "to skip a class"], ["rater", "to fail"], ["redoubler", "to repeat a grade/course"], ["quitter", "to leave (something, someone or some place)"]], "label": "University Life" }, { "map": 92, "items": [["les affaires (f pl)", "business"], ["une entreprise / une boîte [slang]", "firm, business"], ["un bureau", "office"], ["un client / une cliente", "client, customer"], ["un métier", "profession"], ["un emploi / un travail / un job / un boulot [slang]", "job"], ["un poste à mi-temps/à plein temps", "half-time/full-time position"], ["un chômeur / une chômeuse", "unemployed person"], ["le marché du travail", "job market"], ["les petites annonces (f pl)", "classified ads"], ["un curriculum vitae (un CV)", "résumé"], ["un entretien", "interview"], ["les avantages sociaux (m)", "benefits (health insurance, retirement plan, etc.)"], ["un salaire", "salary"], ["les congés", "vacation days"], ["une promotion", "promotion"], ["la retraite", "retirement"], ["un retraité / une retraitée", "retired person"]], "label": "Work & Business" }, { "map": 93, "items": [["un/une fonctionnaire", "civil servant, government worker"], ["un facteur", "mail carrier"], ["un militaire", "person in the armed services"], ["un policier", "police officer"], ["un pompier", "firefighter"], ["un enseignant / une enseignante", "teacher"], ["une assistante sociale", "social worker"], ["un médecin", "doctor, physician"], ["un/une dentiste", "dentist"], ["un infirmier / une infirmière", "nurse"], ["un kinésithérapeute / un kiné", "chiropractor, physical therapist"], ["un/une psychologue", "psychologist"], ["un opticien / une opticienne", "optician"], ["un pharmacien / une pharmacienne", "pharmacist"], ["un avocat / une avocate", "lawyer"], ["un banquier / une banquière", "banker"], ["un chef d'entreprise", "company head, business owner"], ["un patron / une patronne", "boss"], ["un P.D.G. (Président Directeur Général)", "CEO"], ["un cadre", "executive"], ["un/ une comptable", "accountant"], ["un publicitaire", "advertising agent"], ["un/une secrétaire", "secretary"], ["un employé / une employée (de bureau)", "employee (office employee)"], ["un ouvrier / une ouvrière", "blue collar worker"], ["une usine", "factory"], ["un informaticien / une informaticienne", "computer scientist"], ["un ingénieur", "engineer"], ["un chercheur", "researcher"], ["un technicien / une technicienne", "technician"], ["un/une propriétaire", "owner"], ["un commerçant / une commerçante", "shopkeeper, store owner"], ["un vendeur / une vendeuse", "salesperson"], ["un caissier / une caissière", "cashier"], ["un restaurateur", "restaurant owner"], ["un cuisinier / une cuisinière", "cook"], ["un serveur / une serveuse", "wait person"], ["un boulanger / une boulangère", "a baker"], ["un couturier / une couturière", "fashion designer, seamstress"], ["un coiffeur / une coiffeuse", "hairdresser"], ["un critique (de films, d'art, etc.)", "critic (film, art, etc.)"], ["un écrivain", "writer"], ["un journaliste", "reporter, journalist"], ["un peintre / une peintre", "painter"], ["un musicien / une musicienne", "musician"], ["un voyagiste / un agent de voyage", "travel agent"], ["une femme au foyer", "housewife"]], "label": "Professions" }, { "map": 94, "items": [["dur(e) / difficile", "hard, tough, difficult"], ["dynamique", "dynamic"], ["honnête", "honest"], ["passionnant(e)", "enthralling, fascinating"], ["utile", "useful"], ["inutile", "useless"], ["d'occasion (une voiture d'occasion)", "second-hand, used"]], "label": "Work Adjectives" }, { "map": 95, "items": [["chercher une situation", "to look for a job"], ["faire une demande d'emploi", "to apply for a job"], ["prendre un rendez-vous", "to make an appointment"], ["remplir un formulaire", "to fill out a form"], ["embaucher / être embauché(e)", "to hire / to be hired"], ["gérer", "to manage, direct, organize"], ["gagner sa vie / gagner de l'argent", "to earn a living / to earn money"], ["payer des impôts", "to pay taxes"], ["être au chômage", "to be unemployed"], ["être à la retraite", "to be retired"]], "label": "Job Search Verbs" }, { "map": 96, "items": [["une banque", "bank"], ["une caisse d'épargne", "savings and loan association"], ["un compte (bancaire)", "(bank) account"], ["un distributeur (automatique de billets)", "ATM (automatic teller machine) _______"], ["un guichet automatique", "_______"], ["l'euro", "euro (currency)"], ["un héritage", "inheritance"], ["les dépenses", "expenses"], ["les factures (f pl)", "bills"], ["le logement", "housing"], ["le loyer", "rent"], ["l'alimentation", "food"], ["le divertissement / les loisirs", "entertainment"], ["la facture de téléphone", "telephone bill"], ["les frais (m) de scolarité", "tuition, education expenses"], ["l'emprunt-étudiant", "student loan"], ["l'assurance", "insurance"], ["l'essence (f)", "gas"], ["les charges", "utilities"], ["les impôts (m pl)", "taxes"], ["les dettes (f pl)", "debts"]], "label": "Finance" }, { "map": 97, "items": [["des actions (f pl)", "stocks"], ["un portefeuille", "portfolio (also, wallet)"]], "label": "Investments" }, { "map": 98, "items": [["généreux / généreuse", "generous"], ["dépensier / dépensière", "spendthrift"], ["radin / radine [slang]", "miserly, stingy"], ["économe", "economical, frugal"], ["bon marché / pas cher", "inexpensive"], ["être en solde", "to be on sale"], ["un prix intéressant", "a good price"], ["cher / chère", "expensive"], ["être fauché(e) [slang]", "to be broke"], ["être aisé(e)", "to be well off"], ["satisfait(e)", "satisfied, fulfilled"]], "label": "Money Adjectives" }, { "map": 99, "items": [["coûter", "to cost"], ["dépenser", "to spend"], ["rembourser", "to reimburse"], ["emprunter", "borrow"], ["avoir les moyens de", "to have the means to"], ["louer", "to rent"], ["faire un budget", "to establish a budget"], ["dépasser son budget", "to go beyond one's budget"], ["avoir des dettes", "to have debts"], ["gaspiller", "to waste"], ["faire des économies", "to save money"], ["offrir", "to give, to offer"]], "label": "Money Verbs" }, { "map": 100, "items": [["un couple", "couple"], ["le coup de foudre", "love at first sight"], ["l'amour passion (m)", "passionate love"], ["le grand amour", "the love of one's life"], ["un rendez-vous", "date (also an appointment)"], ["une relation", "relationship"], ["les fiançailles (f pl)", "engagement"], ["un fiancé / une fiancée", "fiancé / fiancée"], ["le mariage", "marriage, wedding"], ["la compatibilité", "compatibility / matching"], ["l'apparence physique", "physical appearance"], ["le bonheur", "happiness"], ["la communication", "interaction / communication"], ["le sens de l'humour", "sense of humor"], ["le respect", "respect"], ["l'honnêteté (f)", "honesty"], ["le romantisme", "romanticism"]], "label": "Love & Relationships" }, { "map": 101, "items": [["draguer", "to try to pick up, to hit on someone, to flirt"], ["être amis", "to be friends"], ["vivre ensemble", "to live together"], ["s'embrasser", "to kiss each other"], ["s'aimer", "to love each other"], ["se pacser", "to enter a PACS contract"], ["se fiancer", "to get engaged"], ["se marier", "to get married"], ["rompre", "to break up"], ["divorcer", "to get divorced"], ["tromper", "to cheat on"]], "label": "Relationship Verbs" }, { "map": 102, "items": [["Quel est ton signe?", "What's your sign?"], ["le signe", "sign"], ["le Capricorne", "Capricorn"], ["le Verseau", "Aquarius"], ["les Poissons (m)", "Pisces"], ["le Bélier", "Aries"], ["le Taureau", "Taurus"], ["les Gémeaux (m)", "Gemini"], ["le Cancer", "Cancer"], ["le Lion", "Leo"], ["la Vierge", "Virgo"], ["la Balance", "Libra"], ["le Scorpion", "Scorpio"], ["le Sagittaire", "Sagittarius"]], "label": "Horoscope Signs" }];
+    <!-- ADD MAP MODAL -->
+    <div class="modal-overlay hidden" id="modal-add-map">
+        <div class="modal">
+            <h2>✨ New Custom Map</h2>
+            <p class="modal-sub">Create your own vocabulary set. Paste word pairs or add them one by one.</p>
+            <div class="form-row">
+                <label>Map Title</label>
+                <input type="text" id="new-map-title" placeholder="e.g. My Irregular Verbs">
+                <div class="error-msg" id="err-title">Please enter a title.</div>
+            </div>
+            <div class="form-row">
+                <label>Paste Word Pairs</label>
+                <textarea id="new-map-paste" placeholder="Paste lines like:
+fr — en
+bonjour — hello
+merci — thank you
 
-        let currentMap = null;
+Or leave blank and add words below."></textarea>
+                <div class="form-hint">Each line: <strong>French — English</strong> (separated by —)</div>
+                <div class="parsed-count" id="parsed-count"></div>
+            </div>
+            <div class="form-row">
+                <label>Or Add Words Manually</label>
+                <div style="display:flex;gap:0.5rem">
+                    <input type="text" id="add-fr" placeholder="French" style="flex:1">
+                    <input type="text" id="add-en" placeholder="English" style="flex:1">
+                    <button onclick="addWordToNew()"
+                        style="padding:0.65rem 1rem;background:rgba(123,79,212,0.3);border:1px solid rgba(123,79,212,0.5);border-radius:8px;color:#c9b8f0;cursor:pointer;font-size:0.9rem;flex-shrink:0">＋</button>
+                </div>
+            </div>
+            <div id="manual-words-list"></div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-add-map')">Cancel</button>
+                <button class="btn-save purple" onclick="saveNewMap()">Create Map</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD WORD MODAL -->
+    <div class="modal-overlay hidden" id="modal-add-word">
+        <div class="modal" style="max-width:400px">
+            <h2>＋ Add Word</h2>
+            <p class="modal-sub" id="add-word-subtitle">Adding to current map</p>
+            <div class="form-row">
+                <label>French</label>
+                <input type="text" id="aw-fr" placeholder="French expression">
+            </div>
+            <div class="form-row">
+                <label>English</label>
+                <input type="text" id="aw-en" placeholder="English translation">
+                <div class="error-msg" id="err-word">Both fields are required.</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-add-word')">Cancel</button>
+                <button class="btn-save purple" onclick="saveNewWord()">Add Word</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ─── BASE VOCAB (from file) ───────────────────────────────────────────────
+        const BASE_VOCAB = [{ "map": 1, "items": [["Je m'appelle ...", "My name is ..."], ["Je suis de ...", "I am from ..."], ["Je suis étudiant en ... (français, maths, etc.)", "I am a student (male) in ... (French, math, etc.)"], ["Je suis étudiante en...(français, maths, etc.)", "I am a student (female) in ... (French, math, etc.)"], ["Il/Elle s'appelle ...", "His/Her name is ..."], ["Il/Elle est de ...", "He/She is from ..."], ["Il est étudiant en ... (français, maths, etc.)", "He is a student (male) in ... (French, math, etc.)"], ["Elle est étudiante en ... (français, maths, etc.)", "She is a student (female) in ... (French, math, etc.)"]], "custom": false, "label": "Introductions" }, { "map": 2, "items": [["le commerce", "business"], ["la comptabilité", "accounting"], ["les langues (f)", "languages"], ["l'anglais (m)", "English"], ["le français", "French"], ["l'espagnol (m)", "Spanish"], ["la littérature", "literature"], ["l'histoire (f)", "history"], ["la géographie", "geography"], ["les sciences politiques", "political science"], ["les mathématiques/les maths (f)", "math"], ["les sciences (f)", "sciences"], ["la biologie", "biology"], ["la chimie", "chemistry"], ["l'informatique (f)", "computer science"], ["la musique", "music"], ["la philosophie", "philosophy"], ["la psychologie", "psychology"]], "custom": false, "label": "Academic Subjects" }, { "map": 4, "items": [["le cafard", "cockroach"], ["le chat / la chatte / la minette", "cat / female cat / kitty"], ["l'écureuil", "squirrel"], ["l'escargot", "snail"], ["la fourmi", "ant"], ["le tatou", "armadillo"]], "custom": false, "label": "Animals" }, { "map": 5, "items": [["Monsieur", "Sir"], ["Madame", "Ma'am (Mrs.)"], ["Mademoiselle", "Miss"], ["Bonjour, Monsieur", "Good day (Hello), Sir"], ["Bonsoir", "Good evening"], ["Au revoir", "Goodbye"], ["Salut!", "Hi!"], ["À tout à l'heure!", "See you in a little while."], ["À ce soir.", "See you this evening."], ["À demain.", "See you tomorrow."], ["À bientôt.", "See you soon."], ["Comment vous appelez-vous?", "What's your name? (formal)"], ["Comment tu t'appelles? (Comment t'appelles-tu?)", "What's your name? (informal)"], ["Je m'appelle ...", "My name is ..."], ["Comment allez-vous?", "How are you? (formal)"], ["Comment vas-tu?", "How are you? (informal)"], ["Je vais très bien, merci.", "I am very well, thank you."], ["Je vais bien, merci.", "I am fine, thank you."], ["Pas mal, merci.", "Not bad, thank you."], ["Comment ça va?", "How are things going?"], ["Bien, merci!", "Great, thanks!"], ["Ça va (bien)?", "Are things going (well)?"], ["Ça va bien.", "Things are going (well)."], ["Et vous? Vous êtes d'où?", "And you? Where are you from? (formal)"], ["Et toi? Tu es d'où?", "And you? Where are you from? (informal)"]], "custom": false, "label": "Greetings" }, { "map": 6, "items": [["Monsieur, je vous présente ...", "Sir, I would like to introduce to you ... (formal)"], ["Je te présente ...", "This is ... (informal)"], ["Voici ...", "This is ..."], ["Qui est-ce?", "Who is it?"], ["C'est ...", "It's ..."], ["Ce sont ...", "They are ..."], ["Comment s'appelle-t-il/elle?", "What's his/her name?"], ["Il/Elle s'appelle ...", "His/Her name is ..."], ["Il/Elle est de ...", "He/She is from ..."], ["Comment s'appellent-ils/elles?", "What are their names?"], ["Ils/Elles s'appellent ...", "Their names are ..."], ["Qu'est-ce qu'il/elle fait?", "What does he/she do?"], ["Qu'est-ce qu'ils/elles font?", "What do they do?"], ["Il est ... Elle est ...", "He/She is a/an ..."], ["acteur / actrice", "actor / actress"], ["architecte", "architect"], ["chanteur / chanteuse", "singer"], ["coiffeur / coiffeuse", "hair dresser"], ["dentiste", "dentist"], ["ingénieur", "engineer"], ["journaliste", "journalist"], ["médecin", "doctor"], ["professeur", "teacher, professor"], ["retraité / retraitée", "retired man/woman"], ["stagiaire", "intern"]], "custom": false, "label": "Introductions & Professions" }, { "map": 7, "items": [["Qu'est-ce que c'est?", "What is it?"], ["C'est ...", "It's ..."], ["C'est une salle de classe.", "It's a classroom."], ["Dans la salle de classe, il y a ...", "In the classroom, there is ..."], ["une porte", "door"], ["une fenêtre", "window"], ["un tableau (noir)", "blackboard"], ["une télévision", "television"], ["une carte (du monde)", "map (of the world)"], ["une affiche", "poster"], ["une chaise", "chair"], ["un bureau", "desk"], ["Sur le bureau, il y a ...", "On the desk, there is ..."], ["une craie", "chalk"], ["un crayon", "pencil"], ["un stylo", "pen"], ["un cahier", "notebook"], ["un livre", "book"], ["un dictionnaire", "dictionary"], ["un sac à dos", "backpack"], ["Au labo, il y a ...", "In the lab, there are ..."], ["des ordinateurs (m)", "computers"], ["Les étudiants travaillent!", "The students work!"], ["des devoirs (m)", "homework"], ["un exercice", "exercise"], ["un examen", "test"]], "custom": false, "label": "Classroom Objects" }, { "map": 8, "items": [["Écoutez.", "Listen."], ["Écrivez.", "Write."], ["Levez le doigt.", "Raise your finger (hand)."], ["Répétez.", "Repeat."], ["Ouvrez vos livres.", "Open your books."], ["Ouvrez le livre à la page ...", "Turn to page ..."], ["s'il vous plaît", "please"], ["Vous comprenez?", "Do you understand?"], ["Oui, je comprends.", "Yes, I understand."], ["Non, je ne comprends pas.", "No, I don't understand."], ["Que veut dire ...?", "What does ... mean?"], ["Comment dit-on ...?", "How do you say ...?"], ["Voici ...", "Here is ... (here are ...)"], ["Voilà ...", "There is ... (there are ...)"], ["Il y a ...", "There is, there are ..."], ["Il y a combien de ...?", "There are how many ...?"]], "custom": false, "label": "Classroom Commands" }, { "map": 10, "items": [["le calendrier", "calendar"], ["le jour", "day"], ["Quels sont les jours de la semaine?", "What are the days of the week?"], ["lundi", "Monday"], ["mardi", "Tuesday"], ["mercredi", "Wednesday"], ["jeudi", "Thursday"], ["vendredi", "Friday"], ["samedi", "Saturday"], ["dimanche", "Sunday"], ["C'est quel jour?", "What day is it?"], ["C'est lundi.", "It's Monday."], ["aujourd'hui", "today"], ["demain", "tomorrow"], ["la semaine", "week"], ["la semaine prochaine", "next week"], ["la semaine dernière", "last week"], ["Quelle est la date?", "What's the date?"], ["C'est le premier septembre.", "It's September 1st."], ["C'est le deux octobre.", "It's October 2nd."], ["C'est le 30 août.", "It's August 30th."], ["le mois", "month"], ["Quels sont les mois de l'année?", "What are the months of the year?"], ["janvier", "January"], ["février", "February"], ["mars", "March"], ["avril", "April"], ["mai", "May"], ["juin", "June"], ["juillet", "July"], ["août", "August"], ["septembre", "September"], ["octobre", "October"], ["novembre", "November"], ["décembre", "December"]], "custom": false, "label": "Days & Months" }, { "map": 11, "items": [["Nom (de famille)", "last name"], ["Prénom(s)", "first (and middle) name(s)"], ["Age", "age"], ["Nationalité", "nationality"], ["Résidence actuelle", "current address"], ["Profession", "profession"], ["Passe-temps préférés", "pastimes"]], "custom": false, "label": "Personal Info" }, { "map": 12, "items": [["Comment vous appelez-vous?", "What is your name?"], ["Quel âge avez-vous?", "How old are you?"], ["Quelle est votre nationalité?", "What is your nationality?"], ["Vous êtes d'où?", "Where are you from?"], ["Où habitez-vous?", "Where do you live?"], ["Que faites-vous dans la vie?", "What do you do for a living?"], ["Quels sont vos passe-temps préférés?", "What are your favorite pastimes?"]], "custom": false, "label": "Questions About You" }, { "map": 13, "items": [["un homme", "man"], ["une femme", "woman, wife"], ["un mari", "husband"], ["un fiancé / une fiancée", "fiancé / fiancée"], ["des parents", "parents, relatives"], ["un père", "father"], ["une mère", "mother"], ["un/une enfant", "child"], ["un fils", "son"], ["une fille", "daughter"], ["un fils unique", "only child (male)"], ["une fille unique", "only child (female)"], ["un frère", "brother"], ["une soeur", "sister"], ["des grands-parents (m)", "grandparents"], ["un grand-père", "grandfather"], ["une grand-mère", "grandmother"], ["un petit-enfant", "grandchild"], ["un oncle", "uncle"], ["une tante", "aunt"], ["un neveu", "nephew"], ["une nièce", "niece"]], "custom": false, "label": "Family" }, { "map": 14, "items": [["un ami / une amie", "friend"], ["un/une camarade", "friend"], ["un copain / une copine", "friend; boyfriend / girlfriend"]], "custom": false, "label": "Friends" }, { "map": 16, "items": [["l'heure (f)", "the time"], ["Quelle heure est-il?", "What time is it?"], ["Il est huit heures.", "It's 8 o'clock."], ["Il est huit heures dix.", "It's ten after 8."], ["Il est huit heures et quart.", "It's quarter after 8."], ["Il est huit heures vingt-cinq.", "It's twenty-five after 8."], ["Il est huit heures et demie.", "It's eight-thirty."], ["Il est neuf heures moins vingt.", "It's twenty to nine."], ["Il est neuf heures moins le quart.", "It's quarter to nine."], ["Il est midi.", "It's noon."], ["Il est midi et demi.", "It's twelve-thirty."], ["Il est minuit.", "It's midnight."], ["Il est trois heures...", "It's three o'clock..."], ["du matin", "in the morning (3 a.m.)"], ["de l'après-midi", "in the afternoon (3 p.m.)"], ["Il est sept heures...", "It's seven o'clock..."], ["du soir", "in the evening (7 p.m.)"]], "custom": false, "label": "Telling Time" }, { "map": 17, "items": [["Il est 10h.", "It's 10 a.m."], ["Il est 12h05.", "It's 12:05 p.m."], ["Il est 13h15.", "It's 1:15 p.m."], ["Il est 15h35.", "It's 3:35 p.m."], ["Il est 18h45.", "It's 6:45 p.m."], ["Il est 22h59.", "It's 10:59 p.m."]], "custom": false, "label": "24h Time" }, { "map": 18, "items": [["avoir", "to have"], ["avoir besoin de...", "to need"], ["avoir envie de...", "to feel like (to want to)"], ["avoir l'intention de...", "to intend (to)"], ["chercher", "to look for"], ["trouver", "to find"], ["(Qui cherche, trouve!)", "(Who looks for (searches), finds!)"], ["tomber amoureux (de) /amoureuse (de)", "to fall in love"], ["embrasser", "to kiss"], ["écouter...", "to listen to..."], ["de la musique", "music"], ["chanter", "to sing"], ["danser", "to dance"], ["aimer", "to like, to love"], ["la musique classique / le jazz /", "classical music / jazz /"], ["le hip-hop / la techno /", "hip-hop / techno /"], ["le sport / le tennis / le football /", "sports / tennis / soccer /"], ["le basket / le golf / le footing", "basketball / golf / running"], ["préférer", "to prefer"], ["adorer", "to adore"], ["détester", "to detest"], ["habiter", "to live"], ["rester à la maison", "to stay at home"], ["étudier", "to study"], ["lire", "to read *"], ["oublier", "to forget"], ["regarder la télévision", "to watch television"], ["téléphoner à", "to telephone"], ["parler", "to speak"], ["jouer...", "to play..."], ["au foot / au tennis / aux cartes", "soccer / tennis / cards"], ["de la guitare / du piano", "guitar / piano"], ["nager", "to swim"], ["rencontrer", "to meet"], ["rêver", "to dream"], ["travailler", "to work"], ["voyager", "to travel"]], "custom": false, "label": "Activities & Hobbies" }, { "map": 19, "items": [["aussi", "also"], ["maintenant", "now"], ["plus tard", "later"], ["beaucoup", "a lot"], ["peu / un peu", "little / a little"], ["rarement", "rarely"], ["parfois", "at times"], ["quelquefois", "sometimes"], ["souvent", "often"], ["toujours", "always"], ["ne ... jamais", "never *"]], "custom": false, "label": "Adverbs of Frequency" }, { "map": 20, "items": [["un continent", "continent"], ["un pays", "country"], ["l'Afrique (f) / africain (e)", "Africa / African"], ["l'Algérie (f) / algérien(ne)", "Algeria / Algerian"], ["le Maroc / marocain(e)", "Morocco / Moroccan"], ["le Sénégal / sénégalais(e)", "Senegal / Senegalese"], ["la Tunisie / tunisien(ne)", "Tunisia / Tunisian"], ["l'Amérique du Nord", "North America"], ["le Canada / canadien(ne)", "Canada / Canadian"], ["les Etats-Unis / américain(e)", "United States / American"], ["le Mexique / mexicain(e)", "Mexico / Mexican"], ["l'Amérique du Sud", "South America"], ["la Guyane française / guyanais(e)", "French Guyana / Guyanese"], ["l'Asie (f) / asiatique", "Asia / Asian"], ["la Chine / chinois(e)", "China / Chinese"], ["le Japon / japonais(e)", "Japan / Japanese"], ["le Vietnam / vietnamien(ne)", "Vietnam / Vietnamese"], ["l'Océanie", "Oceania (the South Sea Islands)"], ["l'Australie (f) / australien(ne)", "Australia / Australian"], ["l'Europe (f) / européen(ne)", "Europe / European"], ["l'Allemagne (f) / allemand(e)", "Germany / German"], ["l'Angleterre (f) / anglais(e)", "England / English"], ["la Belgique / belge", "Belgium / Belgian"], ["l'Espagne (f) / espagnol(e)", "Spain / Spanish"], ["la France / français(e)", "France / French"], ["l'Italie (f) / italien(ne)", "Italy / Italian"], ["la Suisse / suisse", "Switzerland / Swiss"]], "custom": false, "label": "Countries & Nationalities" }, { "map": 21, "items": [["Quel temps fait-il?", "What's the weather?"], ["Il fait beau.", "It's nice."], ["Il fait chaud.", "It's hot."], ["Il fait du soleil. / Il y a du soleil.", "It's sunny."], ["Il fait frais.", "It's cool."], ["Il fait mauvais.", "It's bad."], ["Il fait froid.", "It's cold."], ["Il fait du brouillard. / Il y a du brouillard.", "It's foggy."], ["Il fait du vent. / Il y a du vent.", "It's windy."], ["Il y a des nuages.", "It's cloudy."], ["Il y a des orages.", "There are storms."], ["Il pleut.", "It's raining."], ["Il neige.", "It's snowing."]], "custom": false, "label": "Weather" }, { "map": 22, "items": [["le printemps / au printemps", "spring / in the spring"], ["l'été (m) / en été", "summer / in the summer"], ["l'automne (m) / en automne", "fall / in the fall"], ["l'hiver (m) / en hiver", "winter / in the winter"]], "custom": false, "label": "Seasons" }, { "map": 23, "items": [["la campagne", "countryside"], ["la ville", "town, city"], ["une province", "province"], ["une région", "region"], ["un lac", "lake"], ["un fleuve", "major river (that flows to the sea)"], ["la Loire", "the Loire (river)"], ["la Garonne", "the Garonne (river)"], ["le Rhône", "the Rhône (river)"], ["la Seine", "the Seine (river)"], ["la mer", "sea"], ["la mer Méditerranée", "the Mediterranean Sea"], ["l'océan (m)", "ocean"], ["l'océan Atlantique", "the Atlantic Ocean"], ["la Manche", "the English Channel"], ["la plage", "beach"], ["une forêt", "forest"], ["la montagne", "mountain"], ["les Alpes (f)", "the Alps"], ["le Jura", "the Jura (mountains)"], ["les Pyrénées (f)", "the Pyrenees"], ["le Massif Central", "the Massif Central"], ["les Vosges (f)", "the Vosges"]], "custom": false, "label": "French Geography" }, { "map": 24, "items": [["dans le nord / au nord", "in the north"], ["dans le sud / au sud", "in the south"], ["dans l'est / à l'est", "in the east"], ["dans l'ouest / à l'ouest", "in the west"], ["au centre", "in the center"], ["sur la côte", "on the coast"]], "custom": false, "label": "Directions" }, { "map": 25, "items": [["l'Alsace (f)", "Alsace"], ["la Bourgogne", "Burgundy"], ["la Bretagne", "Brittany"], ["la Côte d'Azur", "the Riviera"], ["la Corse", "Corsica"], ["l'Ile de France (f)", "Ile de France"], ["(la région parisienne)", "(Parisian region)"], ["la Lorraine", "Lorraine"], ["la Normandie", "Normandy"], ["la Provence", "Provence"], ["la Vallée de la Loire", "the Loire Valley"]], "custom": false, "label": "French Regions" }, { "map": 26, "items": [["aller", "to go"], ["aller au cinéma", "to go to the movies"], ["aller en boîte", "to go clubbing"], ["aller au concert", "to go to a concert"], ["aller à l'université", "to go to the university"], ["aller au parc", "to go to the park"], ["faire de la bicyclette", "to go bicycle riding"], ["faire du bateau", "to go boating"], ["faire de la planche à voile", "to go windsurfing"], ["faire des randonnées", "to go hiking"], ["faire du ski", "to go skiing"], ["faire du vélo", "to go cycling"], ["faire de la voile", "to go sailing"], ["faire une promenade", "to take a walk"], ["passer les vacances (f pl)", "spend a vacation"], ["visiter... (un lieu, pas une personne)", "to visit... (a place, not a person)"], ["une cathédrale", "a cathedral"], ["un château", "a castle"], ["une exposition", "an exhibition, show"], ["un monument", "a monument"], ["un musée", "a museum"]], "custom": false, "label": "Activities & Travel" }, { "map": 27, "items": [["Comment voyagez-vous?", "How do you travel?"], ["Je voyage...", "I travel..."], ["en avion / un avion", "by plane / plane"], ["en bateau / un bateau", "by boat / boat"], ["en train / un train", "by train / train"], ["en car / un car", "by tour bus (from city to city) / tour bus"], ["en voiture / une voiture", "by car / car"], ["Comment allez-vous... (à l'université, chez vos parents, au travail, etc.)?", "How do you go... (to the university, to your parents' house, to work, etc.) ?"], ["Je vais...", "I go..."], ["en métro / le métro", "by subway / subway"], ["en bus / un bus", "by bus / bus"], ["en taxi / un taxi", "by taxi / taxi"], ["à moto / une moto", "by motorcycle / motorcycle"], ["à vélo / un vélo", "by bicycle / bicycle"], ["à pied", "on foot"]], "custom": false, "label": "Transportation" }, { "map": 28, "items": [["acheter", "to buy"], ["amener", "to bring somebody (along)"], ["changer", "to change"], ["dormir", "to sleep"], ["emmener", "to take somebody (along)"], ["espérer", "to hope"], ["essayer", "to try"], ["manger", "to eat"], ["nager", "to swim"], ["partager", "to share"], ["partir", "to leave"], ["sortir", "to go out"]], "custom": false, "label": "Verbs" }, { "map": 30, "items": [["la tête", "head"], ["les cheveux (m)", "hair"], ["le front", "forehead"], ["les sourcils (m)", "eyebrows"], ["les yeux (m)", "eyes"], ["le nez", "nose"], ["les joues (f)", "cheeks"], ["les oreilles (f)", "ears"], ["la bouche", "mouth"], ["les dents (f)", "teeth"], ["le menton", "chin"], ["le cou", "neck"]], "custom": false, "label": "Body – Head" }, { "map": 31, "items": [["blanc / blanche", "white"], ["bleu / bleue", "blue"], ["gris / grise", "gray"], ["jaune", "yellow"], ["marron (invariable)", "brown"], ["noir / noire", "black"], ["orange (invariable)", "orange"], ["rouge", "red"], ["vert / verte", "green"], ["violet / violette", "purple"]], "custom": false, "label": "Colors" }, { "map": 32, "items": [["Quelle est votre taille (f)?", "What's your height?"], ["Je fais 1 m. 60.", "I'm one meter 60."], ["de taille moyenne", "of medium height"], ["Combien pesez-vous?", "How much do you weigh?"], ["Je fais 55 kilos.", "I weigh 55 kilos."], ["maigre", "thin, skinny"], ["mince", "thin, slender"], ["De quelle couleur sont vos cheveux?", "What color is your hair?"], ["J'ai les cheveux blonds / bruns / châtain (invariable) / roux.", "I have blond / brown / light brown, chestnut / red hair."], ["Il est... Elle est...", "He is... She is..."], ["blond. blonde.", "a blond."], ["brun. brune.", "a brunette."], ["roux. rousse.", "a red-head."], ["Comment est-il coiffé?", "What is his hair like?"], ["Il a les cheveux longs / courts / bouclés / raides.", "He has long / short / curly / straight hair. _______________"], ["De quelle couleur sont vos yeux?", "What color are your eyes?"], ["J'ai les yeux marron.", "I have brown eyes."], ["Quelle est la forme de son visage?", "What's the shape of his face?"], ["Il a le visage carré / long / rond.", "He has a square / long / round face."], ["Il a le nez retroussé / pointu.", "He has a snub / pointed nose."], ["Il a de grandes oreilles.", "He has big ears."], ["Il/Elle a...", "He/She has..."], ["des lunettes (f)", "glasses"], ["une cicatrice", "scar"], ["un piercing", "body piercing"], ["un tatouage", "tattoo"]], "custom": false, "label": "Appearance & Description" }, { "map": 33, "items": [["actif / active", "active"], ["agréable", "pleasant"], ["ambitieux / ambitieuse", "ambitious"], ["amusant / amusante", "funny"], ["arrogant / arrogante", "arrogant"], ["calme", "calm"], ["compétitif / compétitive", "competitive"], ["créatif / créative", "creative"], ["curieux / curieuse", "curious"], ["débrouillard / débrouillarde", "resourceful"], ["désagréable", "unpleasant"], ["drôle", "funny"], ["égoïste", "selfish"], ["ennuyeux / ennuyeuse", "boring"], ["enthousiaste", "enthusiastic"], ["être de bonne humeur", "to be in a good mood"], ["être de mauvaise humeur", "to be in a bad mood"], ["fou / folle", "crazy"], ["franc / franche", "frank"], ["généreux / généreuse", "generous"], ["gentil / gentille", "kind, nice"], ["heureux / heureuse", "happy"], ["honnête", "honest"], ["hypocrite", "hypocritical"], ["idéaliste", "idealistic"], ["incapable", "incapable, incompetent"], ["indifférent / indifférente", "indifferent"], ["intelligent / intelligente", "intelligent"], ["intéressant / intéressante", "interesting"], ["malhonnête", "dishonest"], ["mignon / mignonne", "cute"], ["naïf / naïve", "naive"], ["nerveux / nerveuse", "nervous"], ["optimiste", "optimistic"], ["paresseux / paresseuse", "lazy"], ["patient / patiente", "patient"], ["pessimiste", "pessimistic"], ["prétentieux / prétentieuse", "pretentious"], ["réaliste", "realistic"], ["réservé / réservée", "reserved"], ["sensible", "sensitive"], ["sérieux / sérieuse", "serious"], ["sincère", "sincere"], ["sociable", "sociable"], ["sportif / sportive", "athletic"], ["têtu / têtue", "stubborn"], ["timide", "shy, timid"], ["tolérant / tolérante", "tolerant"], ["travailleur / travailleuse", "hard-working"]], "custom": false, "label": "Personality Adjectives" }, { "map": 34, "items": [["autre", "other"], ["beau / bel / belle", "beautiful"], ["bon / bonne", "good"], ["grand / grande", "tall, big"], ["gros / grosse", "big, fat"], ["jeune", "young"], ["joli / jolie", "pretty"], ["long / longue", "long"], ["mauvais / mauvaise", "bad"], ["nouveau / nouvel / nouvelle", "new"], ["petit / petite", "little"], ["vieux / vieil / vieille", "old"]], "custom": false, "label": "Common Adjectives" }, { "map": 35, "items": [["se réveiller", "to wake up"], ["se lever", "to get up"], ["se laver", "to wash (oneself)"], ["s'habiller", "to dress (oneself)"], ["se brosser les dents", "to brush your teeth"], ["se brosser les cheveux", "to brush your hair"], ["se maquiller", "to put on make-up"], ["se raser", "to shave"], ["se coucher", "to go to bed"], ["s'amuser", "to have fun"], ["s'ennuyer", "to be bored"], ["se dépêcher", "to hurry"], ["se promener", "to take a walk"], ["se reposer", "to rest"], ["se fâcher", "to get angry"]], "custom": false, "label": "Daily Routine" }, { "map": 36, "items": [["un verre", "glass"], ["une tasse", "cup"], ["un bol", "bowl"], ["une assiette", "plate"], ["un couteau", "knife"], ["une fourchette", "fork"], ["une cuillère *", "spoon"], ["la cuisine", "kitchen, cooking"], ["un repas", "meal"], ["le petit déjeuner", "breakfast"], ["le déjeuner", "lunch"], ["le goûter", "snack"], ["le dîner", "dinner, supper"]], "custom": false, "label": "Meals & Tableware" }, { "map": 37, "items": [["des fruits (m)", "fruits"], ["des bananes (f)", "bananas"], ["des cerises (f)", "cherries"], ["des citrons (m)", "lemons"], ["des fraises (f)", "strawberries"], ["des framboises (f)", "raspberries"], ["des oranges (f)", "oranges"], ["des pamplemousses (m)", "grapefruit"], ["des pêches (f)", "peaches"], ["des poires (f)", "pears"], ["des pommes (f)", "apples"], ["du raisin", "grapes"], ["des légumes (m)", "vegetables"], ["de l'ail (m)", "garlic"], ["des asperges (f)", "asparagus"], ["des aubergines (f)", "eggplants"], ["des carottes (f)", "carrots"], ["des champignons (m)", "mushrooms"], ["des choux (m)", "cabbage"], ["des concombres (m)", "cucumbers"], ["des courgettes (f)", "zucchini"], ["des épinards (m)", "spinach"], ["des haricots verts (m)", "green beans"], ["une/de la laitue", "lettuce"], ["des oignons (m)", "onions"], ["des petits pois (m)", "peas"], ["des poireaux (m)", "leeks"], ["des poivrons verts (m)", "green peppers"], ["des pommes de terre (f)", "potatoes"], ["de la salade", "salad, lettuce"], ["des tomates (f)", "tomatoes"]], "custom": false, "label": "Fruits & Vegetables" }, { "map": 38, "items": [["Chez le boucher, on achète ...", "At the butcher's, you buy ..."], ["de la viande", "meat"], ["du boeuf", "beef"], ["du porc", "pork"], ["du veau", "veal"], ["du canard", "duck"], ["de la dinde", "turkey"], ["du poulet", "chicken"]], "custom": false, "label": "Meat" }, { "map": 39, "items": [["Chez le charcutier, on achète ...", "At the pork butcher's, you buy ..."], ["du jambon", "ham"], ["du pâté", "pâté"], ["des saucisses (f)", "sausages"], ["du saucisson", "hard sausage"]], "custom": false, "label": "Charcuterie" }, { "map": 40, "items": [["Chez le poissonnier, on achète ...", "At the fish merchant's, you buy ..."], ["du poisson", "fish"], ["du saumon", "salmon"], ["de la sole", "sole"], ["du thon", "tuna"]], "custom": false, "label": "Fish" }, { "map": 41, "items": [["Chez l'épicier, on trouve ...", "At the grocer's, you find ..."], ["des céréales (m)", "cereal"], ["un oeuf, des oeufs", "eggs"], ["des noix (f)", "walnuts"], ["des produits laitiers", "dairy products"], ["du beurre", "butter"], ["du lait", "milk"], ["du fromage", "cheese"], ["du yaourt", "yogurt"], ["de la glace", "ice cream"], ["des épices (f)", "spices"], ["du sel", "salt"], ["du poivre", "pepper"], ["de l'huile (f)", "oil"], ["du vinaigre", "vinegar"], ["de la mayonnaise", "mayonnaise"], ["de la moutarde", "mustard"]], "custom": false, "label": "Grocery Items" }, { "map": 42, "items": [["Chez le boulanger, on trouve ...", "At the baker's, you find ..."], ["du pain", "bread"], ["une baguette", "baguette"], ["une brioche", "brioche"], ["un croissant", "croissant"], ["un petit pain", "roll"], ["Chez le patissier, on trouve ...", "At the pastry chef's, you find ..."], ["des pâtisseries (f)", "pastries"], ["un gâteau", "cake"], ["un gâteau au chocolat", "chocolate cake"], ["une tarte", "tart"], ["une tarte aux pommes", "apple tart"], ["une tarte au citron", "lemon tart"], ["une tarte à la fraise", "strawberry tart"]], "custom": false, "label": "Bakery & Pastry" }, { "map": 43, "items": [["Au café, on commande ...", "At the café, you order ..."], ["des boissons non-alcoolisées", "non-alcoholic beverages"], ["du café", "coffee"], ["du thé", "tea"], ["du coca-cola", "cola"], ["de l'eau (f)", "water"], ["de l'eau minérale", "mineral water"], ["du jus de fruit", "fruit juice"], ["des boissons alcoolisées", "alcoholic beverages"], ["de la bière", "beer"], ["du champagne", "champagne"], ["du vin", "wine"], ["du vin blanc (du blanc)", "white wine"], ["du vin rosé (du rosé)", "rosé wine"], ["du vin rouge (du rouge)", "red wine"], ["un sandwich jambon beurre", "sandwich with ham and butter"], ["un croque-monsieur", "toasted cheese sandwich with ham"], ["un croque-madame", "croque-monsieur with a fried egg"], ["une quiche (lorraine, au saumon, etc.)", "quiche (lorraine, salmon, etc.)"], ["une omelette (aux fines herbes, au fromage)", "omelette (with herbs, cheese)"]], "custom": false, "label": "Café & Drinks" }, { "map": 44, "items": [["Au restaurant, on commande ...", "At the restaurant, you order ..."], ["un apéritif (m)", "before dinner drink"], ["une entrée (f)", "appetizer / first course"], ["un plat principal", "main course"], ["un dessert", "dessert"], ["une boisson", "drink, beverage"]], "custom": false, "label": "Restaurant" }, { "map": 45, "items": [["des entrées", "appetizers"], ["des crudités (f)", "raw vegetables plus vinaigrette"], ["une salade (avec des lardons, des noix, etc.)", "salad (with bacon, nuts, etc.)"], ["de la soupe à l'oignon", "onion soup"], ["des plats principaux", "main courses"], ["du boeuf bourguignon", "beef stewed in red wine"], ["du coq au vin", "chicken (rooster) stewed in red wine"], ["un steak-frites", "steak and French fries"], ["des desserts", "desserts"], ["de la mousse au chocolat", "chocolate mousse"], ["de la crème caramel", "caramel custard"], ["de la crème brûlée", "crème brûlée"], ["du fondant au chocolat", "rich chocolate flourless cake"]], "custom": false, "label": "Restaurant Menu" }, { "map": 46, "items": [["un peu de", "a little"], ["assez de", "enough"], ["beaucoup de", "a lot"], ["trop de", "too much (too many)"], ["une cuillère de", "a spoonful of"], ["une bouteille de", "a bottle of"], ["un pichet de", "a pitcher of"], ["un litre de", "a liter of"], ["50 grammes de", "50 grams of"], ["un kilo de", "a kilo of"], ["un morceau de", "a piece of"], ["une tranche de", "a slice of"], ["une boîte de", "a can of"], ["un rôti de boeuf", "a beef roast"], ["une côtelette de porc", "a pork chop"], ["une douzaine d'oeufs", "a dozen eggs"]], "custom": false, "label": "Food Quantities" }, { "map": 47, "items": [["délicieux / délicieuse", "delicious"], ["frais / fraîche", "fresh"], ["épicé(e)", "spicy"], ["grillé(e)", "grilled"], ["hâché(e)", "chopped"], ["salé(e)", "salty"], ["sucré(e)", "sweet"]], "custom": false, "label": "Food Adjectives" }, { "map": 48, "items": [["avoir faim / avoir soif", "to be hungry / to be thirsty"], ["boire", "to drink"], ["déjeuner", "to have lunch"], ["dîner", "to have dinner"], ["faire le marché", "to go grocery shopping"], ["faire la cuisine", "to cook"], ["prendre un repas", "to have a meal"], ["faire la vaisselle", "to do the dishes"], ["grossir", "to gain weight"], ["faire un régime", "to be on a diet"], ["maigrir", "to lose weight"], ["choisir", "to choose"], ["finir", "to finish"], ["grandir", "to grow up"], ["obéir à", "to obey"], ["réfléchir à", "to reflect (on)"], ["réussir à", "to succeed"], ["croire", "to believe"], ["prendre", "to take"], ["(apprendre à quelqu'un)", "to learn"], ["apprendre", "(to teach someone)"], ["comprendre", "to understand"], ["surprendre", "to surprise"]], "custom": false, "label": "Food Verbs" }, { "map": 49, "items": [["une place", "public square"], ["une rue", "street"], ["un boulevard", "boulevard"], ["une avenue", "avenue"], ["un quartier", "neighborhood"], ["l'arrondissement (m)", "administrative district in a large city (e.g. Paris)"], ["le centre-ville", "downtown"], ["la banlieue", "suburbs"], ["un bâtiment", "building"], ["un bureau", "office"], ["un immeuble", "apartment building"], ["une maison", "house"], ["un hôtel", "hotel"], ["une boutique", "boutique"], ["un magasin (de musique, de vidéo, etc.)", "store (music, video, etc.)"], ["un centre commercial", "shopping center, mall"], ["un supermarché", "supermarket"], ["un café", "café"], ["un restaurant", "restaurant"], ["un musée", "museum"], ["un cinéma", "movie theater"], ["une boîte de nuit / une discothèque", "a nightclub, dance club"], ["un théâtre", "theater"], ["un stade", "stadium"], ["un parking", "parking lot"], ["un parc", "park"], ["un jardin public", "park, large garden"], ["un fleuve", "river"], ["un pont", "bridge"], ["une banque", "bank"], ["un bureau de poste", "post office"], ["une boîte aux lettres", "mailbox"], ["une cabine téléphonique", "phone booth"], ["une laverie", "launderette"], ["lhôtel de ville (m)", "city hall, mayors office"], ["la mairie", "city hall, mayors office"], ["l'office du tourisme (m)", "chamber of commerce"], ["un hôpital", "hospital"], ["un aéroport", "airport"], ["une gare", "train station"], ["une école (6 ans à 11 ans)", "school"], ["un collège (11 ans à 15 ans)", "junior high, middle school"], ["un lycée (15 ans à 18 ans)", "high school"], ["une université", "university"], ["une bibliothèque", "library"], ["une église", "church"], ["une cathédrale", "cathedral"], ["une mosquée", "mosque"], ["une synagogue", "synagogue"], ["un temple", "temple"]], "custom": false, "label": "City Vocabulary" }, { "map": 50, "items": [["une épicerie", "grocery store"], ["une boucherie", "butcher shop"], ["une charcuterie", "pork butchers shop, deli"], ["un traiteur", "deli, catering shop"], ["une boulangerie", "bakery"], ["une pâtisserie", "pastry shop"], ["un bureau de tabac", "tobacco shop"], ["une librairie", "bookstore"], ["une papeterie", "paper/stationery store"], ["une pharmacie", "pharmacy"]], "custom": false, "label": "Shops" }, { "map": 51, "items": [["Où se trouve... ?", "Where is... ?"], ["(Où se trouve la poste?)", "(Where is the post office?)"], ["à côté (de)", "beside, next to"], ["à deux pas (de)", "just a step from"], ["à droite (de)", "on the right"], ["à gauche (de)", "on the left"], ["au bout (de)", "at the far end of"], ["au carrefour (de)", "at the intersection of"], ["au centre", "in the center"], ["au coin (de)", "at the corner of"], ["chez", "at someones house"], ["derrière", "behind"], ["devant", "in front of"], ["en face (de)", "facing, opposite"], ["en ville", "in the city"], ["loin (de)", "far"], ["près (de)", "near, close"], ["sous", "under"], ["sur", "on"], ["sur votre droite/gauche", "on your right/left"], ["tout droit", "straight ahead"], ["tout près", "nearby"]], "custom": false, "label": "Giving Directions" }, { "map": 52, "items": [["premier, première", "first"], ["deuxième", "second"], ["troisième", "third"], ["quatrième", "fourth"], ["cinquième", "fifth"], ["sixième", "sixth"], ["septième", "seventh"], ["huitième", "eighth"], ["neuvième", "ninth"], ["dixième", "tenth"], ["onzième", "eleventh"], ["douzième", "twelfth"], ["treizième", "thirteenth"], ["quatorzième", "fourteenth"], ["quinzième", "fifteenth"], ["seizième", "sixteenth"], ["dix-septième", "seventeenth"], ["dix-huitième", "eighteenth"], ["dix-neuvième", "nineteenth"], ["vingtième", "twentieth"]], "custom": false, "label": "Ordinal Numbers" }, { "map": 53, "items": [["aller", "to go"], ["sortir", "to go out"], ["partir", "to leave"], ["rentrer", "to go home, to go back"], ["retourner", "to return"], ["arriver", "to arrive"], ["entrer", "to enter"], ["rester", "to stay"], ["monter", "to go up, to go upstairs, to climb"], ["descendre", "to go down, to go downstairs"], ["tomber", "to fall"], ["passer", "to pass, to go by (intransitive)"], ["naître", "to be born"], ["mourir", "to die"]], "custom": false, "label": "Movement Verbs" }, { "map": 54, "items": [["se déplacer (en ville)", "to get around (town)"], ["prendre le métro, un taxi, etc.", "to take the metro, a taxi, etc."], ["aller à pied", "to go on foot"], ["marcher", "to walk"], ["tourner", "to turn"], ["traverser", "to cross"], ["continuer", "to continue"], ["demander", "to ask (for)"], ["se trouver", "to be found, to be located"], ["attendre", "to wait for"], ["entendre", "to hear"], ["perdre", "to lose"], ["rendre", "to hand in, give back"], ["rendre visite à quelqu'un", "to visit someone"], ["répondre", "to answer"], ["vendre", "to sell"]], "custom": false, "label": "Getting Around" }, { "map": 55, "items": [["avoir: j'ai eu ...", "boire: j'ai bu ..."], ["être: j'ai été ...", "croire: j'ai cru ..."], ["faire: j'ai fait ...", "voir: j'ai vu ..."], ["prendre: j'ai pris ...", "mourir: il est mort / elle est mort(e) ..."], ["mettre: j'ai mis ...", "naître: il est né / elle est né(e) ..."]], "custom": false, "label": "Irregular Past Participles" }, { "map": 56, "items": [["les jours fériés", "national holidays (see * below)"], ["le Jour de l'An, le premier janvier *", "New Year's Day"], ["la Chandeleur, le 2 février", "Candlemas"], ["la Saint-Valentin, le 14 février", "Valentine's Day"], ["le Carnaval (Mardi Gras)", "Mardi Gras, Carnival"], ["La pâque juive / Pessach", "Passover"], ["Pâques *", "Easter"], ["le premier avril", "April Fool's Day"], ["la fête du Travail, le 1er mai *", "Labor Day"], ["le 8 mai, la fête de la Victoire *", "VE Day (Victory in Europe)"], ["l'Ascension (f) *", "Ascension Day"], ["la fête des mères", "Mother's Day"], ["la fête des pères", "Father's Day"], ["la Pentecôte", "Pentecost"], ["la fête nationale, le 14 juillet *", "Bastille Day, French National Day"], ["le 15 août, l'Assomption (f) *", "the feast of the Assumption"], ["Halloween", "Halloween"], ["Yom Kippour", "Yom Kippur"], ["Rosh Hashana", "Rosh Hashana"], ["la Toussaint, le 1er novembre *", "All Saints' Day"], ["l'Armistice (m), le 11 novembre *", "Armistice Day"], ["le Ramadan", "Ramadan"], ["Hanouka", "Hannukah"], ["Noël (m), le 25 décembre *", "Christmas"], ["la Saint-Sylvestre, le 31 décembre", "New Year's Eve"]], "custom": false, "label": "Holidays & Celebrations" }, { "map": 58, "items": [["le réveillon", "Xmas or New Year's Eve party"], ["des feux d'artifice (m)", "fireworks"], ["un défilé (militaire)", "(military) parade"], ["une fête", "saint's day, celebration, party"], ["un anniversaire", "birthday, anniversary"], ["un gâteau", "cake"], ["une bougie", "candle"], ["un cadeau", "gift"], ["les noces (f pl)", "wedding"], ["un anniversaire de mariage", "wedding anniversary"], ["une cérémonie", "ceremony"], ["le champagne", "champagne"], ["le muguet", "lily of the valley"], ["des blagues (f)", "jokes"], ["des costumes (m)", "costumes"], ["des crêpes (f)", "crepes"], ["un pique-nique", "picnic"], ["la bûche de Noël", "Yule log (+ cake shaped like Yule log)"], ["une carte de voeux", "greeting card"], ["le gui", "mistletoe"], ["le Père Noël", "Santa Claus"], ["le sapin de Noël", "Christmas tree"], ["la crèche", "nativity"], ["la messe", "mass"], ["le sabbat / le shabbat", "sabbath"]], "custom": false, "label": "Party Vocabulary" }, { "map": 59, "items": [["célébrer", "to celebrate"], ["faire la fête", "to party"], ["fêter", "to celebrate"], ["réveillonner", "to celebrate Xmas / New Year’s Eve"], ["inviter", "to invite"], ["offrir", "to give"], ["donner", "to give"], ["recevoir", "to receive"], ["ouvrir", "to open"], ["souffler", "to blow out (candles)"], ["plaisanter", "to joke"], ["faire un poisson d’avril", "to play a joke (on someone)"], ["faire le pont", "literally 'to make a bridge' *"], ["* The French often take an extra day off from work when a holiday falls on Tuesday or Thursday.", "If the holiday falls on Tuesday, they take Monday off, and if the holiday falls on Thursday, they take Friday off ..."]], "custom": false, "label": "Celebration Verbs" }, { "map": 60, "items": [["une maison", "house"], ["un appartement", "apartment"], ["une résidence universitaire", "university dorm"], ["une pièce", "a room (general term)"], ["une fenêtre", "window"], ["un meuble / des meubles", "a piece of furniture / furniture"], ["le rez-de-chaussée", "ground floor, first floor"], ["un escalier", "staircase, stairs"], ["un balcon", "balcony"], ["une terrasse", "terrace"], ["un jardin", "garden, yard"]], "custom": false, "label": "Housing" }, { "map": 61, "items": [["une entrée", "entranceway"], ["un hall d'entrée", "foyer"], ["un séjour / un living / un salon / une salle de séjour", "living room"], ["une salle à manger", "dining room"], ["une cuisine", "kitchen"], ["un couloir", "hallway"], ["une chambre", "bedroom"], ["une salle de bains", "bathroom"], ["des toilettes (f pl) / des W.C. (m pl)", "toilet"], ["une buanderie", "laundry room"], ["un grenier", "attic"], ["une cave", "cellar, wine cellar"], ["un garage", "garage"]], "custom": false, "label": "Rooms of the House" }, { "map": 62, "items": [["un lit", "bed"], ["une table de nuit", "nightstand"], ["une armoire", "armoire"], ["une commode", "chest of drawers"], ["un bureau", "desk"], ["une étagère", "bookcase"], ["une lampe", "lamp"], ["un placard", "closet"], ["de la moquette", "carpet (wall to wall)"], ["un lecteur DVD / MP3", "DVD / MP3 player"], ["un ordinateur", "computer"], ["un téléphone", "telephone"]], "custom": false, "label": "Bedroom Furniture" }, { "map": 63, "items": [["une baignoire", "bathtub"], ["une douche", "shower"], ["un lavabo", "sink"], ["un miroir", "mirror"]], "custom": false, "label": "Bathroom" }, { "map": 64, "items": [["un canapé / un sofa", "couch"], ["un fauteuil", "armchair"], ["une table basse", "coffee table"], ["une télévision", "television"], ["un tableau / des tableaux", "painting / paintings"], ["un tapis", "area rug or carpet"]], "custom": false, "label": "Living Room" }, { "map": 65, "items": [["une table", "table"], ["une chaise", "chair"], ["un buffet", "hutch, buffet"]], "custom": false, "label": "Dining Room" }, { "map": 66, "items": [["un réfrigérateur / un frigo", "refrigerator / fridge"], ["un congélateur", "freezer"], ["une cuisinière", "stove"], ["un four", "oven"], ["un four à micro-ondes", "microwave"], ["un lave-vaisselle", "dishwasher"], ["un évier", "sink"], ["un placard", "cabinet"], ["une poubelle", "trash can"]], "custom": false, "label": "Kitchen & Chores" }, { "map": 67, "items": [["un lave-linge", "washing machine"], ["un sèche-linge", "dryer"]], "custom": false, "label": "Laundry" }, { "map": 66, "items": [["faire des achats", "to go shopping"], ["faire le marché", "to do the grocery shopping"], ["faire des courses (f pl)", "to do errands"], ["faire le ménage", "to do housework"], ["faire la cuisine", "to cook"], ["faire la vaisselle", "to do the dishes"], ["ranger", "to straighten up"], ["faire le lit", "to make the bed"], ["passer l'aspirateur (m)", "to pass the vacuum cleaner"], ["faire la lessive", "to do laundry"], ["repasser", "to iron"], ["bricoler", "to make home repairs or improvements"]], "custom": false, "label": "Kitchen & Chores" }, { "map": 69, "items": [["ancien(ne)", "old"], ["moderne", "modern"], ["sombre", "dark"], ["clair(e)", "bright, full of light"], ["en désordre", "messy"], ["en ordre", "straightened up"], ["propre", "clean"], ["sale", "dirty"], ["pratique", "practical"], ["confortable", "comfortable"]], "custom": false, "label": "Describing a Home" }, { "map": 70, "items": [["déménager", "to move (change residences)"]], "custom": false, "label": "Moving" }, { "map": 71, "items": [["s'amuser", "to have fun"], ["s'ennuyer", "to be bored"], ["se dépêcher", "to hurry"], ["s'inquiéter", "to worry"], ["se fâcher", "to get angry"]], "custom": false, "label": "Emotions" }, { "map": 72, "items": [["se disputer", "to argue (with one another)"], ["s'entendre", "to get along (with one another)"], ["se parler", "to talk to (one another)"]], "custom": false, "label": "Relationships" }, { "map": 73, "items": [["la télé", "TV"], ["la télécommande", "remote control"], ["une chaîne", "channel"], ["un programme", "television schedule"], ["un feuilleton", "series / soap opera"], ["une série", "series"], ["une émission", "show"], ["un dessin animé", "cartoon"], ["un documentaire", "documentary"], ["une émission de variétés", "variety show"], ["un jeu télévisé", "game show"], ["la télé-réalité", "reality television"], ["un magazine d'actualités (à la télévision)", "news show"], ["les informations (f pl) / les infos (f pl) / le journal", "news"], ["l'actualité (f)", "current events"], ["la météo", "weather report"], ["un reporter /  un journaliste", "reporter / journalist"], ["une interview", "interview"], ["une publicité / une pub", "commercial"], ["un concert", "concert"], ["un film", "movie"], ["un film d'amour", "romantic movie"], ["un film de science-fiction", "science-fiction movie"], ["un film d'horreur", "horror movie"], ["un film d'action / un film d'aventures", "action film / adventure film"], ["un film policier", "detective/police movie"], ["un drame", "drama"], ["une comédie", "comedy (movie, play)"], ["un (film) musical", "musical"], ["une comédie musicale", "musical comedy"], ["un western", "western"], ["en VO / en VF", "original version / French version"], ["avec / sans sous-titres", "with / without subtitles"], ["un acteur / une actrice", "actor / actress"], ["une célébrité", "celebrity"], ["une star / une vedette", "star (refers to men or women)"], ["une personnalité (de la télévision, du cinéma, de la radio...)", "celebrity"], ["le méchant", "the bad guy"]], "custom": false, "label": "TV & Film" }, { "map": 74, "items": [["un kiosque (à journaux)", "news stand"], ["un journal (national, régional)", "newspaper (national, regional)"], ["une bande-dessinée", "comic strip"], ["une petite annonce", "classified ad"], ["un magazine", "magazine"], ["un livre", "book"], ["un roman", "novel"]], "custom": false, "label": "Press & Media" }, { "map": 75, "items": [["une station", "radio station"], ["une chanson", "song"], ["un chanteur / une chanteuse", "singer"], ["un groupe", "a  band"]], "custom": false, "label": "Radio & Music" }, { "map": 76, "items": [["un ordinateur", "computer"], ["un portable", "laptop"], ["le web", "the web"], ["un site", "website"], ["une page d'accueil", "homepage"], ["un forum", "bulletin board, newsgroup"], ["un moteur de recherche", "search engine"], ["un mot de passe", "password"], ["un email / un courriel", "e-mail"], ["en ligne", "online"], ["un lien", "link"]], "custom": false, "label": "Internet & Technology" }, { "map": 77, "items": [["un (téléphone) portable", "cell phone"], ["un répondeur / une boîte vocale", "voicemail"], ["un texto", "text message"]], "custom": false, "label": "Mobile Phones" }, { "map": 78, "items": [["Allô...", "Hello..."], ["T'es où?", "Where are you at / what are you doing?"], ["Est-ce que je peux parler à...", "May I speak to..."], ["Je voudrais un renseignement.", "I would like some information."], ["Un instant s'il vous plaît.", "Please hold. / One moment please."], ["Ne quittez pas.", "Stay on the line."], ["Je vous le / la passe.", "I'm putting you through to him / her. / I'm connecting you to him / her."], ["Quel est votre numéro de téléphone?", "What is your phone number?"], ["Est-ce que vous voulez laisser un message?", "Do you want to leave a message?"], ["Pouvez-vous rappeler à 15h?", "Could you call back at 3 p.m.?"], ["Qui est à l'appareil?", "Who's on the phone?"]], "custom": false, "label": "Phone Expressions" }, { "map": 79, "items": [["célèbre", "famous"], ["amusant(e) / comique / marrant(e) / drôle", "funny"], ["doublé(e)", "dubbed"], ["effrayant(e)", "frightening"], ["ennuyeux / ennuyeuse", "boring"], ["étranger / étrangère", "foreign"], ["gratuit(e)", "free"], ["optimiste", "optimistic / hopeful"], ["pessimiste", "pessimistic"], ["réaliste", "realistic"], ["satirique", "satirical"], ["tragique", "tragic"], ["triste", "sad"], ["violent(e)", "violent"]], "custom": false, "label": "Media Adjectives" }, { "map": 80, "items": [["surfer / aller (sur internet)", "to surf (the web)"], ["cliquer", "to click"], ["télécharger", "to download"], ["décrire", "to describe"], ["dire", "to say"], ["écrire", "to write"], ["durer", "to last"], ["lire", "to read"], ["montrer", "to show"], ["passer (du temps)", "to spend (time)"]], "custom": false, "label": "Media Verbs" }, { "map": 102, "items": [["Qu'est-ce qui se passe?", "What is going on?"], ["Qu'est-ce qui t'intéresse?", "What interests you?"], ["Qu'est-ce qui t'énerve?", "What bothers you?"], ["Qu'est-ce qui te fait peur?", "What scares you?"], ["Qu'est-ce qui te fait plaisir?", "What pleases you?"], ["Qu'est-ce qui t'amuse?", "What amuses you?"]], "custom": false, "label": "Horoscope Signs" }, { "map": 81, "items": [["un défilé de mode", "fashion show"], ["une marque", "brand"], ["un chapeau", "hat"], ["une casquette", "cap"], ["des vêtements (m)", "clothes"], ["un survêtement / un jogging", "tracksuit"], ["des sous-vêtements", "underwear"], ["un soutien-gorge", "bra"], ["un slip", "briefs"], ["une culotte", "panties"], ["un caleçon / boxer", "boxers"], ["une chemise", "man's shirt"], ["un chemisier", "blouse"], ["un polo", "polo shirt"], ["un tee-shirt", "T-shirt"], ["un pull", "sweater"], ["un pantalon", "(a pair of) pants"], ["un jean (sing.)", "jeans"], ["un short (sing.)", "(shorter) shorts"], ["un bermuda", "(longer) shorts"], ["une ceinture", "belt"], ["des chaussettes (f pl)", "socks"], ["des chaussures (f pl)", "shoes"], ["des baskets (f pl)", "basketball shoes"], ["des bottes (f pl)", "boots"], ["des sandales (f pl)", "sandals"], ["des tennis (f pl)", "tennis shoes"], ["des tongs", "flip-flops"], ["des talons (m) / des chaussures à talons", "high-heels"], ["une robe", "dress"], ["une jupe", "skirt"], ["un tailleur", "woman's suit"], ["un costume", "man's suit"], ["une cravate", "tie"], ["des lunettes (f) de soleil", "sunglasses"], ["un maillot de bain", "swimsuit"], ["un blouson", "short jacket, leather jacket"], ["une veste", "jacket"], ["un manteau", "coat"], ["un anorak", "parka"], ["un imperméable", "raincoat"], ["une écharpe", "scarf"], ["des gants (m)", "gloves"]], "custom": false, "label": "Clothing" }, { "map": 82, "items": [["la course à pied / faire de la course à pied", "running / to go running"], ["le footing / le jogging / faire du footing / du jogging", "jogging / to go jogging"], ["le roller / faire du roller", "roller blading / to go roller blading"], ["le cyclisme / faire du cyclisme", "cycling / to go cycling"], ["l'escalade (f) / faire de l'escalade", "rock-climbing / to go rock-climbing"], ["la musculation / faire de la musculation", "weight training / to train with weights"], ["la natation / faire de la natation", "swimming / to go swimming"], ["le canoë / faire du canoë", "canoeing / to go canoeing"], ["le kayak / faire du kayak", "kayaking / to go kayaking"], ["la peinture / faire de la peinture", "painting / to paint (art)"], ["les échecs (m) / jouer aux échecs", "chess / to play chess"], ["le yoga / faire du yoga", "yoga"], ["le surf / faire du surf", "surfing"], ["le cheval / faire du cheval", "horseback riding"]], "custom": false, "label": "Sports & Leisure" }, { "map": 83, "items": [["une allergie", "allergy"], ["la grippe", "the flu"], ["une migraine", "migraine headache"], ["un rhume", "a cold"], ["des médicaments (m)", "medicine"], ["des vitamines (f)", "vitamins"], ["un somnifère", "sleeping pill"]], "custom": false, "label": "Health & Illness" }, { "map": 84, "items": [["la gorge", "throat"], ["le bras", "arm"], ["le coude", "elbow"], ["le poignet", "wrist"], ["la main", "hand"], ["le doigt", "finger"], ["la poitrine", "chest"], ["le ventre", "stomach"], ["le dos", "back"], ["le derrière", "rear, behind"], ["les fesses (f)", "buttocks"], ["la jambe", "leg"], ["le genou / les genoux", "knee / knees"], ["la cheville", "ankle"], ["le pied", "foot"], ["les orteils (m)", "toes"]], "custom": false, "label": "Body Parts" }, { "map": 85, "items": [["à la mode / branché(e)", "in fashion"], ["démodé(e)", "out of style"], ["décontracté(e)", "casual"], ["habillé(e)", "dressy"], ["discipliné(e)", "disciplined"], ["sportif / sportive", "athletic"], ["stressé(e)", "stressed"], ["malade", "sick"]], "custom": false, "label": "Lifestyle Adjectives" }, { "map": 86, "items": [["s'habiller", "to get dressed"], ["mettre", "to put (on)"], ["porter", "to wear"], ["aller bien / aller mal", "to fit well/poorly"], ["grossir", "to gain weight"], ["être au régime / faire un régime", "to be on a diet"], ["faire du sport", "to exercise"], ["mincir", "to lose weight"], ["être en forme", "to be in shape"], ["tomber malade", "to get sick"], ["tousser", "to cough"], ["avoir mal à...", "to hurt (body part)"], ["(avoir mal à la tête, au dos, aux pieds, etc)", "(to have a headache, a backache, sore feet, etc)"], ["se reposer", "to rest"], ["se détendre", "to relax"], ["fumer", "to smoke"], ["être en bonne santé", "to be in good health"]], "custom": false, "label": "Health Verbs" }, { "map": 87, "items": [["Il faut + infinitif", "It is necessary (to)"], ["Il vaut mieux + infinitif", "It is advisable (to), It is better (to)"], ["Il est important de + infinitif", "It is important (to)"], ["Il est nécessaire de + infinitif", "It is necessary (to)"], ["Il est essentiel de + infinitif", "It is essential (to)"], ["Il est indispensable de + infinitif", "It is essential (to)"], ["Il est amusant de ...", "It is fun (to) ..."], ["Il est difficile de ...", "It is difficult (to) ..."], ["Il est facile de ...", "It is easy (to) ..."], ["Il est fatigant de ...", "It is tiring/annoying (to) ..."]], "custom": false, "label": "Impersonal Expressions" }, { "map": 88, "items": [["la rentrée", "beginning of school year"], ["le collège", "junior high, middle school"], ["le lycée", "high school"], ["un lycéen / une lycéenne", "high school student"], ["la seconde", "first year of high school"], ["la première", "second year of high school"], ["la terminale", "final year of high school"], ["le baccalauréat / le bac", "baccalaureate exam"], ["un bachelier / une bachelière", "student who has passed the bac"], ["un concours (d'entrée)", "competitive entrance exam"], ["la fac", "college, university"], ["la Faculté des Beaux-Arts", "school of fine arts"], ["la Faculté de Lettres et des Sciences Humaines", "school of humanities/liberal arts"], ["la Faculté de Médecine", "school of medicine"], ["la Faculté de Pharmacie", "school of pharmacy"], ["la Faculté des Sciences", "school of sciences"], ["la Faculté de Droit", "law school"], ["L'Ecole de Commerce (f)", "business school"], ["les Grandes Écoles (f)", "elite professional schools"], ["une résidence universitaire", "dormitory"], ["un restaurant universitaire (un restau-U)", "university cafeteria"], ["une cafétéria", "cafeteria"], ["un amphithéâtre / un amphi", "amphitheater"], ["une salle de classe", "classroom"], ["un cours (de maths...)", "a class (math class...)"], ["un cours magistral (des cours magistraux)", "large lecture class"], ["un laboratoire / un labo", "laboratory / lab"], ["une bibliothèque", "library"], ["les devoirs (m)", "homework"], ["une copie", "student paper"], ["un exposé oral", "oral presentation"], ["un examen", "test, exam"], ["une note", "grade"], ["les résultats", "results, grades"], ["un bulletin de notes", "grade report"], ["un emploi du temps", "schedule"], ["une carte d'étudiant", "student ID card"], ["un stage", "internship"], ["un diplôme", "a diploma, degree"]], "custom": false, "label": "University" }, { "map": 89, "items": [["l'architecture (f)", "architecture"], ["l'art (m)", "art"], ["le dessin", "drawing, design"], ["la musique", "music"], ["la peinture", "painting"], ["la communication", "communications"], ["la comptabilité", "accounting"], ["le droit", "law"], ["l'économie (f)", "economics"], ["la géographie", "geography"], ["l'histoire (f)", "history"], ["l'informatique (f)", "computer science"], ["les langues (f)", "languages"], ["le chinois", "Chinese"], ["l'allemand (m)", "German"], ["l'anglais (m)", "English"], ["l'espagnol (m)", "Spanish"], ["le français", "French"], ["l'italien (m)", "Italian"], ["le latin", "Latin"], ["la linguistique", "linguistics"], ["la littérature", "literature"], ["les mathématiques (f) / les maths", "math"], ["la médecine", "medicine"], ["la pharmacie", "pharmacy"], ["la philosophie", "philosophy"], ["la psychologie", "psychology"], ["la biologie", "biology"], ["la chimie", "chemistry"], ["la physique", "physics"], ["les sciences politiques (f)", "political science"], ["la sociologie", "sociology"]], "custom": false, "label": "Academic Subjects II" }, { "map": 90, "items": [["chargé(e)", "full, busy (referring to schedule)"], ["occupé(e)", "busy"], ["prochain(e)", "next"], ["dernier / dernière", "last"]], "custom": false, "label": "University Life" }, { "map": 90, "items": [["s’inscrire (à la fac, au ciné-club…)", "to register, enroll (in)"], ["régler (les frais d’inscription)", "to pay (one’s tuition/fees)"], ["En quelle matiére est-ce que tu te spécialises?", "What's your major?"], ["suivre", "to take (a course), to follow"], ["aller en cours", "to attend class"], ["faire ses devoirs", "to do one’s homework"], ["faire un effort", "to make an effort"], ["faire des progrès", "to improve"], ["se renseigner", "to find out about, to get information"], ["apprendre", "to learn"], ["comprendre", "to understand"], ["passer un examen", "to take an exam"], ["réussir (à) un examen", "to pass (an exam), to succeed (in)"], ["réussir à + infinitif", "to succeed at ..."], ["avoir la moyenne", "to receive a passing grade"], ["recevoir son diplôme", "to graduate, to complete one’s studies"], ["être bonne / bon en ...", "to be good in/at ..."], ["être mauvais(e) en ...", "to be bad in/at ..."], ["être nul(le) en… [slang]", "to suck in/at ..."], ["se décourager", "to be discouraged"], ["sécher un cours", "to skip a class"], ["rater", "to fail"], ["redoubler", "to repeat a grade/course"], ["quitter", "to leave (something, someone or some place)"]], "custom": false, "label": "University Life" }, { "map": 92, "items": [["les affaires (f pl)", "business"], ["une entreprise / une boîte [slang]", "firm, business"], ["un bureau", "office"], ["un client / une cliente", "client, customer"], ["un métier", "profession"], ["un emploi / un travail / un job / un boulot [slang]", "job"], ["un poste à mi-temps/à plein temps", "half-time/full-time position"], ["un chômeur / une chômeuse", "unemployed person"], ["le marché du travail", "job market"], ["les petites annonces (f pl)", "classified ads"], ["un curriculum vitae (un CV)", "résumé"], ["un entretien", "interview"], ["les avantages sociaux (m)", "benefits (health insurance, retirement plan, etc.)"], ["un salaire", "salary"], ["les congés", "vacation days"], ["une promotion", "promotion"], ["la retraite", "retirement"], ["un retraité / une retraitée", "retired person"]], "custom": false, "label": "Work & Business" }, { "map": 93, "items": [["un/une fonctionnaire", "civil servant, government worker"], ["un facteur", "mail carrier"], ["un militaire", "person in the armed services"], ["un policier", "police officer"], ["un pompier", "firefighter"], ["un enseignant / une enseignante", "teacher"], ["une assistante sociale", "social worker"], ["un médecin", "doctor, physician"], ["un/une dentiste", "dentist"], ["un infirmier / une infirmière", "nurse"], ["un kinésithérapeute / un kiné", "chiropractor, physical therapist"], ["un/une psychologue", "psychologist"], ["un opticien / une opticienne", "optician"], ["un pharmacien / une pharmacienne", "pharmacist"], ["un avocat / une avocate", "lawyer"], ["un banquier / une banquière", "banker"], ["un chef d'entreprise", "company head, business owner"], ["un patron / une patronne", "boss"], ["un P.D.G. (Président Directeur Général)", "CEO"], ["un cadre", "executive"], ["un/ une comptable", "accountant"], ["un publicitaire", "advertising agent"], ["un/une secrétaire", "secretary"], ["un employé / une employée (de bureau)", "employee (office employee)"], ["un ouvrier / une ouvrière", "blue collar worker"], ["une usine", "factory"], ["un informaticien / une informaticienne", "computer scientist"], ["un ingénieur", "engineer"], ["un chercheur", "researcher"], ["un technicien / une technicienne", "technician"], ["un/une propriétaire", "owner"], ["un commerçant / une commerçante", "shopkeeper, store owner"], ["un vendeur / une vendeuse", "salesperson"], ["un caissier / une caissière", "cashier"], ["un restaurateur", "restaurant owner"], ["un cuisinier / une cuisinière", "cook"], ["un serveur / une serveuse", "wait person"], ["un boulanger / une boulangère", "a baker"], ["un couturier / une couturière", "fashion designer, seamstress"], ["un coiffeur / une coiffeuse", "hairdresser"], ["un critique (de films, d'art, etc.)", "critic (film, art, etc.)"], ["un écrivain", "writer"], ["un journaliste", "reporter, journalist"], ["un peintre / une peintre", "painter"], ["un musicien / une musicienne", "musician"], ["un voyagiste / un agent de voyage", "travel agent"], ["une femme au foyer", "housewife"]], "custom": false, "label": "Professions" }, { "map": 94, "items": [["dur(e) / difficile", "hard, tough, difficult"], ["dynamique", "dynamic"], ["honnête", "honest"], ["passionnant(e)", "enthralling, fascinating"], ["utile", "useful"], ["inutile", "useless"], ["d'occasion (une voiture d'occasion)", "second-hand, used"]], "custom": false, "label": "Work Adjectives" }, { "map": 95, "items": [["chercher une situation", "to look for a job"], ["faire une demande d'emploi", "to apply for a job"], ["prendre un rendez-vous", "to make an appointment"], ["remplir un formulaire", "to fill out a form"], ["embaucher / être embauché(e)", "to hire / to be hired"], ["gérer", "to manage, direct, organize"], ["gagner sa vie / gagner de l'argent", "to earn a living / to earn money"], ["payer des impôts", "to pay taxes"], ["être au chômage", "to be unemployed"], ["être à la retraite", "to be retired"]], "custom": false, "label": "Job Search Verbs" }, { "map": 96, "items": [["une banque", "bank"], ["une caisse d'épargne", "savings and loan association"], ["un compte (bancaire)", "(bank) account"], ["un distributeur (automatique de billets)", "ATM (automatic teller machine) _______"], ["un guichet automatique", "_______"], ["l'euro", "euro (currency)"], ["un héritage", "inheritance"], ["les dépenses", "expenses"], ["les factures (f pl)", "bills"], ["le logement", "housing"], ["le loyer", "rent"], ["l'alimentation", "food"], ["le divertissement / les loisirs", "entertainment"], ["la facture de téléphone", "telephone bill"], ["les frais (m) de scolarité", "tuition, education expenses"], ["l'emprunt-étudiant", "student loan"], ["l'assurance", "insurance"], ["l'essence (f)", "gas"], ["les charges", "utilities"], ["les impôts (m pl)", "taxes"], ["les dettes (f pl)", "debts"]], "custom": false, "label": "Finance" }, { "map": 97, "items": [["des actions (f pl)", "stocks"], ["un portefeuille", "portfolio (also, wallet)"]], "custom": false, "label": "Investments" }, { "map": 98, "items": [["généreux / généreuse", "generous"], ["dépensier / dépensière", "spendthrift"], ["radin / radine [slang]", "miserly, stingy"], ["économe", "economical, frugal"], ["bon marché / pas cher", "inexpensive"], ["être en solde", "to be on sale"], ["un prix intéressant", "a good price"], ["cher / chère", "expensive"], ["être fauché(e) [slang]", "to be broke"], ["être aisé(e)", "to be well off"], ["satisfait(e)", "satisfied, fulfilled"]], "custom": false, "label": "Money Adjectives" }, { "map": 99, "items": [["coûter", "to cost"], ["dépenser", "to spend"], ["rembourser", "to reimburse"], ["emprunter", "borrow"], ["avoir les moyens de", "to have the means to"], ["louer", "to rent"], ["faire un budget", "to establish a budget"], ["dépasser son budget", "to go beyond one's budget"], ["avoir des dettes", "to have debts"], ["gaspiller", "to waste"], ["faire des économies", "to save money"], ["offrir", "to give, to offer"]], "custom": false, "label": "Money Verbs" }, { "map": 100, "items": [["un couple", "couple"], ["le coup de foudre", "love at first sight"], ["l'amour passion (m)", "passionate love"], ["le grand amour", "the love of one's life"], ["un rendez-vous", "date (also an appointment)"], ["une relation", "relationship"], ["les fiançailles (f pl)", "engagement"], ["un fiancé / une fiancée", "fiancé / fiancée"], ["le mariage", "marriage, wedding"], ["la compatibilité", "compatibility / matching"], ["l'apparence physique", "physical appearance"], ["le bonheur", "happiness"], ["la communication", "interaction / communication"], ["le sens de l'humour", "sense of humor"], ["le respect", "respect"], ["l'honnêteté (f)", "honesty"], ["le romantisme", "romanticism"]], "custom": false, "label": "Love & Relationships" }, { "map": 101, "items": [["draguer", "to try to pick up, to hit on someone, to flirt"], ["être amis", "to be friends"], ["vivre ensemble", "to live together"], ["s'embrasser", "to kiss each other"], ["s'aimer", "to love each other"], ["se pacser", "to enter a PACS contract"], ["se fiancer", "to get engaged"], ["se marier", "to get married"], ["rompre", "to break up"], ["divorcer", "to get divorced"], ["tromper", "to cheat on"]], "custom": false, "label": "Relationship Verbs" }, { "map": 102, "items": [["Quel est ton signe?", "What's your sign?"], ["le signe", "sign"], ["le Capricorne", "Capricorn"], ["le Verseau", "Aquarius"], ["les Poissons (m)", "Pisces"], ["le Bélier", "Aries"], ["le Taureau", "Taurus"], ["les Gémeaux (m)", "Gemini"], ["le Cancer", "Cancer"], ["le Lion", "Leo"], ["la Vierge", "Virgo"], ["la Balance", "Libra"], ["le Scorpion", "Scorpio"], ["le Sagittaire", "Sagittarius"]], "custom": false, "label": "Horoscope Signs" }];
+
+        // ─── STATE ────────────────────────────────────────────────────────────────
+        let customMaps = [];      // persisted in localStorage
+        let allMaps = [];         // BASE_VOCAB + customMaps merged
+        let currentMapId = null;  // map identifier (number for base, string for custom)
         let currentItems = [];
         let mode = 'browse';
 
-        // Flashcard state
-        let fcIndex = 0;
-        let fcItems = [];
-        let fcFlipped = false;
+        // Flashcard
+        let fcIndex = 0, fcItems = [], fcFlipped = false;
 
-        // Quiz state
-        let qCorrect = 0, qWrong = 0, qTotal = 0;
-        let qCurrent = null;
-        let qAnswered = false;
+        // Quiz
+        let qCorrect = 0, qWrong = 0, qTotal = 0, qCurrent = null, qAnswered = false;
 
-        // Stats
+        // Progress
         let studiedSet = new Set();
 
-        // Build sidebar
+        // New map modal manual words buffer
+        let newMapWords = [];
+
+        // ─── PERSISTENCE ──────────────────────────────────────────────────────────
+        const LS_CUSTOM = 'fr_custom_maps_v2';
+        const LS_STUDIED = 'fr_studied_v2';
+        const LS_SCORES = 'fr_scores_v2';
+        const LS_LASTMAP = 'fr_lastmap_v2';
+
+        function saveCustomMaps() {
+            try { localStorage.setItem(LS_CUSTOM, JSON.stringify(customMaps)); } catch (e) { }
+        }
+        function loadCustomMaps() {
+            try {
+                const s = localStorage.getItem(LS_CUSTOM);
+                customMaps = s ? JSON.parse(s) : [];
+            } catch (e) { customMaps = []; }
+        }
+        function saveStudied() {
+            try { localStorage.setItem(LS_STUDIED, JSON.stringify([...studiedSet])); } catch (e) { }
+        }
+        function loadStudied() {
+            try {
+                const s = localStorage.getItem(LS_STUDIED);
+                studiedSet = s ? new Set(JSON.parse(s)) : new Set();
+            } catch (e) { studiedSet = new Set(); }
+        }
+        function saveScores() {
+            try { localStorage.setItem(LS_SCORES, JSON.stringify({ c: qCorrect, w: qWrong, t: qTotal })); } catch (e) { }
+        }
+        function loadScores() {
+            try {
+                const s = localStorage.getItem(LS_SCORES);
+                if (s) { const d = JSON.parse(s); qCorrect = d.c || 0; qWrong = d.w || 0; qTotal = d.t || 0; }
+            } catch (e) { }
+        }
+        function saveLastMap(id) {
+            try { localStorage.setItem(LS_LASTMAP, String(id)); } catch (e) { }
+        }
+        function loadLastMap() {
+            try { return localStorage.getItem(LS_LASTMAP); } catch (e) { return null; }
+        }
+
+        // ─── MERGE & REBUILD ──────────────────────────────────────────────────────
+        function rebuildAllMaps() {
+            allMaps = [
+                ...BASE_VOCAB.map(m => ({ ...m, id: m.map, isCustom: false })),
+                ...customMaps.map(m => ({ ...m, id: m.id, isCustom: true }))
+            ];
+            updateStats();
+        }
+
+        function updateStats() {
+            const totalMaps = allMaps.length;
+            const totalWords = allMaps.reduce((s, m) => s + m.items.length, 0);
+            document.getElementById('stat-maps').textContent = totalMaps;
+            document.getElementById('stat-words').textContent = totalWords;
+            document.getElementById('stat-studied').textContent = studiedSet.size;
+            if (qCorrect + qWrong > 0) {
+                const pct = Math.round(qCorrect / (qCorrect + qWrong) * 100);
+                document.getElementById('stat-score').textContent = pct + '%';
+            }
+            document.getElementById('q-correct').textContent = qCorrect;
+            document.getElementById('q-wrong').textContent = qWrong;
+            document.getElementById('q-total-label').textContent = `of ${qTotal}`;
+        }
+
+        // ─── SIDEBAR ──────────────────────────────────────────────────────────────
         function buildSidebar() {
             const list = document.getElementById('map-list');
             list.innerHTML = '';
-            const query = document.getElementById('map-search').value.toLowerCase();
+            const query = document.getElementById('map-search').value.toLowerCase().trim();
 
-            VOCAB.forEach(m => {
-                if (query && !m.label.toLowerCase().includes(query) && !String(m.map).includes(query)) return;
-                const btn = document.createElement('button');
-                btn.className = 'map-btn' + (currentMap === m.map ? ' active' : '');
-                btn.innerHTML = `<span class="map-num">${String(m.map).padStart(3, '0')}</span><span>${m.label}</span><span class="map-count">${m.items.length}</span>`;
-                btn.onclick = () => selectMap(m.map);
-                list.appendChild(btn);
-            });
+            const baseMaps = allMaps.filter(m => !m.isCustom);
+            const custMaps = allMaps.filter(m => m.isCustom);
+
+            const renderGroup = (maps, label) => {
+                const filtered = query
+                    ? maps.filter(m => m.label.toLowerCase().includes(query) || String(m.map || '').includes(query))
+                    : maps;
+                if (!filtered.length) return;
+                const lbl = document.createElement('div');
+                lbl.className = 'map-section-label';
+                lbl.textContent = label;
+                list.appendChild(lbl);
+                filtered.forEach(m => {
+                    const btn = document.createElement('button');
+                    const isActive = m.id === currentMapId || (m.isCustom && m.id === currentMapId);
+                    btn.className = 'map-btn' + (m.isCustom ? ' custom-map' : '') + (isActive ? ' active' : '');
+                    const numStr = m.isCustom ? '✦' : String(m.map).padStart(3, '0');
+                    btn.innerHTML = `<span class="map-num">${numStr}</span>` +
+                        (m.isCustom ? '<span class="custom-dot"></span>' : '') +
+                        `<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(m.label)}</span>` +
+                        `<span class="map-count">${m.items.length}</span>`;
+                    btn.onclick = () => selectMap(m.id);
+                    list.appendChild(btn);
+                });
+            };
+
+            if (custMaps.length) renderGroup(custMaps, 'My Custom Maps');
+            renderGroup(baseMaps, 'Course Vocabulary');
         }
 
         function filterMaps() { buildSidebar(); }
 
-        function selectMap(mapNum) {
-            currentMap = mapNum;
-            const map = VOCAB.find(m => m.map === mapNum);
+        // ─── MAP SELECTION ────────────────────────────────────────────────────────
+        function selectMap(id) {
+            currentMapId = id;
+            const map = allMaps.find(m => m.id === id);
             currentItems = map ? map.items : [];
             fcItems = [...currentItems];
             fcIndex = 0;
             fcFlipped = false;
+            qCorrect = 0; qWrong = 0; qTotal = 0;
+            saveLastMap(id);
             buildSidebar();
             renderCurrent();
         }
 
+        // ─── MODES ────────────────────────────────────────────────────────────────
         function setMode(m) {
             mode = m;
             document.querySelectorAll('.mode-btn').forEach((b, i) => {
@@ -749,50 +1266,91 @@
             else if (mode === 'quiz') startQuiz();
         }
 
-        // BROWSE
+        // ─── BROWSE ───────────────────────────────────────────────────────────────
         function renderBrowse() {
-            const map = VOCAB.find(m => m.map === currentMap);
-            const title = document.getElementById('browse-title');
-            const sub = document.getElementById('browse-subtitle');
+            const map = allMaps.find(m => m.id === currentMapId);
+            const titleEl = document.getElementById('browse-title');
+            const subEl = document.getElementById('browse-subtitle');
             const grid = document.getElementById('vocab-grid');
+            const actions = document.getElementById('browse-actions');
 
             if (!map) {
-                title.textContent = 'Select a topic';
-                sub.textContent = 'Choose a word map from the sidebar to start browsing.';
+                titleEl.textContent = 'Select a topic';
+                subEl.textContent = 'Choose a word map from the sidebar to start browsing.';
                 grid.innerHTML = '';
+                actions.style.display = 'none';
                 return;
             }
 
-            title.textContent = map.label;
-            sub.textContent = `Word Map ${String(map.map).padStart(3, '0')} · ${map.items.length} expressions`;
-            grid.innerHTML = map.items.map(([fr, en]) => `
-    <div class="vocab-card">
-      <div class="vocab-fr">${escHtml(fr)}</div>
-      <div class="vocab-en">${escHtml(en)}</div>
-    </div>
-  `).join('');
+            titleEl.textContent = map.label;
+            subEl.textContent = (map.isCustom ? '✦ Custom Map' : `Word Map ${String(map.map).padStart(3, '0')}`) + ` · ${map.items.length} expression${map.items.length !== 1 ? 's' : ''}`;
+            actions.style.display = 'flex';
+
+            // Actions
+            actions.innerHTML = '';
+            if (map.isCustom) {
+                const editBtn = document.createElement('button');
+                editBtn.className = 'action-btn';
+                editBtn.textContent = '✏️ Edit Map';
+                editBtn.onclick = () => openEditMapModal(map.id);
+                actions.appendChild(editBtn);
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'action-btn danger';
+                delBtn.textContent = '🗑 Delete Map';
+                delBtn.onclick = () => deleteMap(map.id);
+                actions.appendChild(delBtn);
+            }
+
+            const addWordBtn = document.createElement('button');
+            addWordBtn.className = 'action-btn';
+            addWordBtn.style.cssText = 'border-color:rgba(123,79,212,0.4);color:#b89ee0';
+            addWordBtn.textContent = '＋ Add Word';
+            addWordBtn.onclick = () => openAddWordModal(map.id);
+            actions.appendChild(addWordBtn);
+
+            // Grid
+            grid.innerHTML = '';
+            map.items.forEach(([fr, en], idx) => {
+                const card = document.createElement('div');
+                card.className = 'vocab-card' + (map.isCustom ? ' custom-card' : '');
+                card.innerHTML = `<div class="vocab-fr">${escHtml(fr)}</div><div class="vocab-en">${escHtml(en)}</div>` +
+                    `<button class="card-del-btn" title="Remove word" onclick="removeWord('${escAttr(String(map.id))}',${idx})">✕</button>`;
+                grid.appendChild(card);
+            });
+
+            if (map.isCustom || true) {
+                const addCard = document.createElement('div');
+                addCard.className = 'add-word-card';
+                addCard.innerHTML = '＋ Add a word';
+                addCard.onclick = () => openAddWordModal(map.id);
+                grid.appendChild(addCard);
+            }
 
             map.items.forEach(([fr]) => studiedSet.add(fr));
+            saveStudied();
             document.getElementById('stat-studied').textContent = studiedSet.size;
         }
 
-        // FLASHCARD
+        // ─── FLASHCARD ────────────────────────────────────────────────────────────
         function renderFlashcard() {
-            if (!currentItems.length) return;
+            if (!currentItems.length) {
+                document.getElementById('fc-front-text').textContent = 'No words in this map';
+                document.getElementById('fc-back-text').textContent = '—';
+                document.getElementById('fc-progress').textContent = '0 cards';
+                return;
+            }
             const isReverse = document.getElementById('fc-reverse').checked;
-            const item = fcItems[fcIndex];
+            const item = fcItems[fcIndex] || fcItems[0];
             const [fr, en] = item;
-
             document.getElementById('fc-progress').textContent = `Card ${fcIndex + 1} of ${fcItems.length}`;
             document.getElementById('fc-front-text').textContent = isReverse ? en : fr;
             document.getElementById('fc-back-text').textContent = isReverse ? fr : en;
-
             const inner = document.getElementById('fc-inner');
             inner.classList.remove('flipped');
             fcFlipped = false;
-
-            // Mark studied
             studiedSet.add(fr);
+            saveStudied();
             document.getElementById('stat-studied').textContent = studiedSet.size;
         }
 
@@ -809,18 +1367,19 @@
         }
 
         function fcShuffle() {
-            if (document.getElementById('fc-shuffle').checked) {
-                fcItems = [...currentItems].sort(() => Math.random() - 0.5);
-            } else {
-                fcItems = [...currentItems];
-            }
+            fcItems = document.getElementById('fc-shuffle').checked
+                ? [...currentItems].sort(() => Math.random() - 0.5)
+                : [...currentItems];
             fcIndex = 0;
             renderFlashcard();
         }
 
-        // QUIZ
+        // ─── QUIZ ─────────────────────────────────────────────────────────────────
         function startQuiz() {
             if (!currentItems.length) return;
+            document.getElementById('quiz-next').style.display = 'none';
+            document.getElementById('q-choices').innerHTML = '';
+            document.getElementById('q-text').textContent = '—';
             nextQuestion();
         }
 
@@ -828,31 +1387,22 @@
             if (!currentItems.length) return;
             qAnswered = false;
             document.getElementById('quiz-next').style.display = 'none';
-
-            // Pick random question item
             const idx = Math.floor(Math.random() * currentItems.length);
             qCurrent = currentItems[idx];
             const isReverse = Math.random() > 0.5;
-
             const [fr, en] = qCurrent;
             const qText = isReverse ? en : fr;
             const correctAns = isReverse ? fr : en;
-
             document.getElementById('q-label').textContent = isReverse ? 'Translate to French' : 'Translate to English';
             document.getElementById('q-text').textContent = qText;
-
-            // Generate 3 wrong answers from same map
             const pool = currentItems.filter(item => item !== qCurrent);
             const wrongs = [];
-            const shuffled = [...pool].sort(() => Math.random() - 0.5);
-            for (let item of shuffled) {
+            for (const item of [...pool].sort(() => Math.random() - 0.5)) {
                 if (wrongs.length >= 3) break;
                 const ans = isReverse ? item[0] : item[1];
                 if (ans !== correctAns) wrongs.push(ans);
             }
-
             const choices = [correctAns, ...wrongs].sort(() => Math.random() - 0.5);
-
             const choicesDiv = document.getElementById('q-choices');
             choicesDiv.innerHTML = '';
             choices.forEach(choice => {
@@ -862,46 +1412,276 @@
                 btn.onclick = () => answerQuiz(choice, correctAns, btn);
                 choicesDiv.appendChild(btn);
             });
-
             qTotal++;
             document.getElementById('q-total-label').textContent = `of ${qTotal}`;
+            saveScores();
         }
 
         function answerQuiz(chosen, correct, btn) {
             if (qAnswered) return;
             qAnswered = true;
-
-            const isCorrect = chosen === correct;
-            if (isCorrect) {
+            if (chosen === correct) {
                 qCorrect++;
                 btn.classList.add('correct');
             } else {
                 qWrong++;
                 btn.classList.add('wrong');
-                // Highlight correct
-                document.querySelectorAll('.choice-btn').forEach(b => {
-                    if (b.textContent === correct) b.classList.add('correct');
-                });
+                document.querySelectorAll('.choice-btn').forEach(b => { if (b.textContent === correct) b.classList.add('correct'); });
             }
-
             document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
             document.getElementById('q-correct').textContent = qCorrect;
             document.getElementById('q-wrong').textContent = qWrong;
-
             const pct = Math.round(qCorrect / (qCorrect + qWrong) * 100);
             document.getElementById('stat-score').textContent = pct + '%';
-
             document.getElementById('quiz-next').style.display = 'inline-block';
+            saveScores();
         }
 
+        // ─── ADD MAP MODAL ────────────────────────────────────────────────────────
+        let editingMapId = null;
+
+        function openAddMapModal() {
+            editingMapId = null;
+            newMapWords = [];
+            document.getElementById('new-map-title').value = '';
+            document.getElementById('new-map-paste').value = '';
+            document.getElementById('add-fr').value = '';
+            document.getElementById('add-en').value = '';
+            document.getElementById('parsed-count').textContent = '';
+            document.getElementById('err-title').style.display = 'none';
+            renderManualWordsList();
+            document.querySelector('#modal-add-map h2').textContent = '✨ New Custom Map';
+            document.querySelector('#modal-add-map .btn-save').textContent = 'Create Map';
+            document.getElementById('modal-add-map').classList.remove('hidden');
+        }
+
+        function openEditMapModal(mapId) {
+            editingMapId = mapId;
+            const map = customMaps.find(m => m.id === mapId);
+            if (!map) return;
+            newMapWords = map.items.map(([fr, en]) => [fr, en]);
+            document.getElementById('new-map-title').value = map.label;
+            document.getElementById('new-map-paste').value = '';
+            document.getElementById('add-fr').value = '';
+            document.getElementById('add-en').value = '';
+            document.getElementById('parsed-count').textContent = '';
+            document.getElementById('err-title').style.display = 'none';
+            renderManualWordsList();
+            document.querySelector('#modal-add-map h2').textContent = '✏️ Edit Map';
+            document.querySelector('#modal-add-map .btn-save').textContent = 'Save Changes';
+            document.getElementById('modal-add-map').classList.remove('hidden');
+        }
+
+        function addWordToNew() {
+            const fr = document.getElementById('add-fr').value.trim();
+            const en = document.getElementById('add-en').value.trim();
+            if (!fr || !en) return;
+            newMapWords.push([fr, en]);
+            document.getElementById('add-fr').value = '';
+            document.getElementById('add-en').value = '';
+            renderManualWordsList();
+        }
+
+        function removeNewWord(idx) {
+            newMapWords.splice(idx, 1);
+            renderManualWordsList();
+        }
+
+        function renderManualWordsList() {
+            const list = document.getElementById('manual-words-list');
+            if (!newMapWords.length) { list.innerHTML = ''; return; }
+            list.innerHTML = '<div class="words-preview">' +
+                newMapWords.map(([fr, en], i) =>
+                    `<div class="word-pair-row"><span class="wp-fr">${escHtml(fr)}</span><span class="wp-en">${escHtml(en)}</span><button class="wp-del" onclick="removeNewWord(${i})">✕</button></div>`
+                ).join('') + '</div>';
+        }
+
+        document.getElementById('new-map-paste').addEventListener('input', function () {
+            const lines = this.value.split('\n').filter(l => l.includes('—'));
+            const parsed = lines.map(l => {
+                const parts = l.split('—').map(p => p.trim());
+                return parts.length >= 2 && parts[0] && parts[1] ? [parts[0], parts[1]] : null;
+            }).filter(Boolean);
+            document.getElementById('parsed-count').textContent = parsed.length ? `✓ ${parsed.length} pairs detected` : '';
+        });
+
+        function saveNewMap() {
+            const title = document.getElementById('new-map-title').value.trim();
+            if (!title) {
+                document.getElementById('err-title').style.display = 'block';
+                return;
+            }
+            document.getElementById('err-title').style.display = 'none';
+
+            // Parse pasted text
+            const pasteText = document.getElementById('new-map-paste').value;
+            const pastedWords = pasteText.split('\n')
+                .filter(l => l.includes('—'))
+                .map(l => { const p = l.split('—').map(s => s.trim()); return (p.length >= 2 && p[0] && p[1]) ? [p[0], p[1]] : null; })
+                .filter(Boolean);
+
+            const allWords = [...newMapWords, ...pastedWords];
+            if (!allWords.length) {
+                showToast('⚠️ Add at least one word pair');
+                return;
+            }
+
+            if (editingMapId) {
+                // Edit existing
+                const map = customMaps.find(m => m.id === editingMapId);
+                if (map) { map.label = title; map.items = allWords; }
+                showToast(`✅ Map "${title}" updated (${allWords.length} words)`);
+            } else {
+                // New map
+                const newId = 'custom_' + Date.now();
+                customMaps.push({ id: newId, label: title, items: allWords, isCustom: true });
+                showToast(`✅ Map "${title}" created (${allWords.length} words)`);
+                // Auto-select new map
+                rebuildAllMaps();
+                buildSidebar();
+                selectMap(newId);
+            }
+
+            saveCustomMaps();
+            rebuildAllMaps();
+            buildSidebar();
+            renderCurrent();
+            closeModal('modal-add-map');
+        }
+
+        function deleteMap(mapId) {
+            const map = customMaps.find(m => m.id === mapId);
+            if (!map) return;
+            if (!confirm(`Delete the map "${map.label}"? This cannot be undone.`)) return;
+            customMaps = customMaps.filter(m => m.id !== mapId);
+            saveCustomMaps();
+            rebuildAllMaps();
+            if (currentMapId === mapId) {
+                currentMapId = allMaps[0]?.id ?? null;
+                currentItems = allMaps[0]?.items ?? [];
+            }
+            buildSidebar();
+            renderCurrent();
+            showToast(`🗑 Map deleted`);
+        }
+
+        // ─── ADD WORD MODAL ───────────────────────────────────────────────────────
+        let addWordTargetId = null;
+
+        function openAddWordModal(mapId) {
+            addWordTargetId = mapId;
+            const map = allMaps.find(m => m.id === mapId);
+            document.getElementById('add-word-subtitle').textContent = `Adding to: ${map?.label || 'map'}`;
+            document.getElementById('aw-fr').value = '';
+            document.getElementById('aw-en').value = '';
+            document.getElementById('err-word').style.display = 'none';
+            document.getElementById('modal-add-word').classList.remove('hidden');
+            setTimeout(() => document.getElementById('aw-fr').focus(), 100);
+        }
+
+        function saveNewWord() {
+            const fr = document.getElementById('aw-fr').value.trim();
+            const en = document.getElementById('aw-en').value.trim();
+            if (!fr || !en) { document.getElementById('err-word').style.display = 'block'; return; }
+            document.getElementById('err-word').style.display = 'none';
+
+            // Find and update map
+            let updated = false;
+            const baseMap = BASE_VOCAB.find(m => m.id === addWordTargetId || m.map === addWordTargetId);
+            if (baseMap) {
+                // For base maps, we store additions in customMaps as an overlay
+                // OR we clone the base map to custom
+                const existing = customMaps.find(m => m.id === 'base_ext_' + addWordTargetId);
+                if (existing) {
+                    existing.items.push([fr, en]);
+                } else {
+                    // Check if it's already current items
+                    const fullMap = allMaps.find(m => m.id === addWordTargetId);
+                    if (fullMap) fullMap.items.push([fr, en]);
+                }
+                // Actually just push to BASE_VOCAB items directly (in-memory)
+                baseMap.items.push([fr, en]);
+                updated = true;
+            } else {
+                const customMap = customMaps.find(m => m.id === addWordTargetId);
+                if (customMap) { customMap.items.push([fr, en]); updated = true; }
+            }
+
+            if (updated) {
+                saveCustomMaps();
+                rebuildAllMaps();
+                // Refresh currentItems
+                const map = allMaps.find(m => m.id === addWordTargetId);
+                if (currentMapId === addWordTargetId) currentItems = map?.items || [];
+                renderCurrent();
+                showToast(`✅ "${fr}" added`);
+            }
+            closeModal('modal-add-word');
+        }
+
+        // ─── REMOVE WORD ──────────────────────────────────────────────────────────
+        function removeWord(mapIdStr, idx) {
+            // mapIdStr may be numeric string or custom_xxx
+            let mapId = isNaN(Number(mapIdStr)) ? mapIdStr : Number(mapIdStr);
+
+            const baseMap = BASE_VOCAB.find(m => m.map === mapId || m.id === mapId);
+            if (baseMap) {
+                baseMap.items.splice(idx, 1);
+            } else {
+                const customMap = customMaps.find(m => m.id === mapId);
+                if (customMap) customMap.items.splice(idx, 1);
+            }
+            saveCustomMaps();
+            rebuildAllMaps();
+            if (currentMapId === mapId) currentItems = allMaps.find(m => m.id === mapId)?.items || [];
+            renderCurrent();
+            showToast('Word removed');
+        }
+
+        // ─── MODAL HELPERS ────────────────────────────────────────────────────────
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.add('hidden'); });
+        });
+
+        // Enter key in add-word modal
+        document.getElementById('aw-en').addEventListener('keydown', e => { if (e.key === 'Enter') saveNewWord(); });
+
+        // ─── TOAST ────────────────────────────────────────────────────────────────
+        let toastTimer = null;
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        // ─── UTILS ────────────────────────────────────────────────────────────────
         function escHtml(str) {
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+        function escAttr(str) {
+            return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
 
-        // Init
+        // ─── INIT ─────────────────────────────────────────────────────────────────
+        loadCustomMaps();
+        loadStudied();
+        loadScores();
+        rebuildAllMaps();
         buildSidebar();
-        // Select first map
-        if (VOCAB.length > 0) selectMap(VOCAB[0].map);
+
+        // Restore last map or default to first
+        const lastMap = loadLastMap();
+        const startId = lastMap !== null
+            ? (allMaps.find(m => String(m.id) === lastMap)?.id ?? allMaps[0]?.id)
+            : allMaps[0]?.id;
+        if (startId !== undefined) selectMap(startId);
     </script>
 </body>
 
