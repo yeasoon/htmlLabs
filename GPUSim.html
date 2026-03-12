@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GPU Simulator - Unified Workflow View</title>
+    <style>
+        :root {
+            --bg: #0f1115;
+            --panel: #171a21;
+            --panel-2: #1e2430;
+            --border: #2f3848;
+            --text: #e6edf3;
+            --muted: #95a2b3;
+            --free: #11161d;
+            --used: #29405f;
+            --a: #305cde;
+            --b: #15803d;
+            --c: #9333ea;
+            --other: #9a3412;
+            --danger: #dc2626;
+            --warn: #d97706;
+            --ok: #16a34a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            padding: 16px;
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            overflow: auto;
+            max-height: 100vh;
+        }
+
+        .main {
+            padding: 16px;
+            overflow: auto;
+            max-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0 0 12px;
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+
+        h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+            margin-top: 16px;
+        }
+
+        h3 {
+            font-size: 13px;
+            margin-top: 12px;
+            color: var(--muted);
+        }
+
+        p {
+            color: var(--muted);
+            margin: 6px 0 12px;
+            font-size: 13px;
+        }
+
+        .card {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .card.compact {
+            padding: 10px;
+        }
+
+        .card.compact h2 {
+            margin-top: 0;
+            font-size: 12px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 100px;
+            gap: 8px;
+            align-items: end;
+            margin-bottom: 8px;
+        }
+
+        .row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        label {
+            font-size: 11px;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        input,
+        select,
+        button,
+        textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            background: #0f141b;
+            color: var(--text);
+            border-radius: 6px;
+            padding: 7px 8px;
+            font-size: 13px;
+        }
+
+        button {
+            cursor: pointer;
+            background: #223044;
+            transition: 120ms ease;
+        }
+
+        button:hover {
+            filter: brightness(1.1);
+        }
+
+        button.danger {
+            background: #4b1f24;
+        }
+
+        button.good {
+            background: #173b29;
+        }
+
+        button.warn {
+            background: #4a3315;
+        }
+
+        button.small {
+            padding: 5px 8px;
+            font-size: 11px;
+        }
+
+        .memory-panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+
+        .memory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stats {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            min-width: 90px;
+        }
+
+        .stat .k {
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .stat .v {
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .memory-grid {
+            display: grid;
+            gap: 4px;
+            align-content: start;
+        }
+
+        .cell {
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--free);
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 100ms ease, box-shadow 100ms ease;
+            position: relative;
+            overflow: hidden;
+            font-size: 10px;
+        }
+
+        .cell:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .cell.used {
+            background: var(--used);
+        }
+
+        .cell.type-A {
+            background: linear-gradient(180deg, rgba(48, 92, 222, 0.45), rgba(18, 23, 31, 0.85));
+        }
+
+        .cell.type-B {
+            background: linear-gradient(180deg, rgba(21, 128, 61, 0.45), rgba(18, 23, 31, 0.85));
+        }
+
+        .cell.type-C {
+            background: linear-gradient(180deg, rgba(147, 51, 234, 0.45), rgba(18, 23, 31, 0.85));
+        }
+
+        .cell.type-other {
+            background: linear-gradient(180deg, rgba(154, 52, 18, 0.45), rgba(18, 23, 31, 0.85));
+        }
+
+        .addr {
+            font-size: 9px;
+            color: #d7e0ea;
+            opacity: 0.9;
+        }
+
+        .sig {
+            font-size: 9px;
+            color: #d7e0ea;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .value {
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .free-label {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .alloc-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .alloc-table th,
+        .alloc-table td {
+            border-bottom: 1px solid var(--border);
+            padding: 6px 4px;
+            text-align: left;
+        }
+
+        .alloc-table th {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .log {
+            background: #0d1218;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            height: 150px;
+            overflow: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 10px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+
+        .tiny {
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        /* Cache Styles */
+        .cache-level {
+            margin-bottom: 12px;
+        }
+
+        .cache-sets {
+            display: grid;
+            gap: 3px;
+            margin-top: 8px;
+        }
+
+        .cache-line {
+            display: grid;
+            grid-template-columns: 50px 60px 1fr 60px;
+            gap: 6px;
+            padding: 6px;
+            background: var(--free);
+            border-radius: 5px;
+            font-size: 10px;
+            align-items: center;
+        }
+
+        .cache-line.valid {
+            background: rgba(48, 92, 222, 0.2);
+        }
+
+        .cache-line.dirty {
+            background: rgba(217, 119, 6, 0.2);
+        }
+
+        /* Compute Styles */
+        .warp-grid {
+            display: grid;
+            grid-template-columns: repeat(16, 1fr);
+            gap: 3px;
+            margin-top: 8px;
+        }
+
+        .thread {
+            aspect-ratio: 1;
+            background: var(--free);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            transition: background 200ms ease;
+        }
+
+        .thread.active {
+            background: var(--ok);
+        }
+
+        .thread.stalled {
+            background: var(--warn);
+        }
+
+        .thread.idle {
+            background: var(--free);
+        }
+
+        .compute-pipeline {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .pipeline-stage {
+            flex: 1;
+            padding: 8px;
+            background: var(--free);
+            border-radius: 6px;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .pipeline-stage.active {
+            background: linear-gradient(180deg, rgba(48, 92, 222, 0.3), rgba(18, 23, 31, 0.5));
+            border: 1px solid var(--a);
+        }
+
+        /* Shared Memory Styles */
+        .shared-bank {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px;
+            min-height: 60px;
+        }
+
+        .shared-bank.has-data {
+            border-color: var(--ok);
+        }
+
+        .shared-bank.conflict {
+            border-color: var(--warn);
+            animation: pulse-border 1s infinite;
+        }
+
+        @keyframes pulse-border {
+
+            0%,
+            100% {
+                border-color: var(--warn);
+            }
+
+            50% {
+                border-color: var(--danger);
+            }
+        }
+
+        /* Unified View Layout */
+        .unified-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .module-section {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .module-section h2 {
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .workflow-arrow {
+            text-align: center;
+            color: var(--muted);
+            font-size: 20px;
+            padding: 8px;
+        }
+
+        .data-flow-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ok);
+            margin-right: 6px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .compact-controls {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .compact-controls button {
+            flex: 1;
+            min-width: 60px;
+        }
+
+        @media (max-width: 1200px) {
+            .unified-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 960px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                max-height: none;
+            }
+
+            .main {
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <h1>GPU Simulator</h1>
+            <p>Unified workflow view - All modules active simultaneously</p>
+
+            <!-- Global Memory Controls -->
+            <div class="card compact">
+                <h2><span class="data-flow-indicator"></span>Global Memory Controls</h2>
+                <div class="row">
+                    <div>
+                        <label>Signature</label>
+                        <input id="memSignature" type="text" value="A_0_0" />
+                    </div>
+                    <div>
+                        <label>Cells</label>
+                        <input id="memAllocSize" type="number" min="1" max="256" value="8" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <label>Type</label>
+                        <select id="memAllocType">
+                            <option value="A">Matrix A</option>
+                            <option value="B">Matrix B</option>
+                            <option value="C">Matrix C</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Init</label>
+                        <select id="memFillMode">
+                            <option value="zero">Zero</option>
+                            <option value="random">Random</option>
+                            <option value="empty">Empty</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="compact-controls">
+                    <button id="memMallocBtn" class="good">Malloc</button>
+                    <button id="memFreeBtn" class="danger">Free</button>
+                    <button id="memRandFillBtn" class="warn">Fill</button>
+                    <button id="memClearBtn">Clear</button>
+                </div>
+            </div>
+
+            <!-- Cache Controls -->
+            <div class="card compact">
+                <h2><span class="data-flow-indicator"></span>Cache Controls</h2>
+                <div class="row">
+                    <div>
+                        <label>Test Address</label>
+                        <input id="cacheTestAddr" type="number" min="0" max="1023" value="0" />
+                    </div>
+                    <div style="display:flex;align-items:flex-end;">
+                        <button id="cacheAccessBtn" class="good">Access</button>
+                    </div>
+                </div>
+                <div class="compact-controls">
+                    <button id="cacheClearBtn" class="danger">Clear Cache</button>
+                    <button id="cacheDemoBtn">Demo Access Pattern</button>
+                </div>
+            </div>
+
+            <!-- Compute Controls -->
+            <div class="card compact">
+                <h2><span class="data-flow-indicator"></span>Compute Controls</h2>
+                <div class="compact-controls">
+                    <button id="compStepBtn" class="good">Step</button>
+                    <button id="compRunBtn">Run</button>
+                    <button id="compResetBtn" class="danger">Reset</button>
+                    <button id="compLoadProgramBtn">Load Program</button>
+                </div>
+            </div>
+
+            <!-- Module Configuration -->
+            <div class="card compact">
+                <h2>Module Configuration</h2>
+
+                <h3>Global Memory</h3>
+                <div class="row-2">
+                    <div>
+                        <label>Total Cells</label>
+                        <input id="cfgMemCells" type="number" min="32" max="512" step="16" value="512" />
+                    </div>
+                    <div>
+                        <label>Grid Columns</label>
+                        <input id="cfgMemCols" type="number" min="8" max="32" value="32" />
+                    </div>
+                </div>
+
+                <h3>L1 Cache</h3>
+                <div class="row-2">
+                    <div>
+                        <label>Sets</label>
+                        <input id="cfgL1Sets" type="number" min="4" max="32" value="8" />
+                    </div>
+                    <div>
+                        <label>Ways</label>
+                        <input id="cfgL1Ways" type="number" min="1" max="8" value="2" />
+                    </div>
+                </div>
+
+                <h3>L2 Cache</h3>
+                <div class="row-2">
+                    <div>
+                        <label>Sets</label>
+                        <input id="cfgL2Sets" type="number" min="8" max="64" value="16" />
+                    </div>
+                    <div>
+                        <label>Ways</label>
+                        <input id="cfgL2Ways" type="number" min="2" max="16" value="4" />
+                    </div>
+                </div>
+
+                <h3>Compute Unit</h3>
+                <div class="row-2">
+                    <div>
+                        <label>Warps</label>
+                        <input id="cfgWarps" type="number" min="1" max="16" value="4" />
+                    </div>
+                    <div>
+                        <label>Threads/Warp</label>
+                        <input id="cfgThreads" type="number" min="8" max="64" step="8" value="32" />
+                    </div>
+                </div>
+                <div class="row-2">
+                    <div>
+                        <label>Warps per Row</label>
+                        <input id="cfgWarpsPerRow" type="number" min="1" max="8" value="4" />
+                    </div>
+                    <div>
+                        <label>Thread Size (px)</label>
+                        <input id="cfgThreadSize" type="number" min="8" max="32" value="16" />
+                    </div>
+                </div>
+
+                <h3>Shared Memory</h3>
+                <div class="row-2">
+                    <div>
+                        <label>Size (words)</label>
+                        <input id="cfgSharedSize" type="number" min="64" max="1024" step="64" value="256" />
+                    </div>
+                    <div>
+                        <label>Banks</label>
+                        <input id="cfgSharedBanks" type="number" min="16" max="64" step="16" value="32" />
+                    </div>
+                </div>
+
+                <button id="applyConfigBtn" class="good" style="margin-top:8px;">Apply & Reinitialize</button>
+                <p class="tiny">Warning: This will reset all module state.</p>
+            </div>
+
+            <!-- Workflow Actions -->
+            <div class="card compact">
+                <h2>Workflow Presets</h2>
+                <div class="compact-controls">
+                    <button id="wfMatmulBtn">Setup MatMul</button>
+                    <button id="wfVectorAddBtn">Setup Vector Add</button>
+                    <button id="wfFullRunBtn" class="good">Full Run</button>
+                </div>
+            </div>
+
+            <!-- Shared Memory Controls -->
+            <div class="card compact">
+                <h2><span class="data-flow-indicator"></span>Shared Memory Controls</h2>
+                <div class="row">
+                    <div>
+                        <label>Bank Address</label>
+                        <input id="sharedBankAddr" type="number" min="0" max="255" value="0" />
+                    </div>
+                    <div style="display:flex;align-items:flex-end;">
+                        <button id="sharedReadBtn" class="good">Read</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <label>Value</label>
+                        <input id="sharedValue" type="number" value="0" />
+                    </div>
+                    <div style="display:flex;align-items:flex-end;">
+                        <button id="sharedWriteBtn" class="warn">Write</button>
+                    </div>
+                </div>
+                <div class="compact-controls">
+                    <button id="sharedClearBtn" class="danger">Clear</button>
+                    <button id="sharedDemoBtn">Demo Pattern</button>
+                </div>
+            </div>
+
+            <!-- Stats Summary -->
+            <div class="card compact">
+                <h2>Live Stats</h2>
+                <div class="row-2">
+                    <div class="stat">
+                        <div class="k">L1 Hit Rate</div>
+                        <div class="v" id="statL1Rate">0%</div>
+                    </div>
+                    <div class="stat">
+                        <div class="k">L2 Hit Rate</div>
+                        <div class="v" id="statL2Rate">0%</div>
+                    </div>
+                </div>
+                <div class="row-2">
+                    <div class="stat">
+                        <div class="k">Cycle</div>
+                        <div class="v" id="statCycle">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="k">Active Warps</div>
+                        <div class="v" id="statWarps">0</div>
+                    </div>
+                </div>
+                <div class="row-2">
+                    <div class="stat">
+                        <div class="k">Bank Conflicts</div>
+                        <div class="v" id="statBankConflicts">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="k">Shared Writes</div>
+                        <div class="v" id="statSharedWrites">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Log -->
+            <div class="card compact">
+                <h2>Event Log</h2>
+                <div id="log" class="log"></div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="unified-grid">
+                <!-- Memory Module View -->
+                <div class="module-section">
+                    <div class="section-header">
+                        <h2>Global Memory (VRAM)</h2>
+                        <div class="tiny" id="memStats">0 used / ${memory.totalCells} total</div>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item"><span class="swatch" style="background: var(--free);"></span> Free
+                        </div>
+                        <div class="legend-item"><span class="swatch" style="background: var(--a);"></span> A</div>
+                        <div class="legend-item"><span class="swatch" style="background: var(--b);"></span> B</div>
+                        <div class="legend-item"><span class="swatch" style="background: var(--c);"></span> C</div>
+                    </div>
+                    <div id="memoryGrid" class="memory-grid"></div>
+                    <div id="allocTableWrap" style="margin-top:12px;"></div>
+                </div>
+
+                <!-- Cache Module View -->
+                <div class="module-section">
+                    <div class="section-header">
+                        <h2>Cache Hierarchy</h2>
+                        <div class="tiny" id="cacheStatsDisplay">L1: 8 sets × 2-way | L2: 16 sets × 4-way</div>
+                    </div>
+
+                    <h3>L1 Cache</h3>
+                    <div id="l1CacheView"></div>
+
+                    <h3>L2 Cache (first 4 sets)</h3>
+                    <div id="l2CacheView"></div>
+                </div>
+
+                <!-- Shared Memory Module View -->
+                <div class="module-section">
+                    <div class="section-header">
+                        <h2>Shared Memory</h2>
+                        <div class="tiny" id="sharedStatsDisplay">256 words × 32 banks</div>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item"><span class="swatch" style="background: var(--free);"></span> Empty
+                        </div>
+                        <div class="legend-item"><span class="swatch" style="background: var(--ok);"></span> Has Data
+                        </div>
+                        <div class="legend-item"><span class="swatch" style="background: var(--warn);"></span> Conflict
+                        </div>
+                    </div>
+                    <div id="sharedMemoryView"></div>
+                </div>
+
+                <!-- Compute Module View -->
+                <div class="module-section" style="grid-column: 1 / -1;">
+                    <div class="section-header">
+                        <h2>Compute Unit (SIMT)</h2>
+                        <div class="tiny" id="computeStatsDisplay">4 Warps × 32 Threads (2/row)</div>
+                    </div>
+
+                    <div class="compute-pipeline">
+                        <div class="pipeline-stage" id="stageFetch">Fetch</div>
+                        <div class="pipeline-stage" id="stageDecode">Decode</div>
+                        <div class="pipeline-stage" id="stageExecute">Execute</div>
+                        <div class="pipeline-stage" id="stageMemory">Memory</div>
+                        <div class="pipeline-stage" id="stageWriteback">Writeback</div>
+                    </div>
+
+                    <div id="warpsView"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ============================================
+        // EVENT BUS
+        // ============================================
+        class EventBus {
+            constructor() {
+                this.listeners = new Map();
+            }
+
+            on(event, callback, context = null) {
+                if (!this.listeners.has(event)) {
+                    this.listeners.set(event, []);
+                }
+                this.listeners.get(event).push({ callback, context });
+            }
+
+            emit(event, data = null) {
+                if (!this.listeners.has(event)) return;
+                this.listeners.get(event).forEach(({ callback, context }) => {
+                    try {
+                        context ? callback.call(context, data) : callback(data);
+                    } catch (e) {
+                        console.error(`Error in event handler for ${event}:`, e);
+                    }
+                });
+            }
+        }
+
+        // ============================================
+        // GLOBAL MEMORY MODULE
+        // ============================================
+        class GlobalMemory {
+            constructor(eventBus, config = {}) {
+                this.eventBus = eventBus;
+                this.totalCells = config.totalCells || 512;
+                this.columns = config.columns || 32;
+                this.cells = [];
+                this.allocations = new Map();
+                this.reset(this.totalCells);
+            }
+
+            reset(totalCells = this.totalCells) {
+                this.totalCells = totalCells;
+                this.cells = Array.from({ length: totalCells }, (_, i) => ({
+                    addr: i,
+                    used: false,
+                    signature: null,
+                    type: null,
+                    value: null,
+                    offset: null,
+                }));
+                this.allocations.clear();
+                this.eventBus.emit('memory:reset', { totalCells });
+            }
+
+            malloc(signature, size, type = 'other', init = 'empty') {
+                if (!signature || !signature.trim()) {
+                    return { ok: false, error: 'Signature is required.' };
+                }
+                if (this.allocations.has(signature)) {
+                    return { ok: false, error: `Signature already exists: ${signature}` };
+                }
+                if (size <= 0 || size > this.totalCells) {
+                    return { ok: false, error: `Invalid size: ${size}` };
+                }
+
+                const start = this.findContiguousFreeBlock(size);
+                if (start === -1) {
+                    return { ok: false, error: `No contiguous block of ${size} cells available.` };
+                }
+
+                const block = { signature, size, type, start, end: start + size - 1 };
+
+                for (let i = 0; i < size; i++) {
+                    const cell = this.cells[start + i];
+                    cell.used = true;
+                    cell.signature = signature;
+                    cell.type = type;
+                    cell.offset = i;
+                    cell.value = init === 'random' ? this.randomValue(type) : (init === 'zero' ? 0 : null);
+                }
+
+                this.allocations.set(signature, block);
+                this.eventBus.emit('memory:allocated', { block });
+                return { ok: true, block };
+            }
+
+            free(signature) {
+                const block = this.allocations.get(signature);
+                if (!block) {
+                    return { ok: false, error: `Signature not found: ${signature}` };
+                }
+                for (let i = block.start; i <= block.end; i++) {
+                    this.cells[i] = {
+                        addr: i, used: false, signature: null,
+                        type: null, value: null, offset: null,
+                    };
+                }
+                this.allocations.delete(signature);
+                this.eventBus.emit('memory:freed', { signature, block });
+                return { ok: true, block };
+            }
+
+            randomFill(signature) {
+                const block = this.allocations.get(signature);
+                if (!block) return { ok: false, error: `Signature not found: ${signature}` };
+                for (let i = block.start; i <= block.end; i++) {
+                    this.cells[i].value = this.randomValue(block.type);
+                }
+                this.eventBus.emit('memory:modified', { signature });
+                return { ok: true, block };
+            }
+
+            readValue(addr) {
+                if (addr < 0 || addr >= this.totalCells) return null;
+                return this.cells[addr];
+            }
+
+            getAllocation(signature) {
+                return this.allocations.get(signature) || null;
+            }
+
+            findContiguousFreeBlock(size) {
+                let run = 0, start = 0;
+                for (let i = 0; i < this.cells.length; i++) {
+                    if (!this.cells[i].used) {
+                        if (run === 0) start = i;
+                        run++;
+                        if (run === size) return start;
+                    } else {
+                        run = 0;
+                    }
+                }
+                return -1;
+            }
+
+            randomValue(type) {
+                if (type === 'C') return +(Math.random() * 10).toFixed(1);
+                return Math.floor(Math.random() * 9) + 1;
+            }
+
+            getStats() {
+                const used = this.cells.filter(c => c.used).length;
+                return { total: this.totalCells, used, free: this.totalCells - used, allocations: this.allocations.size };
+            }
+        }
+
+        // ============================================
+        // CACHE MODULE
+        // ============================================
+        class CacheHierarchy {
+            constructor(eventBus, memory, config = {}) {
+                this.eventBus = eventBus;
+                this.memory = memory;
+                this.l1Sets = config.l1Sets || 8;
+                this.l1Ways = config.l1Ways || 2;
+                this.l1 = this.createCache(this.l1Sets, this.l1Ways);
+                this.l2Sets = config.l2Sets || 16;
+                this.l2Ways = config.l2Ways || 4;
+                this.l2 = this.createCache(this.l2Sets, this.l2Ways);
+                this.stats = { l1Hits: 0, l1Misses: 0, l2Hits: 0, l2Misses: 0 };
+
+                this.eventBus.on('memory:modified', this.onMemoryModified.bind(this));
+                this.eventBus.on('memory:freed', this.onMemoryFreed.bind(this));
+            }
+
+            createCache(sets, ways) {
+                return Array.from({ length: sets }, () =>
+                    Array.from({ length: ways }, () => ({
+                        valid: false, dirty: false, tag: null, addr: null, data: null, lastAccess: 0
+                    }))
+                );
+            }
+
+            onMemoryModified(data) {
+                this.invalidateAddr(data.signature);
+            }
+
+            onMemoryFreed(data) {
+                this.invalidateAddr(data.signature);
+            }
+
+            invalidateAddr(signature) {
+                const block = this.memory.getAllocation(signature);
+                if (!block) return;
+                for (let addr = block.start; addr <= block.end; addr++) {
+                    this.invalidateL1(addr);
+                    this.invalidateL2(addr);
+                }
+            }
+
+            invalidateL1(addr) {
+                const { setIdx, tag } = this.getL1Indices(addr);
+                this.l1[setIdx].forEach(line => {
+                    if (line.valid && line.tag === tag) line.valid = false;
+                });
+            }
+
+            invalidateL2(addr) {
+                const { setIdx, tag } = this.getL2Indices(addr);
+                this.l2[setIdx].forEach(line => {
+                    if (line.valid && line.tag === tag) line.valid = false;
+                });
+            }
+
+            getL1Indices(addr) {
+                const setIdx = addr % this.l1Sets;
+                const tag = Math.floor(addr / this.l1Sets);
+                return { setIdx, tag };
+            }
+
+            getL2Indices(addr) {
+                const setIdx = addr % this.l2Sets;
+                const tag = Math.floor(addr / this.l2Sets);
+                return { setIdx, tag };
+            }
+
+            access(addr) {
+                const l1Result = this.accessL1(addr);
+                if (l1Result.hit) {
+                    this.stats.l1Hits++;
+                    this.eventBus.emit('cache:l1-hit', { addr });
+                    return { hit: true, level: 'L1', data: l1Result.data };
+                }
+                this.stats.l1Misses++;
+
+                const l2Result = this.accessL2(addr);
+                if (l2Result.hit) {
+                    this.stats.l2Hits++;
+                    this.eventBus.emit('cache:l2-hit', { addr });
+                    this.fillL1(addr, l2Result.data);
+                    return { hit: true, level: 'L2', data: l2Result.data };
+                }
+                this.stats.l2Misses++;
+
+                const memData = this.memory.readValue(addr);
+                this.eventBus.emit('cache:miss', { addr });
+                this.fillL2(addr, memData);
+                this.fillL1(addr, memData);
+                return { hit: false, level: 'Memory', data: memData };
+            }
+
+            accessL1(addr) {
+                const { setIdx, tag } = this.getL1Indices(addr);
+                const line = this.l1[setIdx].find(l => l.valid && l.tag === tag);
+                if (line) {
+                    line.lastAccess = Date.now();
+                    return { hit: true, data: line.data };
+                }
+                return { hit: false };
+            }
+
+            accessL2(addr) {
+                const { setIdx, tag } = this.getL2Indices(addr);
+                const line = this.l2[setIdx].find(l => l.valid && l.tag === tag);
+                if (line) {
+                    line.lastAccess = Date.now();
+                    return { hit: true, data: line.data };
+                }
+                return { hit: false };
+            }
+
+            fillL1(addr, data) {
+                const { setIdx, tag } = this.getL1Indices(addr);
+                const set = this.l1[setIdx];
+                const victim = set.reduce((min, l, i) => l.lastAccess < set[min].lastAccess ? i : min, 0);
+                set[victim] = { valid: true, dirty: false, tag, addr, data, lastAccess: Date.now() };
+            }
+
+            fillL2(addr, data) {
+                const { setIdx, tag } = this.getL2Indices(addr);
+                const set = this.l2[setIdx];
+                const victim = set.reduce((min, l, i) => l.lastAccess < set[min].lastAccess ? i : min, 0);
+                set[victim] = { valid: true, dirty: false, tag, addr, data, lastAccess: Date.now() };
+            }
+
+            clear() {
+                this.l1 = this.createCache(this.l1Sets, this.l1Ways);
+                this.l2 = this.createCache(this.l2Sets, this.l2Ways);
+                this.stats = { l1Hits: 0, l1Misses: 0, l2Hits: 0, l2Misses: 0 };
+                this.eventBus.emit('cache:cleared');
+            }
+
+            getHitRates() {
+                const l1Total = this.stats.l1Hits + this.stats.l1Misses;
+                const l2Total = this.stats.l2Hits + this.stats.l2Misses;
+                return {
+                    l1: l1Total > 0 ? ((this.stats.l1Hits / l1Total) * 100).toFixed(1) : 0,
+                    l2: l2Total > 0 ? ((this.stats.l2Hits / l2Total) * 100).toFixed(1) : 0
+                };
+            }
+        }
+
+        // ============================================
+        // SHARED MEMORY MODULE
+        // ============================================
+        class SharedMemory {
+            constructor(eventBus, config = {}) {
+                this.eventBus = eventBus;
+                this.size = config.size || 256;  // Total words
+                this.numBanks = config.numBanks || 32;  // Number of banks
+                this.data = new Array(this.size).fill(null);
+                this.stats = { reads: 0, writes: 0, conflicts: 0 };
+                this.recentAccesses = [];  // Track recent accesses for conflict detection
+            }
+
+            // Calculate which bank an address maps to
+            getBank(addr) {
+                return addr % this.numBanks;
+            }
+
+            // Read from shared memory
+            read(addr, threadId = 0) {
+                if (addr < 0 || addr >= this.size) {
+                    return { ok: false, error: 'Address out of bounds' };
+                }
+                this.stats.reads++;
+                this.trackAccess(addr, threadId, 'read');
+                this.eventBus.emit('shared:read', { addr, bank: this.getBank(addr), threadId });
+                return { ok: true, value: this.data[addr], bank: this.getBank(addr) };
+            }
+
+            // Write to shared memory
+            write(addr, value, threadId = 0) {
+                if (addr < 0 || addr >= this.size) {
+                    return { ok: false, error: 'Address out of bounds' };
+                }
+                this.stats.writes++;
+                this.data[addr] = value;
+                this.trackAccess(addr, threadId, 'write');
+                this.eventBus.emit('shared:write', { addr, value, bank: this.getBank(addr), threadId });
+                return { ok: true, bank: this.getBank(addr) };
+            }
+
+            // Track accesses for conflict detection
+            trackAccess(addr, threadId, type) {
+                const bank = this.getBank(addr);
+                const timestamp = Date.now();
+                this.recentAccesses.push({ addr, bank, threadId, type, timestamp });
+
+                // Keep only recent accesses (last 100ms)
+                this.recentAccesses = this.recentAccesses.filter(a => timestamp - a.timestamp < 100);
+
+                // Check for conflicts (multiple threads accessing same bank simultaneously)
+                const sameBankAccesses = this.recentAccesses.filter(a => a.bank === bank && a.timestamp === timestamp);
+                if (sameBankAccesses.length > 1) {
+                    this.stats.conflicts++;
+                    this.eventBus.emit('shared:conflict', { bank, accesses: sameBankAccesses });
+                }
+            }
+
+            // Clear all data
+            clear() {
+                this.data.fill(null);
+                this.stats = { reads: 0, writes: 0, conflicts: 0 };
+                this.recentAccesses = [];
+                this.eventBus.emit('shared:cleared');
+            }
+
+            // Get bank utilization
+            getBankUtilization() {
+                const bankCounts = new Array(this.numBanks).fill(0);
+                for (let i = 0; i < this.size; i++) {
+                    if (this.data[i] !== null) {
+                        bankCounts[this.getBank(i)]++;
+                    }
+                }
+                return bankCounts;
+            }
+
+            // Get stats
+            getStats() {
+                return { ...this.stats, size: this.size, numBanks: this.numBanks };
+            }
+        }
+
+        // ============================================
+        // COMPUTE MODULE
+        // ============================================
+        class ComputeUnit {
+            constructor(eventBus, memory, cache, config = {}) {
+                this.eventBus = eventBus;
+                this.memory = memory;
+                this.cache = cache;
+                this.numWarps = config.numWarps || 4;
+                this.threadsPerWarp = config.threadsPerWarp || 32;
+                this.warpsPerRow = config.warpsPerRow || 4;
+                this.threadSize = config.threadSize || 16;
+                this.warps = this.createWarps();
+                this.cycle = 0;
+                this.running = false;
+                this.interval = null;
+                this.currentStage = 0;
+            }
+
+            createWarps() {
+                return Array.from({ length: this.numWarps }, (_, i) => ({
+                    id: i,
+                    active: false,
+                    threads: Array.from({ length: this.threadsPerWarp }, (_, j) => ({
+                        id: j, state: 'idle', pc: 0, regs: [0, 0, 0, 0]
+                    })),
+                    program: [],
+                    pc: 0
+                }));
+            }
+
+            reconfigure(config) {
+                this.stop();
+                this.numWarps = config.numWarps || this.numWarps;
+                this.threadsPerWarp = config.threadsPerWarp || this.threadsPerWarp;
+                this.warps = this.createWarps();
+                this.cycle = 0;
+                this.currentStage = 0;
+            }
+
+            step() {
+                this.cycle++;
+                let activity = false;
+                this.currentStage = (this.cycle % 5);
+
+                for (const warp of this.warps) {
+                    if (!warp.active || warp.pc >= warp.program.length) continue;
+                    activity = true;
+                    const inst = warp.program[warp.pc];
+
+                    for (const thread of warp.threads) {
+                        if (inst.op === 'LOAD') {
+                            const result = this.cache.access(inst.addr + thread.id);
+                            thread.regs[inst.reg] = result.data?.value ?? 0;
+                            thread.state = result.hit ? 'active' : 'stalled';
+                        } else if (inst.op === 'MUL') {
+                            thread.regs[inst.reg] = thread.regs[inst.src1] * thread.regs[inst.src2];
+                            thread.state = 'active';
+                        } else if (inst.op === 'ADD') {
+                            thread.regs[inst.reg] = thread.regs[inst.src1] + thread.regs[inst.src2];
+                            thread.state = 'active';
+                        } else if (inst.op === 'STORE') {
+                            thread.state = 'active';
+                        } else if (inst.op === 'DONE') {
+                            thread.state = 'idle';
+                        }
+                    }
+
+                    if (inst.op !== 'DONE') {
+                        warp.pc++;
+                    } else {
+                        warp.active = false;
+                    }
+                }
+
+                this.eventBus.emit('compute:step', { cycle: this.cycle });
+                return activity;
+            }
+
+            run() {
+                if (this.running) return;
+                this.running = true;
+                this.interval = setInterval(() => {
+                    if (!this.step()) this.stop();
+                    renderAll();
+                }, 300);
+            }
+
+            stop() {
+                this.running = false;
+                if (this.interval) {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+            }
+
+            reset() {
+                this.stop();
+                this.cycle = 0;
+                this.currentStage = 0;
+                for (const warp of this.warps) {
+                    warp.pc = 0;
+                    warp.active = false;
+                    for (const thread of warp.threads) {
+                        thread.state = 'idle';
+                        thread.pc = 0;
+                        thread.regs = [0, 0, 0, 0];
+                    }
+                }
+            }
+
+            loadProgram(warpId, program) {
+                if (this.warps[warpId]) {
+                    this.warps[warpId].program = program;
+                    this.warps[warpId].active = true;
+                }
+            }
+
+            getActiveWarpCount() {
+                return this.warps.filter(w => w.active).length;
+            }
+        }
+
+        // ============================================
+        // UI RENDERING
+        // ============================================
+        let eventBus, memory, cache, compute, sharedMemory;
+
+        function initializeModules(config = {}) {
+            // Clean up existing
+            if (compute) compute.stop();
+
+            // Default configs
+            const memConfig = {
+                totalCells: config.memCells || 512,
+                columns: config.memCols || 32
+            };
+            const cacheConfig = {
+                l1Sets: config.l1Sets || 8,
+                l1Ways: config.l1Ways || 2,
+                l2Sets: config.l2Sets || 16,
+                l2Ways: config.l2Ways || 4
+            };
+            const computeConfig = {
+                numWarps: config.numWarps || 4,
+                threadsPerWarp: config.threadsPerWarp || 32,
+                warpsPerRow: config.warpsPerRow || 4,
+                threadSize: config.threadSize || 16
+            };
+            const sharedConfig = {
+                size: config.sharedSize || 256,
+                numBanks: config.sharedBanks || 32
+            };
+
+            // Create new instances
+            eventBus = new EventBus();
+            memory = new GlobalMemory(eventBus, memConfig);
+            cache = new CacheHierarchy(eventBus, memory, cacheConfig);
+            sharedMemory = new SharedMemory(eventBus, sharedConfig);
+            compute = new ComputeUnit(eventBus, memory, cache, computeConfig);
+
+            // Re-attach event listeners
+            eventBus.on('memory:allocated', (data) => log(`Allocated: ${data.block.signature}`));
+            eventBus.on('memory:freed', (data) => log(`Freed: ${data.signature}`));
+            eventBus.on('cache:l1-hit', () => renderStats());
+            eventBus.on('cache:l2-hit', () => renderStats());
+            eventBus.on('cache:miss', () => renderStats());
+            eventBus.on('shared:conflict', () => updateBankConflictStats());
+
+            return { eventBus, memory, cache, compute, sharedMemory };
+        }
+
+        function updateBankConflictStats() {
+            const stats = sharedMemory.getStats();
+            document.getElementById('statBankConflicts').textContent = stats.conflicts;
+        }
+
+        // Initial initialization
+        initializeModules();
+
+        function log(msg) {
+            const stamp = new Date().toLocaleTimeString();
+            const logEl = document.getElementById('log');
+            logEl.textContent = `[${stamp}] ${msg}\n` + logEl.textContent;
+        }
+
+        function typeClass(type) {
+            if (type === 'A') return 'type-A';
+            if (type === 'B') return 'type-B';
+            if (type === 'C') return 'type-C';
+            return 'type-other';
+        }
+
+        function renderMemory() {
+            const stats = memory.getStats();
+            document.getElementById('memStats').textContent = `${stats.used} used / ${stats.total} total | ${stats.allocations} allocs`;
+
+            const grid = document.getElementById('memoryGrid');
+            grid.style.gridTemplateColumns = `repeat(${memory.columns}, minmax(36px, 1fr))`;
+            grid.innerHTML = '';
+
+            for (const cell of memory.cells) {
+                const div = document.createElement('div');
+                div.className = `cell ${cell.used ? `used ${typeClass(cell.type)}` : ''}`;
+                div.title = cell.used ? `addr=${cell.addr} | sig=${cell.signature} | offset=${cell.offset}` : `addr=${cell.addr} | free`;
+
+                if (cell.used) {
+                    div.innerHTML = `
+                        <div class="addr">@${cell.addr}</div>
+                        <div class="value">${cell.value ?? '·'}</div>
+                        <div class="sig">${cell.signature}[${cell.offset}]</div>
+                    `;
+                } else {
+                    div.innerHTML = `<div class="addr">@${cell.addr}</div><div class="free-label">free</div>`;
+                }
+                grid.appendChild(div);
+            }
+
+            const allocList = Array.from(memory.allocations.values());
+            const tableWrap = document.getElementById('allocTableWrap');
+            if (!allocList.length) {
+                tableWrap.innerHTML = '<div class="tiny">No active allocations.</div>';
+            } else {
+                tableWrap.innerHTML = `
+                    <table class="alloc-table">
+                        <thead><tr><th>Sig</th><th>Type</th><th>Size</th><th>Range</th></tr></thead>
+                        <tbody>${allocList.map(b => `
+                            <tr><td>${b.signature}</td><td>${b.type}</td><td>${b.size}</td><td>${b.start}..${b.end}</td></tr>
+                        `).join('')}</tbody>
+                    </table>
+                `;
+            }
+        }
+
+        function renderCache() {
+            const renderSet = (set, setIdx) => set.map((line, wayIdx) => `
+                <div class="cache-line ${line.valid ? 'valid' : ''} ${line.dirty ? 'dirty' : ''}">
+                    <span>W${wayIdx}</span>
+                    <span>${line.valid ? 'V' : 'I'}</span>
+                    <span>${line.valid ? `Tag:${line.tag}` : '—'}</span>
+                    <span>${line.valid && line.data ? line.data.value ?? '·' : '—'}</span>
+                </div>
+            `).join('');
+
+            const l1El = document.getElementById('l1CacheView');
+            l1El.innerHTML = `<div class="cache-sets">${cache.l1.map((set, i) => renderSet(set, i)).join('')}</div>`;
+
+            const l2El = document.getElementById('l2CacheView');
+            const l2Visible = Math.min(4, cache.l2Sets);
+            const l2Remaining = cache.l2Sets - l2Visible;
+            l2El.innerHTML = cache.l2.slice(0, l2Visible).map((set, i) => `
+                <div class="cache-level">
+                    <div class="tiny">Set ${i}</div>
+                    <div class="cache-sets">${renderSet(set, i)}</div>
+                </div>
+            `).join('') + (l2Remaining > 0 ? `<div class="tiny">... ${l2Remaining} more sets</div>` : '');
+
+            // Update cache stats display
+            const cacheStatsDisplay = document.getElementById('cacheStatsDisplay');
+            if (cacheStatsDisplay) {
+                cacheStatsDisplay.textContent = `L1: ${cache.l1Sets} sets × ${cache.l1Ways}-way | L2: ${cache.l2Sets} sets × ${cache.l2Ways}-way`;
+            }
+        }
+
+        function renderSharedMemory() {
+            const sharedEl = document.getElementById('sharedMemoryView');
+            const bankSize = Math.ceil(sharedMemory.size / sharedMemory.numBanks);
+            const bankUtil = sharedMemory.getBankUtilization();
+
+            // Create bank visualization - single horizontal line
+            let html = '<div style="display: flex; gap: 4px; overflow-x: auto; padding: 4px;">';
+
+            for (let bank = 0; bank < sharedMemory.numBanks; bank++) {
+                const bankData = [];
+                for (let i = 0; i < bankSize; i++) {
+                    const addr = bank + i * sharedMemory.numBanks;
+                    if (addr < sharedMemory.size) {
+                        bankData.push({ addr, value: sharedMemory.data[addr] });
+                    }
+                }
+
+                const hasData = bankData.some(d => d.value !== null);
+                const usedCells = bankData.filter(d => d.value !== null).length;
+
+                html += `
+                    <div style="background: var(--panel-2); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; min-width: 60px; flex-shrink: 0;">
+                        <div style="font-size: 9px; color: var(--muted); margin-bottom: 4px; text-align: center;">B${bank}</div>
+                        <div style="font-size: 9px; display: flex; flex-direction: column; gap: 2px;">
+                            ${bankData.map(d => `
+                                <div style="padding: 2px 4px; background: ${d.value !== null ? 'rgba(22, 163, 74, 0.3)' : 'var(--free)'}; border-radius: 2px; text-align: center;">
+                                    ${d.addr}:${d.value !== null ? d.value : '·'}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 4px; font-size: 8px; color: ${usedCells > 0 ? 'var(--ok)' : 'var(--muted)'}; text-align: center;">
+                            ${usedCells}/${bankData.length}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+
+            // Add stats
+            const stats = sharedMemory.getStats();
+            html += `
+                <div style="margin-top: 12px; display: flex; gap: 16px; font-size: 11px;">
+                    <span>Reads: <strong>${stats.reads}</strong></span>
+                    <span>Writes: <strong>${stats.writes}</strong></span>
+                    <span style="color: ${stats.conflicts > 0 ? 'var(--warn)' : 'var(--muted)'}">Conflicts: <strong>${stats.conflicts}</strong></span>
+                </div>
+            `;
+
+            sharedEl.innerHTML = html;
+
+            // Update stats display
+            const sharedStatsDisplay = document.getElementById('sharedStatsDisplay');
+            if (sharedStatsDisplay) {
+                sharedStatsDisplay.textContent = `${sharedMemory.size} words × ${sharedMemory.numBanks} banks (${bankSize} words/bank)`;
+            }
+
+            // Update shared stats
+            document.getElementById('statBankConflicts').textContent = stats.conflicts;
+            document.getElementById('statSharedWrites').textContent = stats.writes;
+        }
+
+        function renderCompute() {
+            const stages = ['Fetch', 'Decode', 'Execute', 'Memory', 'Writeback'];
+            stages.forEach((stage, i) => {
+                const el = document.getElementById(`stage${stage}`);
+                if (el) el.className = `pipeline-stage ${i === compute.currentStage ? 'active' : ''}`;
+            });
+
+            const warpsEl = document.getElementById('warpsView');
+            const warpsPerRow = compute.warpsPerRow || 4;
+            const threadSize = compute.threadSize || 16;
+            const gap = 2;
+
+            // Warp container style - arrange warps in a grid
+            const warpContainerStyle = `
+                display: grid;
+                grid-template-columns: repeat(${warpsPerRow}, 1fr);
+                gap: 16px;
+            `;
+
+            // Thread grid style - always 8x8 layout
+            const threadGridStyle = `
+                display: grid;
+                grid-template-columns: repeat(8, ${threadSize}px);
+                grid-template-rows: repeat(8, ${threadSize}px);
+                gap: ${gap}px;
+            `;
+
+            const threadStyle = `
+                width: ${threadSize}px;
+                height: ${threadSize}px;
+                font-size: ${Math.max(6, threadSize - 6)}px;
+            `;
+
+            warpsEl.innerHTML = `<div style="${warpContainerStyle}">${compute.warps.map(warp => `
+                <div class="cache-level" style="padding: 10px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <span style="font-size:11px;font-weight:600;">Warp ${warp.id} ${warp.active ? '<span style="color:var(--ok)">●</span>' : '<span style="color:var(--muted)">○</span>'}</span>
+                        <span class="tiny">PC:${warp.pc}</span>
+                    </div>
+                    <div style="${threadGridStyle}">
+                        ${warp.threads.map(t => `
+                            <div class="thread ${t.state}" style="${threadStyle}" title="T${t.id}: R0=${t.regs[0]} R1=${t.regs[1]} R2=${t.regs[2]}">${t.id}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('')}</div>`;
+
+            document.getElementById('statCycle').textContent = compute.cycle;
+            document.getElementById('statWarps').textContent = compute.getActiveWarpCount();
+
+            // Update compute stats display
+            const computeStatsDisplay = document.getElementById('computeStatsDisplay');
+            if (computeStatsDisplay) {
+                computeStatsDisplay.textContent = `${compute.numWarps} Warps × ${compute.threadsPerWarp} Threads (${warpsPerRow}/row)`;
+            }
+        }
+
+        function renderStats() {
+            const rates = cache.getHitRates();
+            document.getElementById('statL1Rate').textContent = rates.l1 + '%';
+            document.getElementById('statL2Rate').textContent = rates.l2 + '%';
+        }
+
+        function renderAll() {
+            renderMemory();
+            renderCache();
+            renderSharedMemory();
+            renderCompute();
+            renderStats();
+        }
+
+        // ============================================
+        // EVENT BINDINGS
+        // ============================================
+
+        // Memory controls
+        document.getElementById('memMallocBtn').onclick = () => {
+            const sig = document.getElementById('memSignature').value.trim();
+            const size = Number(document.getElementById('memAllocSize').value) || 1;
+            const type = document.getElementById('memAllocType').value;
+            const init = document.getElementById('memFillMode').value;
+            const res = memory.malloc(sig, size, type, init);
+            log(res.ok ? `Malloc: ${sig} (${size} cells)` : `Malloc failed: ${res.error}`);
+            renderAll();
+        };
+
+        document.getElementById('memFreeBtn').onclick = () => {
+            const sig = document.getElementById('memSignature').value.trim();
+            const res = memory.free(sig);
+            log(res.ok ? `Freed: ${sig}` : `Free failed: ${res.error}`);
+            renderAll();
+        };
+
+        document.getElementById('memRandFillBtn').onclick = () => {
+            const sig = document.getElementById('memSignature').value.trim();
+            const res = memory.randomFill(sig);
+            log(res.ok ? `Random fill: ${sig}` : `Fill failed: ${res.error}`);
+            renderAll();
+        };
+
+        document.getElementById('memClearBtn').onclick = () => {
+            memory.reset(512);
+            cache.clear();
+            log('Memory cleared');
+            renderAll();
+        };
+
+        // Cache controls
+        document.getElementById('cacheAccessBtn').onclick = () => {
+            const addr = Number(document.getElementById('cacheTestAddr').value) || 0;
+            const result = cache.access(addr);
+            log(`Cache access @${addr}: ${result.hit ? 'HIT' : 'MISS'} at ${result.level}`);
+            renderAll();
+        };
+
+        document.getElementById('cacheClearBtn').onclick = () => {
+            cache.clear();
+            log('Cache cleared');
+            renderAll();
+        };
+
+        document.getElementById('cacheDemoBtn').onclick = () => {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const addr = Math.floor(Math.random() * 20);
+                    cache.access(addr);
+                    renderAll();
+                }, i * 100);
+            }
+            log('Demo: Random access pattern started');
+        };
+
+        // Compute controls
+        document.getElementById('compStepBtn').onclick = () => {
+            compute.step();
+            renderAll();
+        };
+
+        document.getElementById('compRunBtn').onclick = () => {
+            if (compute.running) {
+                compute.stop();
+                document.getElementById('compRunBtn').textContent = 'Run';
+            } else {
+                compute.run();
+                document.getElementById('compRunBtn').textContent = 'Stop';
+            }
+        };
+
+        document.getElementById('compResetBtn').onclick = () => {
+            compute.reset();
+            document.getElementById('compRunBtn').textContent = 'Run';
+            renderAll();
+        };
+
+        document.getElementById('compLoadProgramBtn').onclick = () => {
+            compute.warps[0].program = [
+                { op: 'LOAD', reg: 0, addr: 0 },
+                { op: 'LOAD', reg: 1, addr: 1 },
+                { op: 'MUL', reg: 2, src1: 0, src2: 1 },
+                { op: 'STORE', reg: 2, addr: 2 },
+                { op: 'DONE' }
+            ];
+            compute.warps[0].active = true;
+            log('Program loaded into Warp 0');
+            renderAll();
+        };
+
+        // Workflow presets
+        document.getElementById('wfMatmulBtn').onclick = () => {
+            // Setup matrices in memory
+            memory.malloc('A', 16, 'A', 'random');
+            memory.malloc('B', 16, 'B', 'random');
+            memory.malloc('C', 16, 'C', 'zero');
+
+            // Load compute program
+            compute.warps[0].program = [
+                { op: 'LOAD', reg: 0, addr: 0 },
+                { op: 'LOAD', reg: 1, addr: 1 },
+                { op: 'MUL', reg: 2, src1: 0, src2: 1 },
+                { op: 'ADD', reg: 3, src1: 2, src2: 3 },
+                { op: 'STORE', reg: 3, addr: 32 },
+                { op: 'DONE' }
+            ];
+            compute.warps[0].active = true;
+
+            log('MatMul setup complete');
+            renderAll();
+        };
+
+        document.getElementById('wfVectorAddBtn').onclick = () => {
+            // Setup vectors in global memory
+            memory.malloc('A', 32, 'A', 'random');  // Vector A with 32 elements
+            memory.malloc('B', 32, 'B', 'random');  // Vector B with 32 elements
+            memory.malloc('C', 32, 'C', 'zero');    // Vector C (result) initialized to zero
+
+            // Load shared memory with vector A data (simulate copy from global)
+            for (let i = 0; i < 16; i++) {
+                sharedMemory.write(i, memory.cells[i].value || i + 1);  // First half of A
+            }
+            // Load shared memory with vector B data at offset
+            for (let i = 0; i < 16; i++) {
+                sharedMemory.write(16 + i, memory.cells[32 + i].value || (i + 1) * 2);  // First half of B
+            }
+
+            // Load compute program - each thread does: C[i] = A[i] + B[i]
+            compute.warps[0].program = [
+                { op: 'LOAD', reg: 0, addr: 0 },     // Load A[i] from shared mem
+                { op: 'LOAD', reg: 1, addr: 16 },    // Load B[i] from shared mem (offset by 16)
+                { op: 'ADD', reg: 2, src1: 0, src2: 1 },  // Add: R2 = A[i] + B[i]
+                { op: 'STORE', reg: 2, addr: 64 },   // Store result to C[i] in global mem
+                { op: 'LOAD', reg: 3, addr: 1 },     // Load next A[i+1]
+                { op: 'LOAD', reg: 4, addr: 17 },    // Load next B[i+1]
+                { op: 'ADD', reg: 5, src1: 3, src2: 4 },
+                { op: 'STORE', reg: 5, addr: 65 },
+                { op: 'DONE' }
+            ];
+            compute.warps[0].active = true;
+
+            // Activate more warps to show parallel processing
+            for (let i = 1; i < Math.min(4, compute.numWarps); i++) {
+                compute.warps[i].program = [
+                    { op: 'LOAD', reg: 0, addr: i * 2 },
+                    { op: 'LOAD', reg: 1, addr: 16 + i * 2 },
+                    { op: 'ADD', reg: 2, src1: 0, src2: 1 },
+                    { op: 'STORE', reg: 2, addr: 64 + i * 2 },
+                    { op: 'DONE' }
+                ];
+                compute.warps[i].active = true;
+            }
+
+            log('Vector Add setup complete: C[i] = A[i] + B[i]');
+            log('Data flow: Global Memory → Shared Memory → Compute → Global Memory');
+            renderAll();
+        };
+
+        document.getElementById('wfFullRunBtn').onclick = () => {
+            // Clear and setup
+            memory.reset(512);
+            cache.clear();
+            compute.reset();
+
+            // Setup
+            document.getElementById('wfMatmulBtn').click();
+
+            // Run
+            setTimeout(() => {
+                compute.run();
+                document.getElementById('compRunBtn').textContent = 'Stop';
+            }, 100);
+
+            log('Full workflow started');
+        };
+
+        // Apply Config button handler
+        document.getElementById('applyConfigBtn').onclick = () => {
+            const config = {
+                memCells: parseInt(document.getElementById('cfgMemCells').value) || 512,
+                memCols: parseInt(document.getElementById('cfgMemCols').value) || 32,
+                l1Sets: parseInt(document.getElementById('cfgL1Sets').value) || 8,
+                l1Ways: parseInt(document.getElementById('cfgL1Ways').value) || 2,
+                l2Sets: parseInt(document.getElementById('cfgL2Sets').value) || 16,
+                l2Ways: parseInt(document.getElementById('cfgL2Ways').value) || 4,
+                numWarps: parseInt(document.getElementById('cfgWarps').value) || 4,
+                threadsPerWarp: parseInt(document.getElementById('cfgThreads').value) || 32,
+                warpsPerRow: parseInt(document.getElementById('cfgWarpsPerRow').value) || 4,
+                threadSize: parseInt(document.getElementById('cfgThreadSize').value) || 16,
+                sharedSize: parseInt(document.getElementById('cfgSharedSize').value) || 256,
+                sharedBanks: parseInt(document.getElementById('cfgSharedBanks').value) || 32
+            };
+
+            // Validate
+            if (config.memCells < 32 || config.memCells > 512) {
+                log('Error: Memory cells must be 32-512');
+                return;
+            }
+            if (config.threadsPerWarp % 8 !== 0) {
+                log('Error: Threads per warp must be multiple of 8');
+                return;
+            }
+
+            // Reinitialize all modules
+            initializeModules(config);
+            log(`Reinitialized: ${config.memCells} cells, L1:${config.l1Sets}×${config.l1Ways}, L2:${config.l2Sets}×${config.l2Ways}, Shared:${config.sharedSize}×${config.sharedBanks}, ${config.numWarps} warps`);
+            renderAll();
+        };
+
+        // Shared Memory controls
+        document.getElementById('sharedReadBtn').onclick = () => {
+            const addr = parseInt(document.getElementById('sharedBankAddr').value) || 0;
+            const result = sharedMemory.read(addr);
+            if (result.ok) {
+                log(`Shared Memory Read [${addr}] (Bank ${result.bank}) = ${result.value}`);
+                document.getElementById('sharedValue').value = result.value || 0;
+            } else {
+                log(`Shared Memory Read failed: ${result.error}`);
+            }
+            renderAll();
+        };
+
+        document.getElementById('sharedWriteBtn').onclick = () => {
+            const addr = parseInt(document.getElementById('sharedBankAddr').value) || 0;
+            const value = parseInt(document.getElementById('sharedValue').value) || 0;
+            const result = sharedMemory.write(addr, value);
+            if (result.ok) {
+                log(`Shared Memory Write [${addr}] (Bank ${result.bank}) = ${value}`);
+            } else {
+                log(`Shared Memory Write failed: ${result.error}`);
+            }
+            renderAll();
+        };
+
+        document.getElementById('sharedClearBtn').onclick = () => {
+            sharedMemory.clear();
+            log('Shared Memory cleared');
+            renderAll();
+        };
+
+        document.getElementById('sharedDemoBtn').onclick = () => {
+            // Demo: Write pattern to demonstrate banked memory
+            for (let i = 0; i < 16; i++) {
+                sharedMemory.write(i * 32, i + 1); // Each bank gets a value
+            }
+            log('Shared Memory: Demo pattern written (one value per bank)');
+            renderAll();
+        };
+
+        // Initial render
+        renderAll();
+        log('GPU Simulator ready - Unified Workflow View');
+
+        // Expose for debugging
+        window.GPUSim = { eventBus, memory, cache, sharedMemory, compute };
+    </script>
+</body>
+
+</html>
