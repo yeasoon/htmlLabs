@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Operator Math — Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FAF8F3;
+  --paper: #F4F1E8;
+  --ink: #1A1814;
+  --ink-mid: #4A4640;
+  --ink-muted: #9A9590;
+  --ink-faint: #D8D5CC;
+  --accent: #C84B2F;
+  --accent-warm: #E8823A;
+  --accent-cool: #2B6CB0;
+  --accent-green: #2A7A4B;
+  --tag-bg: #EDE9DE;
+  --code-bg: #EDE9DE;
+  --border: #DDD9CE;
+  --mono: 'DM Mono', monospace;
+  --serif: 'DM Serif Display', serif;
+  --sans: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 15px; scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── HEADER ─────────────────────────────────────────── */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  background: var(--cream);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.logo {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  width: 240px;
+}
+
+.search-wrap input {
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--ink);
+  width: 100%;
+}
+
+.search-wrap input::placeholder { color: var(--ink-muted); }
+
+.search-icon { color: var(--ink-muted); font-size: 0.9rem; flex-shrink: 0; }
+
+/* ── LAYOUT ─────────────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  min-height: calc(100vh - 56px);
+}
+
+/* ── SIDEBAR ─────────────────────────────────────────── */
+aside {
+  border-right: 1px solid var(--border);
+  padding: 28px 0;
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.aside-section {
+  margin-bottom: 24px;
+}
+
+.aside-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 0 20px 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 20px;
+  font-size: 0.85rem;
+  color: var(--ink-mid);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.nav-item:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.nav-item.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: rgba(200, 75, 47, 0.04);
+  font-weight: 500;
+}
+
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.nav-item.active .nav-dot { opacity: 1; }
+
+/* ── MAIN ─────────────────────────────────────────── */
+main {
+  padding: 40px 56px 80px;
+  max-width: 960px;
+}
+
+.page-title {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  margin-bottom: 44px;
+  font-weight: 300;
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── SECTION ─────────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title-text {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.section-count {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  background: var(--tag-bg);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 400;
+}
+
+/* ── OPERATOR CARDS ─────────────────────────────────── */
+.op-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.op-card:hover {
+  border-color: #C8C4B8;
+  box-shadow: 0 2px 12px rgba(26,24,20,0.06);
+}
+
+.op-header {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  align-items: start;
+  gap: 20px;
+  padding: 18px 20px;
+  cursor: pointer;
+}
+
+.op-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.op-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 3px;
+  width: fit-content;
+}
+
+.badge-opt { background: #E6F4EE; color: #1B5E35; }
+.badge-net { background: #EBF0F8; color: #1A3A6B; }
+.badge-info { background: #FFF0E8; color: #7A3010; }
+
+.op-formula {
+  font-size: 0.82rem;
+}
+
+.op-formula-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--ink-mid);
+}
+
+.code-block {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  background: var(--code-bg);
+  padding: 10px 14px;
+  border-radius: 5px;
+  line-height: 1.65;
+  color: var(--ink-mid);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.op-gain {
+  text-align: right;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.gain-num {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--accent-green);
+  font-style: italic;
+  line-height: 1;
+}
+
+.gain-label {
+  font-size: 0.68rem;
+  color: var(--ink-muted);
+  text-align: right;
+}
+
+/* Expanded detail */
+.op-detail {
+  display: none;
+  border-top: 1px solid var(--border);
+  padding: 18px 20px;
+  background: var(--paper);
+}
+
+.op-card.expanded .op-detail { display: block; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.detail-col-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.detail-note {
+  font-size: 0.83rem;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+
+.chevron {
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  transition: transform 0.2s;
+  margin-top: 2px;
+  align-self: center;
+}
+.op-card.expanded .chevron { transform: rotate(180deg); }
+
+/* ── DIVIDER between sections ─── */
+.panel + .panel { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ML Ops <span>&</span> Math</div>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="searchInput" placeholder="Search operators…" oninput="filterOps(this.value)">
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <div class="aside-section">
+      <div class="aside-label">Sections</div>
+      <div class="nav-item active" onclick="showPanel('linear', this)"><span class="nav-dot"></span>Linear / Matmul</div>
+      <div class="nav-item" onclick="showPanel('conv', this)"><span class="nav-dot"></span>Convolution</div>
+      <div class="nav-item" onclick="showPanel('attn', this)"><span class="nav-dot"></span>Attention</div>
+      <div class="nav-item" onclick="showPanel('norm', this)"><span class="nav-dot"></span>Normalization</div>
+      <div class="nav-item" onclick="showPanel('act', this)"><span class="nav-dot"></span>Activations</div>
+      <div class="nav-item" onclick="showPanel('loss', this)"><span class="nav-dot"></span>Loss Functions</div>
+      <div class="nav-item" onclick="showPanel('embed', this)"><span class="nav-dot"></span>Embeddings</div>
+      <div class="nav-item" onclick="showPanel('opt', this)"><span class="nav-dot"></span>Optimizers</div>
+    </div>
+    <div class="aside-section">
+      <div class="aside-label">Filter</div>
+      <div class="nav-item" onclick="filterOps('optimized')"><span class="nav-dot" style="background:var(--accent-green)"></span>Has speedup</div>
+      <div class="nav-item" onclick="filterOps('transformer')"><span class="nav-dot" style="background:var(--accent-cool)"></span>Transformers</div>
+      <div class="nav-item" onclick="filterOps('')"><span class="nav-dot"></span>Show all</div>
+    </div>
+  </aside>
+
+  <main>
+    <h1 class="page-title">Operator Math<br><em>& Optimizations</em></h1>
+    <p class="page-subtitle">Standard formulas · GPU-optimized variants · Speedup factors across all ML network types</p>
+
+    <!-- LINEAR -->
+    <div class="panel active" id="panel-linear">
+      <div class="section-header">
+        <span class="section-title-text">Linear / Matmul</span>
+        <span class="section-count">5 operators</span>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Dense (Linear) <span class="op-badge badge-net">All networks</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>y = Wx + b,  W ∈ ℝ^(out×in)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">2–10×</div><div class="gain-label">wall-time</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Base formula</div>
+              <div class="code-block">y = W · x + b
+W ∈ ℝ^(out×in),  x ∈ ℝ^in</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Optimized — cuBLAS GEMM (tiled)</div>
+              <div class="code-block">C[i,j] += Σ_k A[i,k] · B[k,j]
+Tile size: 128×128 register tiles
+Shared mem: avoids re-reading HBM per tile</div>
+            </div>
+          </div>
+          <div class="detail-note">Most ML compute reduces to GEMM. The key insight: load a tile of A and B into fast shared SRAM, compute the partial dot products, then accumulate — minimizing slow HBM round-trips.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Low-rank approx <span class="op-badge badge-opt">LoRA / SVD</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>y = Wx,  W ∈ ℝ^(m×n)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">100×</div><div class="gain-label">fewer params</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Base</div>
+              <div class="code-block">W ∈ ℝ^(m×n)
+Params: m·n</div>
+            </div>
+            <div>
+              <div class="detail-col-label">LoRA decomposition</div>
+              <div class="code-block">W ≈ B · A
+B ∈ ℝ^(m×r),  A ∈ ℝ^(r×n)
+r ≪ min(m, n)
+Params: (m+n)·r  vs  m·n</div>
+            </div>
+          </div>
+          <div class="detail-note">LoRA freezes W and trains only ΔW = BA. At r=8, a 4096×4096 layer goes from 16.7M → 65K trainable parameters — a 256× reduction. Merged at inference: W' = W + BA, zero overhead.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Int8 / FP8 quantized <span class="op-badge badge-opt">SmoothQuant</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>y = Wx  (FP32)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">4×</div><div class="gain-label">memory</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Base</div>
+              <div class="code-block">y = W · x
+W, x ∈ FP32</div>
+            </div>
+            <div>
+              <div class="detail-col-label">INT8 quantized (per-channel scale)</div>
+              <div class="code-block">Q(t) = round(t / s) · clamp to [-128,127]
+ŷ   = Q(W) ⊗ Q(x)   ← INT8 matmul
+y   ≈ ŷ · (s_W · s_x)  ← dequantize
+
+SmoothQuant: migrate outliers to W:
+x̂ = x / s,  Ŵ = W · s  (s per channel)</div>
+            </div>
+          </div>
+          <div class="detail-note">Activation outliers are the hard part — a few channels with 100× larger values. SmoothQuant migrates the difficulty from activations (hard to quantize online) to weights (quantized offline), enabling near-lossless INT8.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">2:4 sparse linear <span class="op-badge badge-opt">Ampere+</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>y = Wx,  density = 100%</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">2×</div><div class="gain-label">throughput</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Base</div>
+              <div class="code-block">Dense: every weight stored and multiplied</div>
+            </div>
+            <div>
+              <div class="detail-col-label">N:M structured sparsity (2:4)</div>
+              <div class="code-block">For every 4 consecutive weights:
+  keep 2 largest magnitudes, zero rest
+Compressed storage: 50% values + metadata
+cuSPARSELt maps to hardware sparse TC units</div>
+            </div>
+          </div>
+          <div class="detail-note">NVIDIA Ampere+ has dedicated sparse tensor cores that natively skip zero multiplications. The 2:4 pattern guarantees exactly 50% sparsity in any 4-element window, enabling hardware-level 2× speedup with &lt;1% accuracy loss after sparse fine-tuning.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Batched matmul <span class="op-badge badge-net">All networks</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>C[b] = A[b] @ B[b]  ∀ b</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">3–5×</div><div class="gain-label">vs loop</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Naive</div>
+              <div class="code-block">for b in range(B):
+  C[b] = A[b] @ B[b]   ← B kernel launches</div>
+            </div>
+            <div>
+              <div class="detail-col-label">cuBLAS gemmBatched / Triton BMM</div>
+              <div class="code-block">Single kernel dispatch for all B batches
+Coalesced memory: batch dim outermost
+Pointer array: ptrs[b] → A[b] start addr</div>
+            </div>
+          </div>
+          <div class="detail-note">Kernel launch overhead (microseconds) compounds badly for hundreds of heads. Batched GEMM fuses all heads into one dispatch, with threads tiling across the batch dimension together.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVOLUTION -->
+    <div class="panel" id="panel-conv">
+      <div class="section-header">
+        <span class="section-title-text">Convolution</span>
+        <span class="section-count">5 operators</span>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">2D convolution <span class="op-badge badge-net">CNNs</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>y[n,c,h,w] = Σ_{k,i,j} x[n,k,h+i,w+j]·f[c,k,i,j]</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">3–8×</div><div class="gain-label">vs direct</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Direct sum</div>
+              <div class="code-block">O(N · H · W · Cin · Cout · K²)
+Lots of strided, non-coalesced memory access</div>
+            </div>
+            <div>
+              <div class="detail-col-label">im2col + GEMM</div>
+              <div class="code-block">im2col: x → X ∈ ℝ^(N·H'W' × Cin·K²)
+  Each row = one receptive field patch
+y = X @ F^T   ← pure BLAS SGEMM
+Memory overhead: K² × input size</div>
+            </div>
+          </div>
+          <div class="detail-note">im2col "unrolls" the convolution into a matrix multiply — letting cuBLAS hit near-peak FLOPS. The tradeoff is K² memory redundancy (each input element copied K² times), but for K=3 the compute win dominates.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Winograd F(2,3) <span class="op-badge badge-opt">3×3 conv</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>Standard 3×3: 36 multiplications / tile</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">2.25×</div><div class="gain-label">muls reduced</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Direct 3×3 conv</div>
+              <div class="code-block">9 filter weights × 4 output pts = 36 muls
+per 4×4 input tile</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Winograd transform</div>
+              <div class="code-block">Y = A^T [(GgG^T) ⊙ (B^T d B)] A
+G, B, A: fixed 4×3, 4×4, 2×4 matrices
+⊙: elementwise (only 16 muls!)
+Filter transform GgG^T done once offline.</div>
+            </div>
+          </div>
+          <div class="detail-note">Winograd's minimal filtering algorithm replaces convolution multiplications with additions and fixed transforms. Works best for small K (3×3, 5×5). Winograd F(2,3) produces 2×2 outputs from 4×4 input tiles using only 16 multiplications instead of 36.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Depthwise separable <span class="op-badge badge-net">MobileNet</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>O(HW · Cin · Cout · K²) MACs</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">8–9×</div><div class="gain-label">MACs (K=3)</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Standard conv</div>
+              <div class="code-block">Cost: H·W·Cin·Cout·K²
+Each output channel sees all input channels</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Depthwise + Pointwise</div>
+              <div class="code-block">Depthwise: f_dw[c,i,j] per channel
+  y_dw[c,h,w] = Σ_{i,j} x[c,h+i,w+j]·f_dw[c,i,j]
+  Cost: H·W·Cin·K²
+
+Pointwise: 1×1 conv across channels
+  y[k,h,w] = Σ_c y_dw[c,h,w]·W[k,c]
+  Cost: H·W·Cin·Cout
+
+Total: H·W·Cin·(K² + Cout)
+Ratio vs standard: 1/Cout + 1/K²  ≈ 1/8 for K=3,Cout=256</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">FFT convolution <span class="op-badge badge-opt">Large kernels</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>O(N·K²) direct</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">2–4×</div><div class="gain-label">large K</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Direct convolution</div>
+              <div class="code-block">y = x ★ f
+O(N·K²)  — expensive for K ≥ 7</div>
+            </div>
+            <div>
+              <div class="detail-col-label">FFT via convolution theorem</div>
+              <div class="code-block">y = IFFT(FFT(x) · FFT(f))
+O(N log N)  — sublinear in K
+Pad f to match x length first.
+Crossover point: K ≥ ~7 on GPU</div>
+            </div>
+          </div>
+          <div class="detail-note">Pointwise multiplication in frequency domain = circular convolution in spatial domain. Dominant for large receptive fields (audio models, long-range vision). cuFFT handles batched 1D/2D transforms efficiently.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">1×1 bottleneck conv <span class="op-badge badge-net">ResNet, Inception</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>y[c,h,w] = Σ_k x[k,h,w]·W[c,k]</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">peak</div><div class="gain-label">FLOPS util</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Structure</div>
+              <div class="code-block">No spatial receptive field (K=1)
+Pure channel mixing at each (h,w)</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Optimization: pure GEMM</div>
+              <div class="code-block">Reshape: x → X ∈ ℝ^(Cin × HW)
+y = W @ X   ← no im2col needed
+Memory: no patch duplication at all
+Hits near-peak cuBLAS throughput</div>
+            </div>
+          </div>
+          <div class="detail-note">1×1 convolutions are free matmuls. ResNet bottlenecks use 1×1 to reduce channels before expensive 3×3, then 1×1 to expand again — the "bottleneck" pattern cuts 3×3 compute by Cin/r².</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTENTION -->
+    <div class="panel" id="panel-attn">
+      <div class="section-header">
+        <span class="section-title-text">Attention</span>
+        <span class="section-count">6 operators</span>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Scaled dot-product attention <span class="op-badge badge-net">Transformers</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>softmax(QKᵀ/√d_k)V — O(N²) memory</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">20×</div><div class="gain-label">memory</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Standard (materializes N×N matrix)</div>
+              <div class="code-block">S = QKᵀ / √d_k  ∈ ℝ^(N×N)  ← to HBM
+P = softmax(S)              ← to HBM
+O = PV                      ← from HBM
+Memory: O(N²)   e.g. 32k² = 4GB</div>
+            </div>
+            <div>
+              <div class="detail-col-label">FlashAttention-2 (online softmax)</div>
+              <div class="code-block">Tile Q,K,V into SRAM blocks; no HBM write for S
+Online running stats per tile:
+  m_i = max(m_{i-1}, rowmax(S_tile))
+  l_i = e^(m_{i-1}-m_i)·l_{i-1} + rowsum(e^(S-m_i))
+  O_i = diag(l_{i-1}/l_i)·O_{i-1} + e^(S-m_i)·V
+Final: rescale O by 1/l_N
+Memory: O(N)  — N×N never written to HBM</div>
+            </div>
+          </div>
+          <div class="detail-note">The breakthrough: softmax is normally a two-pass algorithm (first pass for max, second for exp/sum). FlashAttention fuses them with a numerically stable running correction, so attention tiles can compute in-register without materializing the N×N matrix in HBM.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Multi-head attention (MHA) <span class="op-badge badge-net">BERT, GPT</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>Concat(head_1,...,head_h)W_O</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">1.5–3×</div><div class="gain-label">fused kernel</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Per-head formulation</div>
+              <div class="code-block">head_i = Attn(XW_i^Q, XW_i^K, XW_i^V)
+d_k = d_model / h
+3h separate projection GEMMs</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Fused QKV projection + kernel</div>
+              <div class="code-block">W_QKV ∈ ℝ^(d × 3d)  ← single weight matrix
+[Q;K;V] = X @ W_QKV   ← one GEMM
+All h heads in single Flash kernel.
+Avoids h×3 separate kernel launches.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Grouped query attention (GQA) <span class="op-badge badge-opt">KV cache</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard MHA</div>
+            <code>h_Q = h_K = h_V heads</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">h/g ×</div><div class="gain-label">KV cache</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">MHA → MQA → GQA</div>
+              <div class="code-block">MHA: h_Q = h_K = h_V = h
+MQA: h_K = h_V = 1  (extreme)
+GQA: h_K = h_V = g,  1 ≤ g ≤ h</div>
+            </div>
+            <div>
+              <div class="detail-col-label">GQA: each KV head serves h/g queries</div>
+              <div class="code-block">head_{i} = Attn(QW_i^Q, KW_{⌊ig/h⌋}^K, VW_{⌊ig/h⌋}^V)
+KV cache per token: 2 · g · d_head · layers
+Llama 3 70B: h=64 Q, g=8 KV → 8× smaller cache</div>
+            </div>
+          </div>
+          <div class="detail-note">KV cache is the decode bottleneck at scale — every generated token reads all past K,V. GQA (used in LLaMA 3, Gemma, Mistral) cuts cache size by h/g with minimal quality degradation vs MHA.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Linear attention <span class="op-badge badge-opt">Long sequences</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>O(N²d) attention</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">O(N)</div><div class="gain-label">complexity</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Standard softmax attention</div>
+              <div class="code-block">Attn(Q,K,V) = softmax(QKᵀ/√d)V
+Cost: O(N²d)  — quadratic in seq length</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Kernel / linear attention (associative trick)</div>
+              <div class="code-block">Replace softmax with kernel φ(·):
+  Attn(Q,K,V)_i = φ(q_i)ᵀ(Σ_j φ(k_j)v_jᵀ) / φ(q_i)ᵀΣ_j φ(k_j)
+Matrix assoc: compute (φ(K)ᵀV) first → ℝ^(d×d)
+Cost: O(Nd²)  vs  O(N²d)
+φ options: ELU+1, random Fourier features, FAVOR+</div>
+            </div>
+          </div>
+          <div class="detail-note">The key algebraic trick: (AB)C ≠ A(BC) in general, but if softmax is replaced by a decomposable kernel, right-to-left evaluation is valid and reduces complexity from O(N²) to O(N). Used in Performer, RetNet, Mamba-style models.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">RoPE encoding <span class="op-badge badge-opt">Position</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>Sinusoidal: h += PE[pos]</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">free</div><div class="gain-label">no memory</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Sinusoidal (additive)</div>
+              <div class="code-block">PE[pos, 2i]   = sin(pos / 10000^(2i/d))
+PE[pos, 2i+1] = cos(pos / 10000^(2i/d))
+h = token_embed + PE[pos]  ← adds to residual</div>
+            </div>
+            <div>
+              <div class="detail-col-label">RoPE (rotary, multiplicative)</div>
+              <div class="code-block">For each pair (q_{2i}, q_{2i+1}) at position m:
+  q_m^rot = R_m · q_m
+  R_m = block-diag of 2D rotation matrices:
+  [cos(mθ_i)  -sin(mθ_i)]   θ_i = 10000^(-2i/d)
+  [sin(mθ_i)   cos(mθ_i)]
+
+Relative position in dot product:
+  q_m^rot · k_n^rot = f(q_m, k_n, m-n)</div>
+            </div>
+          </div>
+          <div class="detail-note">RoPE encodes relative position directly into the attention score (q·k), not the residual stream. The dot product between two rotated vectors depends only on their relative offset m−n — enabling seamless length extrapolation. Used in LLaMA, PaLM, Gemma, Falcon.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NORMALIZATION -->
+    <div class="panel" id="panel-norm">
+      <div class="section-header">
+        <span class="section-title-text">Normalization</span>
+        <span class="section-count">4 operators</span>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Batch norm <span class="op-badge badge-net">CNNs</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>x̂ = (x−μ_B)/√(σ²_B+ε),  y = γx̂+β</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">2×</div><div class="gain-label">mem bandwidth</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">3-pass naive</div>
+              <div class="code-block">Pass 1: μ_B = (1/m) Σ x_i
+Pass 2: σ²_B = (1/m) Σ(x_i − μ_B)²
+Pass 3: y_i = γ·(x_i−μ_B)/√(σ²+ε) + β
+3 full reads of x from HBM</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Fused BN kernel (1-pass statistics)</div>
+              <div class="code-block">Welford online algorithm:
+  count, mean, M2 updated per element
+  var = M2 / count  (no reread needed)
+Normalize + scale in same kernel.
+Inference: fold γ,β into next layer's W,b:
+  W' = W·γ/σ,  b' = b + W·(−μγ/σ+β)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">RMSNorm <span class="op-badge badge-opt">LLaMA, Gemma</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">LayerNorm</div>
+            <code>LN(x) = γ⊙(x−μ)/√(σ²+ε) + β</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">15%</div><div class="gain-label">faster than LN</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">LayerNorm (full)</div>
+              <div class="code-block">μ = (1/H) Σ x_i
+σ² = (1/H) Σ (x_i − μ)²
+LN(x) = γ ⊙ (x−μ)/√(σ²+ε) + β
+2 stats to compute, 2 params γ,β</div>
+            </div>
+            <div>
+              <div class="detail-col-label">RMSNorm — drop mean subtraction</div>
+              <div class="code-block">RMS(x) = √(1/H · Σ x_i²)
+RMSNorm(x) = γ ⊙ (x / RMS(x))
+  — no β (bias), no mean subtraction
+Fused warp-level reduction:
+  __shfl_down_sync for Σ x_i²
+Single-pass, ~15% faster vs LN</div>
+            </div>
+          </div>
+          <div class="detail-note">Mean subtraction in LayerNorm is "re-centering" — hypothesis: this is redundant if the next layer has a bias. RMSNorm drops it, reducing the reduction kernel from 2 passes to 1. Empirically matches LN quality while being faster.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Group norm <span class="op-badge badge-net">Detection, diffusion</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>Normalize within G channel groups per sample</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">batch-free</div><div class="gain-label">stable at B=1</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Normalization axis comparison</div>
+              <div class="code-block">BatchNorm:    normalize over (N, H, W)  per C  → needs large N
+LayerNorm:    normalize over (C, H, W)  per N
+InstanceNorm: normalize over (H, W)     per (N,C)
+GroupNorm:    normalize over C/G chans  per (N, g)</div>
+            </div>
+            <div>
+              <div class="detail-col-label">GroupNorm math</div>
+              <div class="code-block">Divide C channels into G groups.
+For group g in sample n:
+  μ_{n,g} = mean(x[n, gC/G : (g+1)C/G, :, :])
+  σ²_{n,g} = var(same slice)
+  y = γ·(x−μ)/√(σ²+ε) + β
+Typical: G=32, C≥32. G=1 → LayerNorm.
+G=C → InstanceNorm.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Spectral norm <span class="op-badge badge-net">GANs</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>SN(W) = W / σ_max(W)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">O(mn)</div><div class="gain-label">vs O(mn²) SVD</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Exact SVD</div>
+              <div class="code-block">σ_max(W) = top singular value via full SVD
+Cost: O(m·n·min(m,n))  — expensive per step</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Power iteration (1-step approx)</div>
+              <div class="code-block">Maintain unit vectors û ∈ ℝ^m, v̂ ∈ ℝ^n
+Each forward pass:
+  ṽ = Wᵀû / ‖Wᵀû‖
+  ũ = Wṽ  / ‖Wṽ‖
+  σ̂ = ũᵀWv̂
+  SN(W) = W / σ̂
+Update û←ũ, v̂←ṽ for next step.
+Cost: O(mn) — 2 matvecs only</div>
+            </div>
+          </div>
+          <div class="detail-note">One step of power iteration is sufficient in practice because W changes slowly during training. The running û, v̂ vectors "track" the top singular direction across steps, so each step only needs a small correction.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVATIONS -->
+    <div class="panel" id="panel-act">
+      <div class="section-header">
+        <span class="section-title-text">Activations</span>
+        <span class="section-count">6 operators</span>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">GELU <span class="op-badge badge-net">BERT, GPT</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Exact</div>
+            <code>x · ½[1 + erf(x/√2)]</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">~tanh</div><div class="gain-label">approx speed</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Exact GELU (slow erf call)</div>
+              <div class="code-block">GELU(x) = x · Φ(x)
+Φ: CDF of N(0,1)
+Exact: x · ½·(1 + erf(x/√2))
+erf() requires special function hardware</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Tanh approximation (fast)</div>
+              <div class="code-block">GELU(x) ≈ 0.5x · [1 + tanh(√(2/π)·(x + 0.044715x³))]
+Error: < 0.001 for all x ∈ [-5, 5]
+tanh: single hardware instruction on modern GPUs
+Used in original BERT, GPT-2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">SwiGLU <span class="op-badge badge-net">LLaMA, PaLM</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>Swish(xW+b) ⊙ (xV+c)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">gated</div><div class="gain-label">better quality</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Standard FFN</div>
+              <div class="code-block">FFN(x) = W_2 · act(W_1 · x)
+act = ReLU or GELU
+2 weight matrices: W_1 ∈ ℝ^(h×4h), W_2 ∈ ℝ^(4h×h)</div>
+            </div>
+            <div>
+              <div class="detail-col-label">SwiGLU FFN</div>
+              <div class="code-block">SwiGLU(x) = Swish(xW) ⊙ (xV)
+Swish(x) = x · σ(x) = x/(1+e^{-x})
+
+FFN_SwiGLU(x) = (Swish(xW) ⊙ xV) · W_2
+3 weight matrices but hidden = ⅔·4h = 2.67h
+to keep same total params.
+Fused: compute both branches + multiply in 1 kernel</div>
+            </div>
+          </div>
+          <div class="detail-note">SwiGLU was found empirically to outperform GeLU, ReLU, Swish in dense transformer FFNs (Noam Shazeer 2020). The gating mechanism (⊙) allows the network to "select" which features to pass through, acting as a soft gating rather than hard threshold.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Softmax (numerically stable) <span class="op-badge badge-net">All</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Naive</div>
+            <code>softmax(x)_i = e^{x_i} / Σ e^{x_j}</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">stable</div><div class="gain-label">no overflow</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Naive (overflows for large x)</div>
+              <div class="code-block">softmax(x)_i = e^{x_i} / Σ_j e^{x_j}
+Problem: e^{x_i} → ∞ for x_i > 88 (FP32)</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Log-sum-exp stable form</div>
+              <div class="code-block">m = max(x)                    ← shift
+softmax(x)_i = e^{x_i−m} / Σ_j e^{x_j−m}
+
+log_softmax(x)_i = (x_i − m) − log(Σ_j e^{x_j−m})
+
+Gradient of cross-entropy loss:
+  ∂L/∂logits_i = softmax_i − y_i   ← clean form
+Fused: log_softmax + NLLLoss in 1 kernel</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">ReLU / LeakyReLU <span class="op-badge badge-net">CNNs</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>max(0, x)  /  max(αx, x)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">fused</div><div class="gain-label">with conv/linear</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">ReLU</div>
+              <div class="code-block">f(x) = max(0, x)
+f'(x) = 1[x > 0]  (subgradient at 0 = 0)
+"Dying ReLU": neurons with x < 0 always → grad=0</div>
+            </div>
+            <div>
+              <div class="detail-col-label">PReLU — learnable α per channel</div>
+              <div class="code-block">PReLU(x) = x if x ≥ 0, else α·x
+∂L/∂x_i = 1[x≥0] + α·1[x<0]
+∂L/∂α = Σ_{x<0} x_i · upstream_grad
+α init = 0.25; one param per channel.
+Fused with preceding GEMM/conv in cuDNN.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOSS -->
+    <div class="panel" id="panel-loss">
+      <div class="section-header">
+        <span class="section-title-text">Loss Functions</span>
+        <span class="section-count">5 operators</span>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Cross-entropy loss <span class="op-badge badge-net">Classification</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>L = −Σ y_i log(softmax(logits)_i)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">fused</div><div class="gain-label">1 kernel</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Two-step (materializes probabilities)</div>
+              <div class="code-block">p = softmax(logits)  → HBM write
+L = -log(p[y])       → HBM read
+Memory: O(N·V) for probabilities</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Fused log-softmax + NLLLoss</div>
+              <div class="code-block">L = -logits[y] + log(Σ_j e^{logits_j − m})
+  where m = max(logits)
+
+Never materializes p in HBM.
+Clean gradient: ∂L/∂logits_i = softmax_i − y_i
+For LLMs: chunked vocab to avoid V-dim alloc</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">InfoNCE / contrastive <span class="op-badge badge-net">CLIP, SimCLR</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>−log exp(z_i·z_j/τ) / Σ exp(z_i·z_k/τ)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">free negatives</div><div class="gain-label">in-batch mining</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">InfoNCE</div>
+              <div class="code-block">L = -1/N · Σ_i log [exp(sim(z_i,z_i⁺)/τ) /
+                         Σ_{j≠i} exp(sim(z_i,z_j)/τ)]
+τ: temperature (e.g. 0.07)
+More negatives → sharper training signal</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Optimizations</div>
+              <div class="code-block">In-batch negatives: all B-1 other samples are free negatives
+Large batch (B=32k): ~32k negatives per anchor
+Chunked softmax: tile the denominator sum in blocks
+  → avoids O(B²) memory materialization
+Grad checkpointing on embedder for large B</div>
+            </div>
+          </div>
+          <div class="detail-note">CLIP uses a symmetric version: both image→text and text→image contrastive losses summed. Temperature τ is a learned parameter initialized to log(1/0.07)=2.66. The logit scale exp(τ) controls sharpness of the distribution.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Focal loss <span class="op-badge badge-net">Detection</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>FL = −α_t(1−p_t)^γ log(p_t)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">fused</div><div class="gain-label">modulation in kernel</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Standard CE vs Focal</div>
+              <div class="code-block">CE:     L = −log(p_t)
+Focal:  L = −(1−p_t)^γ · log(p_t)
+γ=0: reduces to CE
+γ=2: easy examples (p_t≈1) downweighted by (1−p_t)² ≈ 0</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Fused numerically stable form</div>
+              <div class="code-block">Compute p_t via stable sigmoid-CE:
+  p = σ(x) = 1/(1+e^{-x})
+  CE = -[y·log p + (1-y)·log(1-p)]  (stable form)
+Then multiply modulating factor in-register:
+  FL = (1-p_t)^γ · CE
+Single kernel: no extra HBM read for p_t</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">KL divergence <span class="op-badge badge-net">KD, VAE, RLHF</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>KL(P‖Q) = Σ p_i log(p_i/q_i)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">log-domain</div><div class="gain-label">stable form</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Forward KL (mean-seeking)</div>
+              <div class="code-block">KL(P‖Q) = Σ p_i · (log p_i − log q_i)
+Forward KL → Q covers all modes of P
+Used in: MLE training, knowledge distillation</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Reverse KL + RLHF form</div>
+              <div class="code-block">KL(Q‖P) = Σ q_i · (log q_i − log p_i)
+Reverse → Q mode-seeks (ignores small-p regions)
+
+RLHF PPO KL penalty:
+  r(x,y) = r_θ(x,y) − β·KL(π_θ‖π_ref)
+  ≈ log(π_θ/π_ref) per token (cheap to compute)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMBEDDINGS -->
+    <div class="panel" id="panel-embed">
+      <div class="section-header">
+        <span class="section-title-text">Embeddings</span>
+        <span class="section-count">3 operators</span>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Embedding lookup <span class="op-badge badge-net">NLP</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>E[i] = W[token_id_i],  W ∈ ℝ^(V×d)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">sparse grad</div><div class="gain-label">efficient update</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Naive</div>
+              <div class="code-block">W ∈ ℝ^(V×d), V = vocab (e.g. 128k)
+Lookup: gather W[token_ids]
+Dense gradient: dW ∈ ℝ^(V×d)  — huge!</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Sparse gradient + tensor parallel</div>
+              <div class="code-block">Grad: only rows in {token_ids} are non-zero
+Optimizer: sparse Adam, only update touched rows.
+Tensor parallel (multi-GPU):
+  W split across K GPUs: W = [W_0|...|W_{K-1}]
+  Each GPU owns V/K rows.
+  Forward: AllGather or masked lookup + AllReduce</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">ALiBi positional bias <span class="op-badge badge-opt">Length extrapolation</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard learned pos</div>
+            <code>h = embed + P[pos],  P ∈ ℝ^(T_max × d)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">0 params</div><div class="gain-label">no memory</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Learned absolute PE</div>
+              <div class="code-block">P ∈ ℝ^(T_max × d): learned, fixed max length
+Extrapolation: fails beyond T_max</div>
+            </div>
+            <div>
+              <div class="detail-col-label">ALiBi: linear bias on attention logits</div>
+              <div class="code-block">S_{ij} = qᵢ·kⱼ/√d − m·|i − j|
+m: head-specific slope (geometric sequence)
+  head h: m_h = 2^{−8/H · h}
+No extra parameters. No extra memory.
+Bias depends only on distance, not absolute pos.
+Generalizes to unseen lengths at inference.</div>
+            </div>
+          </div>
+          <div class="detail-note">ALiBi adds a penalty proportional to token distance directly to attention logits — closer tokens are penalized less. The slope m controls the attention "horizon" per head. Since the bias has no learned parameters, it generalizes smoothly to sequence lengths longer than seen during training.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Weight tying <span class="op-badge badge-opt">Param sharing</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>logits = h · W_output^T</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">38M+</div><div class="gain-label">params saved</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Separate input + output embeddings</div>
+              <div class="code-block">W_in  ∈ ℝ^(V×d): input lookup
+W_out ∈ ℝ^(d×V): output projection
+2 × V×d parameters</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Tied weights (W_in = W_out^T)</div>
+              <div class="code-block">logits = h · W_in^T   ← same matrix reused
+Saves V·d params  (50k×768 = 38.4M for BERT)
+Gradient: accumulates from both forward uses
+Linguistic intuition: embedding a token ≈
+  predicting that token from context</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTIMIZERS -->
+    <div class="panel" id="panel-opt">
+      <div class="section-header">
+        <span class="section-title-text">Optimizers</span>
+        <span class="section-count">5 operators</span>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">AdamW <span class="op-badge badge-net">Transformers, LLMs</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard Adam</div>
+            <code>θ ← θ − η·m̂/(√v̂+ε)</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">decoupled</div><div class="gain-label">weight decay</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Adam (L2 weight decay as gradient)</div>
+              <div class="code-block">g_t = ∇L + λθ          ← decay in gradient
+m ← β₁m + (1-β₁)g_t
+v ← β₂v + (1-β₂)g_t²
+m̂ = m/(1-β₁ᵗ),  v̂ = v/(1-β₂ᵗ)
+θ ← θ − η·m̂/(√v̂+ε)   ← adaptive LR on λθ too</div>
+            </div>
+            <div>
+              <div class="detail-col-label">AdamW (decoupled decay)</div>
+              <div class="code-block">g_t = ∇L                ← decay NOT in gradient
+m ← β₁m + (1-β₁)g_t   ← only loss gradient
+v ← β₂v + (1-β₂)g_t²
+θ ← (1−λη)θ − η·m̂/(√v̂+ε)
+  ↑ fixed-rate decay, not adaptive-scaled
+8-bit AdamW: m,v stored in INT8 w/ dynamic quant
+  → 75% optimizer state memory saved</div>
+            </div>
+          </div>
+          <div class="detail-note">Adam's adaptive learning rates inadvertently scale down the weight decay term — large-gradient parameters see effectively weaker decay. AdamW fixes this by applying decay directly to θ at a fixed rate, independent of the adaptive scaling. This matters significantly for transformers.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Adafactor <span class="op-badge badge-opt">Memory efficient</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Adam</div>
+            <code>Store m, v: 2× param memory</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">4×</div><div class="gain-label">memory vs Adam</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Adam second moment (full)</div>
+              <div class="code-block">v ∈ ℝ^(m×n) for W ∈ ℝ^(m×n)
+Cost: same memory as the parameter itself</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Adafactor: factored second moment</div>
+              <div class="code-block">v ≈ R · Cᵀ / (1ᵀR+C)    ← rank-1 approx
+R ∈ ℝ^m  (row factors)
+C ∈ ℝ^n  (col factors)
+Update: R ← β₂R + (1-β₂)·(v_hat·diag_of_cols)
+         C ← similar for cols
+Cost: O(m+n)  vs  O(mn)  for full v
+Also: no first moment by default (momentum=0)</div>
+            </div>
+          </div>
+          <div class="detail-note">For a 4096×4096 weight matrix, full v needs 64M floats. Adafactor's factored approximation needs only 8K+8K=16K — a 4000× reduction for that layer. Used to train T5, Switch Transformer on TPUs with very limited HBM.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">LAMB <span class="op-badge badge-opt">Large batch</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Adam</div>
+            <code>Global LR doesn't scale to B=32k+</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">B=32k</div><div class="gain-label">batch size</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Adam at large batch</div>
+              <div class="code-block">Global η: tiny for stability → slow
+Linear LR scaling: η ∝ B causes divergence
+Problem: different layers have very different gradient magnitudes</div>
+            </div>
+            <div>
+              <div class="detail-col-label">LAMB: layer-wise trust ratio</div>
+              <div class="code-block">r_l ← Adam update direction for layer l
+η_l = φ(‖θ_l‖) / ‖r_l‖   ← trust ratio
+φ: clip function (e.g. φ(z) = min(z, 10))
+
+θ_l ← θ_l − η · η_l · r_l
+
+Each layer gets its own effective LR.
+Intuition: take a step proportional to
+  current weight magnitude, direction from Adam.</div>
+            </div>
+          </div>
+          <div class="detail-note">LAMB enabled BERT pre-training in 76 minutes (vs days) by scaling to batch size 32,768. The key insight: normalize the update by layer norm and weight norm separately, removing sensitivity to layer-specific gradient scales.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Gradient checkpointing <span class="op-badge badge-opt">Memory</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Standard</div>
+            <code>Store all activations: O(N·L) memory</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">O(√N)</div><div class="gain-label">memory</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Standard backprop</div>
+              <div class="code-block">Store all layer activations during forward
+Memory: O(N·L)  (N tokens, L layers)
+Fast backward: all acts immediately available</div>
+            </div>
+            <div>
+              <div class="detail-col-label">Selective recompute (√N strategy)</div>
+              <div class="code-block">Store only every √L layer's activation
+During backward: recompute intermediate acts
+  from nearest checkpoint.
+Memory: O(√L · N)
+Compute: +33% FLOPs (each layer computed ~1.33×)
+
+PyTorch: torch.utils.checkpoint.checkpoint()
+Selective: wrap only expensive layers (attn, FFN)</div>
+            </div>
+          </div>
+          <div class="detail-note">For a 100-layer model: standard stores 100 activation tensors; √N checkpointing stores ~10 and recomputes up to 10 layers per backward step. Particularly valuable for long-sequence training where activation memory dominates.</div>
+        </div>
+      </div>
+
+      <div class="op-card" onclick="toggleCard(this)">
+        <div class="op-header">
+          <div class="op-name">Mixed precision training <span class="op-badge badge-opt">AMP</span></div>
+          <div class="op-formula">
+            <div class="op-formula-label">Full FP32</div>
+            <code>All ops in FP32: 4 bytes/param</code>
+          </div>
+          <div class="op-gain"><div class="gain-num">2–3×</div><div class="gain-label">speed + 2× mem</div></div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="op-detail">
+          <div class="detail-grid">
+            <div>
+              <div class="detail-col-label">Full FP32 training</div>
+              <div class="code-block">Params, grads, optimizer states: FP32
+4 bytes/element for everything
+cuDNN: no Tensor Cores for FP32 GEMM</div>
+            </div>
+            <div>
+              <div class="detail-col-label">AMP: automatic mixed precision</div>
+              <div class="code-block">Weights: FP32 master copy (for stable updates)
+Forward + backward: FP16/BF16 (2 bytes)
+  → 2× memory, 2-3× faster (Tensor Cores)
+Optimizer states: FP32 (precision critical)
+Loss scaling: multiply loss by S before backward
+  → prevents FP16 underflow (grads too small)
+  unscale before optimizer step: grad /= S
+BF16: same range as FP32, less precision
+  → no loss scaling needed (same exponent bits)</div>
+            </div>
+          </div>
+          <div class="detail-note">BF16 (Brain Float 16) uses 8 exponent bits (same as FP32) vs FP16's 5 — this means BF16 handles the same value range as FP32 and doesn't need loss scaling. Modern LLM training (GPT-4, LLaMA) uses BF16 throughout with FP32 optimizer states.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function showPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleCard(card) {
+  card.classList.toggle('expanded');
+}
+
+function filterOps(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.op-card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+  document.getElementById('searchInput').value = query;
+
+  if (q) {
+    // Show all panels temporarily
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => {
+      const visible = [...p.querySelectorAll('.op-card')].some(c => c.style.display !== 'none');
+      if (visible) p.classList.add('active');
+    });
+    // Show all visible sections stacked
+    document.querySelectorAll('.panel.active').forEach(p => p.style.display = 'block');
+  } else {
+    // Restore first panel
+    document.querySelectorAll('.panel').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
+    document.getElementById('panel-linear').classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelector('.nav-item').classList.add('active');
+  }
+}
+</script>
+</body>
+</html>
