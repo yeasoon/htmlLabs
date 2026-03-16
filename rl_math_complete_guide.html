@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0b0f;
+      --surface: #111318;
+      --surface2: #181c24;
+      --border: rgba(255, 255, 255, 0.07);
+      --border2: rgba(255, 255, 255, 0.12);
+      --text: #e8e6e1;
+      --text2: #8a8782;
+      --text3: #555350;
+      --accent: #e8c97a;
+      --accent2: #c4a857;
+      --blue: #6eb5ff;
+      --coral: #ff7b6b;
+      --green: #6dce9a;
+      --purple: #b69aff;
+      --mono: 'DM Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+      --sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* layout */
+    .shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* sidebar */
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo .label {
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-logo .title {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+
+    .sidebar-logo .subtitle {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 3px;
+    }
+
+    .progress-bar-wrap {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .progress-label {
+      font-size: 11px;
+      color: var(--text3);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-track {
+      height: 3px;
+      background: var(--border2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--coral));
+      border-radius: 2px;
+      transition: width .5s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .nav-list {
+      flex: 1;
+      padding: 12px 0;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all .15s;
+      position: relative;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, .03);
+      color: var(--text);
+    }
+
+    .nav-item.active {
+      border-left-color: var(--accent);
+      background: rgba(232, 201, 122, .06);
+      color: var(--accent);
+    }
+
+    .nav-num {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text3);
+      min-width: 18px;
+    }
+
+    .nav-item.active .nav-num {
+      color: var(--accent2);
+    }
+
+    .nav-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text2);
+      line-height: 1.3;
+    }
+
+    .nav-item.active .nav-text {
+      color: var(--accent);
+    }
+
+    .nav-item.done .nav-num::after {
+      content: '✓';
+      color: var(--green);
+      font-size: 9px;
+    }
+
+    .nav-era {
+      font-size: 9px;
+      color: var(--text3);
+      display: block;
+      font-weight: 400;
+      margin-top: 1px;
+      font-style: italic;
+    }
+
+    /* main */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-path {
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    .topbar-path span {
+      color: var(--text2);
+    }
+
+    .chapter-pill {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text3);
+    }
+
+    .content-area {
+      flex: 1;
+      padding: 40px 36px 60px;
+      max-width: 780px;
+    }
+
+    /* chapter header */
+    .chapter-header {
+      margin-bottom: 32px;
+    }
+
+    .era-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(232, 201, 122, .1);
+      border: 1px solid rgba(232, 201, 122, .2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: var(--accent2);
+      font-weight: 600;
+      letter-spacing: .04em;
+      margin-bottom: 14px;
+    }
+
+    .era-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .chapter-title {
+      font-family: var(--serif);
+      font-size: 34px;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .chapter-title em {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .chapter-desc {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    /* divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+
+    /* section heading */
+    h3.sh {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text3);
+      margin: 28px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3.sh::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* concept cards */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .concept-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      transition: border-color .15s, transform .15s;
+      cursor: default;
+    }
+
+    .concept-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-1px);
+    }
+
+    .cc-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 5px;
+    }
+
+    .cc-val {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    /* math block */
+    .math-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 14px 0;
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .math-block::before {
+      content: attr(data-label);
+      position: absolute;
+      top: -1px;
+      right: 12px;
+      font-size: 10px;
+      letter-spacing: .06em;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: #000;
+      padding: 2px 8px;
+      border-radius: 0 0 6px 6px;
+    }
+
+    .math-block pre {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.9;
+      white-space: pre;
+      color: var(--text);
+    }
+
+    .math-block .hl {
+      color: var(--blue);
+    }
+
+    .math-block .key {
+      color: var(--coral);
+    }
+
+    .math-block .cmt {
+      color: var(--text3);
+      font-size: 11.5px;
+    }
+
+    .math-block .em {
+      color: var(--accent);
+    }
+
+    .math-block .ok {
+      color: var(--green);
+    }
+
+    .math-block .pu {
+      color: var(--purple);
+    }
+
+    /* callout */
+    .callout {
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 14px 0;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .callout.info {
+      background: rgba(110, 181, 255, .07);
+      border: 1px solid rgba(110, 181, 255, .15);
+    }
+
+    .callout.warn {
+      background: rgba(255, 123, 107, .07);
+      border: 1px solid rgba(255, 123, 107, .15);
+    }
+
+    .callout.tip {
+      background: rgba(109, 206, 154, .07);
+      border: 1px solid rgba(109, 206, 154, .15);
+    }
+
+    .callout-icon {
+      font-size: 14px;
+      padding-top: 1px;
+    }
+
+    .callout-text {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text2);
+    }
+
+    .callout.info .callout-text {
+      color: #a8d4ff;
+    }
+
+    .callout.warn .callout-text {
+      color: #ffb5ab;
+    }
+
+    .callout.tip .callout-text {
+      color: #a0e5c0;
+    }
+
+    /* step list */
+    .steps {
+      margin: 14px 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+
+    .step-n {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-weight: 500;
+    }
+
+    .step-body {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.65;
+    }
+
+    .step-code {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--text);
+      background: var(--surface2);
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-top: 6px;
+      display: block;
+    }
+
+    /* connection map */
+    .conn-list {
+      margin: 14px 0;
+    }
+
+    .conn-item {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .conn-from,
+    .conn-to {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .conn-arrow {
+      padding: 0 8px;
+      color: var(--text3);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .conn-label {
+      font-size: 11px;
+      color: var(--text3);
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    /* bottom nav */
+    .bottom-nav {
+      border-top: 1px solid var(--border);
+      padding: 20px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+    }
+
+    .bnav-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s;
+      font-family: var(--sans);
+    }
+
+    .bnav-btn:hover:not(:disabled) {
+      background: var(--surface2);
+      color: var(--text);
+      border-color: var(--border2);
+    }
+
+    .bnav-btn.primary {
+      background: rgba(232, 201, 122, .1);
+      border-color: rgba(232, 201, 122, .3);
+      color: var(--accent);
+    }
+
+    .bnav-btn.primary:hover {
+      background: rgba(232, 201, 122, .18);
+    }
+
+    .bnav-btn:disabled {
+      opacity: .25;
+      cursor: default;
+    }
+
+    .bnav-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .bnav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border2);
+      transition: all .2s;
+    }
+
+    .bnav-dot.active {
+      background: var(--accent);
+      width: 18px;
+      border-radius: 3px;
+    }
+
+    .bnav-dot.done {
+      background: var(--green);
+    }
+
+    /* section visible */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+      animation: fadeUp .25s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    p.body {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <div class="label">Course</div>
+        <div class="title">RL Mathematics<br>from Zero to GRPO</div>
+        <div class="subtitle">10 chapters · Complete derivations</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-label"><span>Progress</span><span id="prog-pct">10%</span></div>
+        <div class="progress-track">
+          <div class="progress-fill" id="prog-fill" style="width:10%"></div>
+        </div>
+      </div>
+      <ul class="nav-list" id="nav-list">
+        <li class="nav-item active" onclick="show(0)"><span class="nav-num">01</span><span class="nav-text">MDP
+            Foundations<span class="nav-era">1950s · Bellman</span></span></li>
+        <li class="nav-item" onclick="show(1)"><span class="nav-num">02</span><span class="nav-text">Bellman
+            Equations<span class="nav-era">1957 · Contraction</span></span></li>
+        <li class="nav-item" onclick="show(2)"><span class="nav-num">03</span><span class="nav-text">Dynamic
+            Programming<span class="nav-era">1960s · Planning</span></span></li>
+        <li class="nav-item" onclick="show(3)"><span class="nav-num">04</span><span class="nav-text">TD Learning<span
+              class="nav-era">1988 · Sutton</span></span></li>
+        <li class="nav-item" onclick="show(4)"><span class="nav-num">05</span><span class="nav-text">Q-Learning &amp;
+            SARSA<span class="nav-era">1989–94 · Watkins</span></span></li>
+        <li class="nav-item" onclick="show(5)"><span class="nav-num">06</span><span class="nav-text">Function
+            Approx<span class="nav-era">1995–2012</span></span></li>
+        <li class="nav-item" onclick="show(6)"><span class="nav-num">07</span><span class="nav-text">Policy
+            Gradient<span class="nav-era">1992–2000 · Williams</span></span></li>
+        <li class="nav-item" onclick="show(7)"><span class="nav-num">08</span><span class="nav-text">Actor-Critic &amp;
+            GAE<span class="nav-era">2000–2015</span></span></li>
+        <li class="nav-item" onclick="show(8)"><span class="nav-num">09</span><span class="nav-text">Deep RL ·
+            DQN/PPO<span class="nav-era">2013–2020</span></span></li>
+        <li class="nav-item" onclick="show(9)"><span class="nav-num">10</span><span class="nav-text">RLHF · GRPO ·
+            DPO<span class="nav-era">2022–2025 · Latest</span></span></li>
+      </ul>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-path">RL Math · <span id="chapter-path">Chapter 01</span></div>
+        <div class="chapter-pill" id="chapter-pill">MDP Foundations</div>
+      </div>
+
+      <div class="content-area">
+
+        <!-- CH 0: MDP -->
+        <div class="section active" id="s0">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>1950s — Richard Bellman
+            </div>
+            <h1 class="chapter-title">Markov Decision<br><em>Processes</em></h1>
+            <p class="chapter-desc">The universal language of sequential decision-making. Every RL algorithm is secretly
+              just a different way of solving an MDP.</p>
+          </div>
+          <div class="concept-grid">
+            <div class="concept-card">
+              <div class="cc-label">States</div>
+              <div class="cc-val">S = {s₁…s|S|}</div>
+            </div>
+            <div class="concept-card">
+              <div class="cc-label">Actions</div>
+              <div class="cc-val">A = {a₁…a|A|}</div>
+            </div>
+            <div class="concept-card">
+              <div class="cc-label">Discount</div>
+              <div class="cc-val">γ ∈ [0, 1)</div>
+            </div>
+            <div class="concept-card">
+              <div class="cc-label">Horizon</div>
+              <div class="cc-val">T ∈ ℕ or ∞</div>
+            </div>
+          </div>
+          <h3 class="sh">Markov Property</h3>
+          <p class="body">The future depends only on the present — not the history. This is what makes the math
+            tractable.</p>
+          <div class="math-block" data-label="AXIOM">
+            <pre><span class="hl">P(sₜ₊₁ | sₜ, aₜ, sₜ₋₁, aₜ₋₁, …)</span>
+  = P(sₜ₊₁ | sₜ, aₜ)
+
+<span class="cmt">// "The present state captures all relevant history"</span></pre>
+          </div>
+          <h3 class="sh">Transition & Reward</h3>
+          <div class="math-block" data-label="DEFINITION">
+            <pre><span class="hl">P(s′ | s, a)</span>         transition probability
+<span class="key">R(s, a, s′)</span>          immediate reward
+
+Expected reward:
+r(s,a) = Σ_{s′} P(s′|s,a) · R(s,a,s′)</pre>
+          </div>
+          <h3 class="sh">Discounted Return</h3>
+          <p class="body">The quantity we want to maximize — a geometric sum of future rewards.</p>
+          <div class="math-block" data-label="OBJECTIVE">
+            <pre><span class="em">Gₜ</span> = Rₜ₊₁ + γ·Rₜ₊₂ + γ²·Rₜ₊₃ + …
+   = Σ_{k=0}^∞  γᵏ · Rₜ₊ₖ₊₁
+
+Recursive:  <span class="em">Gₜ = Rₜ₊₁ + γ · Gₜ₊₁</span>
+
+<span class="cmt">// γ < 1 ensures finite; γ→0 greedy; γ→1 far-sighted</span></pre>
+          </div>
+          <h3 class="sh">Policy</h3>
+          <div class="math-block" data-label="POLICY">
+            <pre>Deterministic:  π(s) → a
+Stochastic:     <span class="hl">π(a | s)</span> = P(Aₜ=a | Sₜ=s)
+
+<span class="ok">Goal:</span> find π* that maximises  𝔼[Gₜ]</pre>
+          </div>
+        </div>
+
+        <!-- CH 1: Bellman -->
+        <div class="section" id="s1">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>1957 — Bellman's Breakthrough
+            </div>
+            <h1 class="chapter-title">Bellman<br><em>Equations</em></h1>
+            <p class="chapter-desc">The central insight: optimal value functions satisfy a recursive consistency
+              condition. This single idea powers all of RL.</p>
+          </div>
+          <h3 class="sh">State-Value V^π</h3>
+          <div class="math-block" data-label="BELLMAN EXPECTATION">
+            <pre>V^π(s) = 𝔼_π[ Gₜ | Sₜ = s ]
+       = 𝔼_π[ Rₜ₊₁ + γ·Gₜ₊₁ | Sₜ = s ]
+
+<span class="hl">V^π(s) = Σ_a π(a|s) · Σ_{s′} P(s′|s,a) [r(s,a) + γ·V^π(s′)]</span></pre>
+          </div>
+          <h3 class="sh">Action-Value Q^π</h3>
+          <div class="math-block" data-label="BELLMAN EXPECTATION">
+            <pre>Q^π(s,a) = 𝔼_π[ Gₜ | Sₜ=s, Aₜ=a ]
+
+<span class="hl">Q^π(s,a) = Σ_{s′} P(s′|s,a) [r(s,a) + γ Σ_{a′} π(a′|s′) Q^π(s′,a′)]</span>
+
+Relationship:
+  V^π(s) = Σ_a π(a|s) · Q^π(s,a)
+  Q^π(s,a) = Σ_{s′} P(s′|s,a) [r + γ·V^π(s′)]</pre>
+          </div>
+          <h3 class="sh">Optimality Equations</h3>
+          <div class="math-block" data-label="BELLMAN OPTIMALITY">
+            <pre><span class="key">V*(s)</span>    = max_a  Σ_{s′} P(s′|s,a) [r(s,a) + γ·V*(s′)]
+
+<span class="key">Q*(s,a)</span>  = Σ_{s′} P(s′|s,a) [r(s,a) + γ · max_{a′} Q*(s′,a′)]
+
+Optimal policy:
+  <span class="ok">π*(s)</span> = argmax_a Q*(s,a)</pre>
+          </div>
+          <h3 class="sh">Bellman Operator & Contraction</h3>
+          <div class="math-block" data-label="CONTRACTION MAPPING">
+            <pre>(𝒯^π V)(s) = Σ_a π(a|s) Σ_{s′} P(s′|s,a) [r + γV(s′)]
+(𝒯* V)(s)  = max_a Σ_{s′} P(s′|s,a) [r + γV(s′)]
+
+<span class="hl">γ-contraction:</span>  ‖𝒯*V − 𝒯*U‖_∞ ≤ γ ‖V − U‖_∞
+
+<span class="cmt">// Banach fixed-point theorem → unique V*, guaranteed convergence</span></pre>
+          </div>
+          <div class="callout info">
+            <div class="callout-icon">⚡</div>
+            <div class="callout-text">The contraction property (γ &lt; 1) is the bedrock guarantee. Every RL convergence
+              proof ultimately reduces to this.</div>
+          </div>
+        </div>
+
+        <!-- CH 2: DP -->
+        <div class="section" id="s2">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>1960s — Dynamic Programming
+            </div>
+            <h1 class="chapter-title">Planning with<br><em>Dynamic Programming</em></h1>
+            <p class="chapter-desc">When the model P(s′|s,a) is known, we can plan exactly. The algorithms here are the
+              conceptual ancestors of every modern RL method.</p>
+          </div>
+          <h3 class="sh">Policy Evaluation</h3>
+          <div class="math-block" data-label="ITERATIVE">
+            <pre>Initialize V₀ arbitrarily;  V(terminal) = 0
+
+For k = 0, 1, 2, …
+  <span class="hl">Vₖ₊₁(s)</span> ← Σ_a π(a|s) Σ_{s′} P(s′|s,a) [r + γ·Vₖ(s′)]
+
+<span class="cmt">// Vₖ → V^π as k → ∞  (by contraction, rate γ per sweep)</span></pre>
+          </div>
+          <h3 class="sh">Policy Improvement Theorem</h3>
+          <div class="math-block" data-label="THEOREM">
+            <pre>Define π′(s) = argmax_a Q^π(s,a)
+
+Then: <span class="ok">V^{π′}(s) ≥ V^π(s)</span>  for all s ∈ S
+
+Proof:
+  V^π(s) ≤ Q^π(s, π′(s))
+         = Σ_{s′} P(s′|s,π′) [r + γ·V^π(s′)]
+         ≤ …  ≤  V^{π′}(s)  ✓</pre>
+          </div>
+          <h3 class="sh">Policy Iteration</h3>
+          <div class="steps">
+            <div class="step">
+              <div class="step-n">1</div>
+              <div class="step-body">Initialize π arbitrarily</div>
+            </div>
+            <div class="step">
+              <div class="step-n">E</div>
+              <div class="step-body"><strong style="color:var(--text)">Policy Evaluation:</strong> compute V^π by
+                iterating Bellman<span class="step-code">Vₖ₊₁ ← 𝒯^π Vₖ until ‖ΔV‖ < ε</span>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-n">I</div>
+              <div class="step-body"><strong style="color:var(--text)">Policy Improvement:</strong> greedy update<span
+                  class="step-code">π′(s) ← argmax_a Q^π(s,a) ∀s</span></div>
+            </div>
+            <div class="step">
+              <div class="step-n">✓</div>
+              <div class="step-body">If π′ ≠ π: set π ← π′, repeat E→I. Else: π* found.</div>
+            </div>
+          </div>
+          <h3 class="sh">Value Iteration</h3>
+          <p class="body">Merge E + I into a single operator. Faster in practice.</p>
+          <div class="math-block" data-label="VALUE ITERATION">
+            <pre><span class="key">Vₖ₊₁(s)</span> ← max_a Σ_{s′} P(s′|s,a) [r + γ·Vₖ(s′)]
+
+Convergence rate:  ‖Vₖ₊₁ − V*‖ ≤ γ·‖Vₖ − V*‖
+Complexity/sweep:  O(|S|² · |A|)
+
+<span class="cmt">// One Bellman optimality backup per step</span></pre>
+          </div>
+        </div>
+
+        <!-- CH 3: TD -->
+        <div class="section" id="s3">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>1988 — Richard Sutton
+            </div>
+            <h1 class="chapter-title">Temporal Difference<br><em>Learning</em></h1>
+            <p class="chapter-desc">No model. No full rollouts. Learn from a single step of experience by bootstrapping
+              off your own estimates.</p>
+          </div>
+          <div class="concept-grid">
+            <div class="concept-card">
+              <div class="cc-label">MC target</div>
+              <div class="cc-val">Gₜ (full return)</div>
+            </div>
+            <div class="concept-card">
+              <div class="cc-label">TD(0) target</div>
+              <div class="cc-val">Rₜ₊₁ + γV(Sₜ₊₁)</div>
+            </div>
+            <div class="concept-card">
+              <div class="cc-label">Bias</div>
+              <div class="cc-val">TD: higher · MC: zero</div>
+            </div>
+            <div class="concept-card">
+              <div class="cc-label">Variance</div>
+              <div class="cc-val">TD: lower · MC: high</div>
+            </div>
+          </div>
+          <h3 class="sh">TD(0) Update</h3>
+          <div class="math-block" data-label="TD ERROR">
+            <pre><span class="hl">δₜ</span> = Rₜ₊₁ + γ·V(Sₜ₊₁) − V(Sₜ)   <span class="cmt">← TD error</span>
+
+<span class="em">V(Sₜ)</span> ← V(Sₜ) + α · δₜ
+
+<span class="cmt">// Converges to V^π if α satisfies Robbins-Monro:
+//   Σ αₙ = ∞,   Σ αₙ² < ∞</span></pre>
+          </div>
+          <h3 class="sh">n-step Returns</h3>
+          <div class="math-block" data-label="N-STEP">
+            <pre>Gₜ^(n) = Rₜ₊₁ + γRₜ₊₂ + … + γⁿ⁻¹Rₜ₊ₙ + γⁿV(Sₜ₊ₙ)
+
+n = 1:  TD(0)         (bootstrap after 1 step)
+n = ∞:  Monte Carlo   (no bootstrap, full return)
+<span class="hl">n ∈ (1,∞):</span> interpolates bias / variance tradeoff</pre>
+          </div>
+          <h3 class="sh">TD(λ) — Eligibility Traces</h3>
+          <div class="math-block" data-label="ELIGIBILITY TRACE">
+            <pre>λ-return (forward view):
+  Gₜ^λ = (1−λ) Σ_{n=1}^∞  λⁿ⁻¹ Gₜ^(n)
+
+Eligibility trace (backward view):
+  eₜ(s) = γλ · eₜ₋₁(s) + 𝟙[Sₜ = s]
+
+Update <em>all</em> states simultaneously:
+  <span class="hl">V(s) ← V(s) + α · δₜ · eₜ(s)</span>
+
+<span class="cmt">// λ=0: TD(0);  λ=1: offline MC;  λ∈(0,1): best of both</span></pre>
+          </div>
+        </div>
+
+        <!-- CH 4: Q-Learning -->
+        <div class="section" id="s4">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>1989–1994 · Watkins, Rummery
+            </div>
+            <h1 class="chapter-title">Q-Learning &amp;<br><em>SARSA</em></h1>
+            <p class="chapter-desc">Apply TD ideas to action-values. SARSA follows the current policy; Q-learning learns
+              the optimal policy regardless of behavior.</p>
+          </div>
+          <h3 class="sh">SARSA — On-Policy</h3>
+          <div class="math-block" data-label="ON-POLICY TD">
+            <pre>Tuple: (Sₜ, Aₜ, Rₜ₊₁, Sₜ₊₁, <span class="hl">Aₜ₊₁</span>)   <span class="cmt">← action from π</span>
+
+<span class="hl">Q(Sₜ,Aₜ)</span> ← Q(Sₜ,Aₜ) + α[Rₜ₊₁ + γ·Q(Sₜ₊₁,Aₜ₊₁) − Q(Sₜ,Aₜ)]</pre>
+          </div>
+          <h3 class="sh">Q-Learning — Off-Policy</h3>
+          <div class="math-block" data-label="OFF-POLICY TD">
+            <pre>Tuple: (Sₜ, Aₜ, Rₜ₊₁, Sₜ₊₁)
+
+<span class="key">Q(Sₜ,Aₜ)</span> ← Q(Sₜ,Aₜ) + α[Rₜ₊₁ + γ·<span class="key">max_{a′}</span> Q(Sₜ₊₁,a′) − Q(Sₜ,Aₜ)]
+
+<span class="cmt">// Behavior policy b can be anything (ε-greedy, random…)
+// Still converges to Q*</span></pre>
+          </div>
+          <h3 class="sh">Convergence Theorem (Watkins & Dayan 1992)</h3>
+          <div class="math-block" data-label="THEOREM">
+            <pre>Q-learning → Q* with probability 1 <span class="ok">iff</span>:
+  1. All (s,a) pairs visited infinitely often
+  2. Σ_t αₜ(s,a) = ∞   and   Σ_t αₜ²(s,a) < ∞
+  3. Rewards bounded:  |R| ≤ R_max</pre>
+          </div>
+          <h3 class="sh">ε-Greedy Exploration</h3>
+          <div class="math-block" data-label="EXPLORATION">
+            <pre>π_ε(a|s) = ⎧ 1 − ε + ε/|A|   if a = argmax Q(s,·)
+           ⎩ ε / |A|           otherwise
+
+ε → 0:  pure exploitation  |  ε = 1:  pure exploration</pre>
+          </div>
+          <h3 class="sh">Double Q-Learning (van Hasselt 2010)</h3>
+          <div class="math-block" data-label="DOUBLE Q">
+            <pre>Two networks Q_A, Q_B:
+
+<span class="hl">Q_A(S,A)</span> ← Q_A + α[R + γ·Q_B(S′, argmax_{a′} Q_A(S′,a′)) − Q_A(S,A)]
+
+<span class="cmt">// Decouples selection from evaluation → kills overestimation bias</span></pre>
+          </div>
+        </div>
+
+        <!-- CH 5: Func Approx -->
+        <div class="section" id="s5">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>1995–2012 · Scaling Up
+            </div>
+            <h1 class="chapter-title">Function<br><em>Approximation</em></h1>
+            <p class="chapter-desc">Tabular methods collapse for Atari, robotics, language. We parameterize value
+              functions with linear models and neural networks.</p>
+          </div>
+          <h3 class="sh">Linear Approximation</h3>
+          <div class="math-block" data-label="LINEAR">
+            <pre>V̂(s; w) = <span class="hl">wᵀ φ(s)</span>     φ(s) ∈ ℝⁿ  (feature vector)
+
+SGD update (minimize MSE to V^π):
+<span class="key">w ← w + α · δₜ · ∇_w V̂(Sₜ; w)</span>
+  = w + α · δₜ · φ(Sₜ)
+
+Semi-gradient TD(0):
+  w ← w + α [R + γV̂(S′;w) − V̂(S;w)] · φ(S)</pre>
+          </div>
+          <h3 class="sh">Neural Network Approximation</h3>
+          <div class="math-block" data-label="DEEP">
+            <pre>Q(s,a; θ) = f_θ(s,a)    <span class="cmt">← deep network</span>
+
+TD target:
+  y = R + γ · max_{a′} Q(s′,a′; θ)
+
+Loss:
+  L(θ) = 𝔼[ (y − Q(s,a;θ))² ]
+
+Gradient:
+  <span class="hl">∇_θ L</span> = −2(y − Q(s,a;θ)) · ∇_θ Q(s,a;θ)</pre>
+          </div>
+          <div class="callout warn">
+            <div class="callout-icon">⚠</div>
+            <div class="callout-text"><strong>Deadly Triad</strong> (Tsitsiklis & Van Roy 1997): combining (1)
+              off-policy + (2) function approximation + (3) bootstrapping can diverge. DQN fixes this with experience
+              replay + target networks.</div>
+          </div>
+          <h3 class="sh">Gradient TD — Stable Off-Policy</h3>
+          <div class="math-block" data-label="GTD2">
+            <pre>Minimize: PBE(w) = ‖V_w − Π𝒯^πV_w‖²_μ
+
+GTD2 update (two timescales):
+  <span class="hl">w ← w + α(δₜφₜ − γφₜ₊₁(φₜᵀvₜ))</span>
+  v ← v + β(δₜ − φₜᵀvₜ) φₜ    <span class="cmt">β ≫ α</span>
+
+<span class="cmt">// Converges with all three deadly-triad elements active</span></pre>
+          </div>
+        </div>
+
+        <!-- CH 6: Policy Gradient -->
+        <div class="section" id="s6">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>1992–2000 · Williams, Sutton
+            </div>
+            <h1 class="chapter-title">Policy Gradient<br><em>Methods</em></h1>
+            <p class="chapter-desc">Skip value functions entirely. Directly differentiate through the policy and climb
+              the expected-return surface.</p>
+          </div>
+          <h3 class="sh">Objective</h3>
+          <div class="math-block" data-label="OBJECTIVE">
+            <pre>J(θ) = V^{π_θ}(s₀) = 𝔼_{τ~π_θ}[G₀]
+     = 𝔼_{τ~π_θ}[ Σₜ γᵗ Rₜ₊₁ ]
+
+τ = (s₀, a₀, r₁, s₁, …)  — trajectory</pre>
+          </div>
+          <h3 class="sh">Policy Gradient Theorem (Sutton 1999)</h3>
+          <div class="math-block" data-label="THEOREM">
+            <pre><span class="hl">∇_θ J(θ)</span> = 𝔼_{s~d^π, a~π_θ} [ <span class="key">Q^π(s,a) · ∇_θ log π_θ(a|s)</span> ]
+
+d^π(s) = (1−γ) Σ_{t=0}^∞  γᵗ P(Sₜ=s|π)   (discounted state dist.)
+
+<span class="cmt">// No need to differentiate through environment dynamics!</span></pre>
+          </div>
+          <h3 class="sh">Log-Derivative Trick</h3>
+          <div class="math-block" data-label="PROOF">
+            <pre>∇_θ 𝔼_{x~p_θ}[f(x)] = 𝔼_{x~p_θ}[ f(x) · ∇_θ log p_θ(x) ]
+
+Derivation:
+  ∇_θ ∫ p_θ(x) f(x) dx
+  = ∫ ∇_θ p_θ(x) · f(x) dx
+  = ∫ p_θ(x) · <span class="hl">∇_θ log p_θ(x)</span> · f(x) dx  ✓
+
+<span class="cmt">// Also called: score function estimator, REINFORCE trick</span></pre>
+          </div>
+          <h3 class="sh">REINFORCE (Williams 1992)</h3>
+          <div class="math-block" data-label="REINFORCE">
+            <pre>Sample τ ~ π_θ;  compute returns Gₜ ∀t
+
+<span class="hl">θ ← θ + α · Σₜ Gₜ · ∇_θ log π_θ(Aₜ|Sₜ)</span>
+
+With baseline b(s) (e.g. V(s)):
+  θ ← θ + α · Σₜ (Gₜ − b(Sₜ)) · ∇_θ log π_θ(Aₜ|Sₜ)
+
+<span class="cmt">// Baseline reduces variance; gradient stays unbiased
+//   𝔼[ b(S) · ∇_θ log π_θ ] = 0  (proof via log-deriv trick)</span></pre>
+          </div>
+          <h3 class="sh">Natural Policy Gradient</h3>
+          <div class="math-block" data-label="NPG">
+            <pre>Fisher Information Matrix:
+  F_θ = 𝔼[ ∇_θ log π_θ · ∇_θ log π_θᵀ ]
+
+Standard gradient:  θ ← θ + α ∇_θ J
+<span class="pu">Natural gradient:</span>   θ ← θ + α <span class="pu">F_θ⁻¹ ∇_θ J</span>
+
+<span class="cmt">// Steepest ascent in KL geometry, not Euclidean parameter space
+// Invariant to reparameterization of π_θ</span></pre>
+          </div>
+        </div>
+
+        <!-- CH 7: Actor-Critic -->
+        <div class="section" id="s7">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>2000–2015 · Actor-Critic
+            </div>
+            <h1 class="chapter-title">Actor-Critic<br><em>&amp; GAE</em></h1>
+            <p class="chapter-desc">Use a critic (value function) to reduce variance of the actor's gradient estimate.
+              The architecture behind nearly every modern algorithm.</p>
+          </div>
+          <h3 class="sh">Advantage Function</h3>
+          <div class="math-block" data-label="ADVANTAGE">
+            <pre><span class="hl">A^π(s,a)</span> = Q^π(s,a) − V^π(s)
+
+  A > 0:  action a is better than average under π
+  A < 0:  action a is worse than average under π
+  A = 0:  indifferent
+
+One-step TD estimate:
+  Âₜ ≈ δₜ = Rₜ₊₁ + γ·V(Sₜ₊₁) − V(Sₜ)</pre>
+          </div>
+          <h3 class="sh">Actor-Critic Updates</h3>
+          <div class="math-block" data-label="A2C">
+            <pre><span class="cmt">// Actor (policy) — climbs advantage-weighted log-prob:</span>
+θ ← θ + α_θ · <span class="hl">Âₜ</span> · ∇_θ log π_θ(Aₜ|Sₜ)
+
+<span class="cmt">// Critic (value) — minimizes TD error:</span>
+w ← w + α_w · δₜ · ∇_w V_w(Sₜ)</pre>
+          </div>
+          <h3 class="sh">GAE — Generalized Advantage Estimation (Schulman 2015)</h3>
+          <div class="math-block" data-label="GAE">
+            <pre>δₜ^V = Rₜ + γ·V(Sₜ₊₁) − V(Sₜ)
+
+<span class="key">Âₜ^{GAE(γ,λ)}</span> = Σ_{l=0}^∞ (γλ)ˡ δₜ₊ₗ^V
+             = δₜ + γλ·δₜ₊₁ + (γλ)²·δₜ₊₂ + …
+
+λ=0:  Âₜ = δₜ                   (low var, high bias)
+λ=1:  Âₜ = Σ_{l} γˡ δₜ₊ₗ       (high var, low bias)
+<span class="cmt">// λ ∈ (0,1): continuous bias-variance interpolation</span></pre>
+          </div>
+          <h3 class="sh">TRPO — Trust Region (Schulman 2015)</h3>
+          <div class="math-block" data-label="TRPO">
+            <pre><span class="hl">max_θ</span>  𝔼ₜ[ π_θ(aₜ|sₜ)/π_{θ_old}(aₜ|sₜ) · Âₜ ]
+subject to:  𝔼ₜ[ KL[π_{θ_old}(·|s) ‖ π_θ(·|s)] ] ≤ δ
+
+Monotonic improvement theorem:
+  J(π_new) ≥ J(π_old) − C · max_s KL[π_old ‖ π_new]
+
+<span class="cmt">// Guaranteed improvement every step. Expensive to solve.</span></pre>
+          </div>
+          <h3 class="sh">SAC — Soft Actor-Critic (Haarnoja 2018)</h3>
+          <div class="math-block" data-label="MAX-ENTROPY">
+            <pre>J(π) = Σₜ 𝔼[ Rₜ + <span class="key">α · H(π(·|sₜ))</span> ]
+
+Soft Bellman:
+  V^π(s)   = 𝔼_a[ Q^π(s,a) − α log π(a|s) ]
+  Q^π(s,a) = r + γ·𝔼_{s′}[ V^π(s′) ]
+
+<span class="cmt">// α balances reward vs. exploration entropy; auto-tunable</span></pre>
+          </div>
+        </div>
+
+        <!-- CH 8: Deep RL -->
+        <div class="section" id="s8">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>2013–2020 · Deep RL
+            </div>
+            <h1 class="chapter-title">Deep Reinforcement<br><em>Learning</em></h1>
+            <p class="chapter-desc">Combine deep neural networks with RL. DQN beats humans at Atari. PPO becomes the
+              standard policy optimizer for everything from robotics to LLMs.</p>
+          </div>
+          <h3 class="sh">DQN (Mnih et al. 2013/2015)</h3>
+          <div class="math-block" data-label="DQN">
+            <pre>Two stabilizing tricks:
+
+<span class="hl">1. Experience Replay:</span>  buffer D stores (s,a,r,s′)
+   → sample random minibatch → breaks temporal correlations
+
+<span class="hl">2. Target Network θ⁻:</span>  frozen copy, updated every C steps
+   → y = r + γ · max_{a′} Q(s′,a′; <span class="key">θ⁻</span>)
+
+Loss:
+  L(θ) = 𝔼_{(s,a,r,s′)~D} [(y − Q(s,a;θ))²]</pre>
+          </div>
+          <h3 class="sh">PPO — Proximal Policy Optimization (Schulman 2017)</h3>
+          <p class="body">TRPO simplified: clip the importance ratio instead of solving a constrained optimization
+            problem.</p>
+          <div class="math-block" data-label="CLIP OBJECTIVE">
+            <pre>Ratio:  rₜ(θ) = π_θ(aₜ|sₜ) / π_{θ_old}(aₜ|sₜ)
+
+<span class="key">L^{CLIP}(θ)</span> = 𝔼ₜ [ min(
+    rₜ(θ) · Âₜ,
+    clip(rₜ(θ), 1−ε, 1+ε) · Âₜ
+) ]
+
+Full PPO loss:
+  L(θ) = −L^{CLIP} + c₁·L^{VF} − c₂·S[π_θ]
+
+  L^{VF} = (V_θ(sₜ) − Vₜ^{targ})²
+  S      = H(π_θ(·|sₜ))          <span class="cmt">← entropy bonus</span>
+  c₁≈0.5,  c₂≈0.01,  ε≈0.2</pre>
+          </div>
+          <h3 class="sh">PPO Training Loop</h3>
+          <div class="steps">
+            <div class="step">
+              <div class="step-n">1</div>
+              <div class="step-body">Collect T timesteps with π_{θ_old} → fill rollout buffer</div>
+            </div>
+            <div class="step">
+              <div class="step-n">2</div>
+              <div class="step-body">Compute advantages via GAE(γ, λ)</div>
+            </div>
+            <div class="step">
+              <div class="step-n">3</div>
+              <div class="step-body">For K epochs, minibatch SGD:<span class="step-code">θ ← θ + α · ∇_θ
+                  L^{CLIP+VF+S}(θ)</span></div>
+            </div>
+            <div class="step">
+              <div class="step-n">4</div>
+              <div class="step-body">Update θ_old ← θ, go to 1</div>
+            </div>
+          </div>
+          <h3 class="sh">TD3 — Twin Delayed DDPG (Fujimoto 2018)</h3>
+          <div class="math-block" data-label="TD3">
+            <pre>Twin critics: Q_{θ₁}, Q_{θ₂}
+
+Target (min of twins):
+  y = r + γ · <span class="hl">min(Q_{θ₁⁻}, Q_{θ₂⁻})</span>(s′, ã)
+  ã = π_{φ⁻}(s′) + clip(ε, −c, c)   <span class="cmt">← smoothed target</span>
+
+Policy update (delayed — every 2 critic steps):
+  <span class="key">∇_φ J</span> = 𝔼_s[∇_a Q_{θ₁}(s,a)|_{a=π_φ(s)} · ∇_φ π_φ(s)]</pre>
+          </div>
+        </div>
+
+        <!-- CH 9: Modern RL -->
+        <div class="section" id="s9">
+          <div class="chapter-header">
+            <div class="era-badge">
+              <div class="era-dot"></div>2022–2025 · LLM Era
+            </div>
+            <h1 class="chapter-title">RLHF · DPO<br><em>&amp; GRPO</em></h1>
+            <p class="chapter-desc">RL applied to language models. From human preference data to ChatGPT, Claude, Gemini
+              — and the group-relative trick powering DeepSeek-R1.</p>
+          </div>
+          <h3 class="sh">RLHF Pipeline (Christiano 2017, InstructGPT 2022)</h3>
+          <div class="steps">
+            <div class="step">
+              <div class="step-n">1</div>
+              <div class="step-body"><strong style="color:var(--text)">SFT:</strong> supervised fine-tune on human
+                demonstrations</div>
+            </div>
+            <div class="step">
+              <div class="step-n">2</div>
+              <div class="step-body"><strong style="color:var(--text)">Reward Model:</strong> train R_φ from preference
+                pairs (y_w ≻ y_l | x)<span class="step-code">L_R(φ) = −𝔼[log σ(R_φ(x,y_w) − R_φ(x,y_l))]
+                  (Bradley-Terry)</span></div>
+            </div>
+            <div class="step">
+              <div class="step-n">3</div>
+              <div class="step-body"><strong style="color:var(--text)">RL Fine-tune:</strong> optimize π_θ with PPO
+                against R_φ</div>
+            </div>
+          </div>
+          <h3 class="sh">PPO-RLHF Objective</h3>
+          <div class="math-block" data-label="RLHF">
+            <pre><span class="key">max_θ</span>  𝔼_{x~D, y~π_θ}[ R_φ(x,y) − β · log(π_θ(y|x) / π_ref(y|x)) ]
+
+<span class="cmt">// KL term prevents reward hacking / collapse to degenerate policy
+// β ≈ 0.01–0.1 controls deviation from reference model</span></pre>
+          </div>
+          <h3 class="sh">DPO — Direct Preference Optimization (Rafailov 2023)</h3>
+          <p class="body">Analytically solve for the optimal policy — eliminate the reward model entirely.</p>
+          <div class="math-block" data-label="DPO">
+            <pre>Optimal policy reparameterization:
+  R*(x,y) = β log(π*(y|x) / π_ref(y|x)) + β log Z(x)
+
+<span class="hl">L_{DPO}(π_θ)</span> = −𝔼_{(x,y_w,y_l)} [
+  log σ( β log π_θ(y_w|x)/π_ref(y_w|x)
+       − β log π_θ(y_l|x)/π_ref(y_l|x) )
+]
+
+Implicit reward:  r_θ(x,y) = β log π_θ(y|x)/π_ref(y|x)
+<span class="cmt">// No RL loop. No reward model. Pure supervised-style training.</span></pre>
+          </div>
+          <h3 class="sh">GRPO — Group Relative Policy Opt. (DeepSeek 2024)</h3>
+          <p class="body">PPO without a critic. Used in DeepSeek-R1. Normalize advantages within a group of sampled
+            outputs.</p>
+          <div class="math-block" data-label="GRPO">
+            <pre>For question q, sample G outputs {o₁…o_G} ~ π_{θ_old}
+Compute rewards {r₁…r_G}  (rule-based / verifiable)
+
+<span class="comment">// Group-relative advantage — no critic network needed:</span>
+<span class="key">Âᵢ</span> = (rᵢ − mean({r₁…r_G})) / std({r₁…r_G})
+
+<span class="hl">L_{GRPO}</span> = −𝔼ᵢ [ min(ρᵢ·Âᵢ, clip(ρᵢ, 1−ε, 1+ε)·Âᵢ) ]
+          + β · KL[π_θ ‖ π_ref]
+
+ρᵢ = π_θ(oᵢ|q) / π_{θ_old}(oᵢ|q)
+
+<span class="cmt">// Cheaper than PPO (no V network); stable with verifiable rewards</span></pre>
+          </div>
+          <h3 class="sh">RLOO — Leave-One-Out Baseline (2024)</h3>
+          <div class="math-block" data-label="RLOO">
+            <pre>Leave-one-out baseline:
+  bᵢ = (1/(G−1)) Σ_{j≠i} rⱼ
+
+<span class="hl">Âᵢ = rᵢ − bᵢ</span>
+
+<span class="cmt">// Lower variance than GRPO std-normalization
+// Used in Qwen2.5, LLaMA-based RLHF pipelines</span></pre>
+          </div>
+          <h3 class="sh">The Full Lineage</h3>
+          <div class="conn-list">
+            <div class="conn-item">
+              <div class="conn-from">REINFORCE '92</div>
+              <div class="conn-arrow">──add clip, GAE──→</div>
+              <div class="conn-to">PPO '17</div>
+            </div>
+            <div class="conn-item">
+              <div class="conn-from">TRPO '15</div>
+              <div class="conn-arrow">──approx KL──→</div>
+              <div class="conn-to">PPO '17</div>
+            </div>
+            <div class="conn-item">
+              <div class="conn-from">PPO</div>
+              <div class="conn-arrow">──+R_φ, KL penalty──→</div>
+              <div class="conn-to">RLHF-PPO '22</div>
+            </div>
+            <div class="conn-item">
+              <div class="conn-from">RLHF-PPO</div>
+              <div class="conn-arrow">──solve analytically──→</div>
+              <div class="conn-to">DPO '23</div>
+            </div>
+            <div class="conn-item">
+              <div class="conn-from">PPO</div>
+              <div class="conn-arrow">──replace V with group mean──→</div>
+              <div class="conn-to">GRPO '24</div>
+            </div>
+            <div class="conn-item">
+              <div class="conn-from">DPO</div>
+              <div class="conn-arrow">──remove π_ref──→</div>
+              <div class="conn-to">SimPO '24</div>
+            </div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-icon">✦</div>
+            <div class="callout-text">Every modern LLM alignment algorithm is a variant of one idea: <strong>make the
+                policy more likely to produce outputs that score higher under human preference, while staying close to
+                the reference policy.</strong> The math differs; the objective is the same.</div>
+          </div>
+        </div>
+
+      </div><!-- /content-area -->
+
+      <!-- bottom nav -->
+      <div class="bottom-nav">
+        <button class="bnav-btn" id="btn-prev" onclick="go(-1)" disabled>← Prev</button>
+        <div class="bnav-dots" id="dots"></div>
+        <button class="bnav-btn primary" id="btn-next" onclick="go(1)">Next →</button>
+      </div>
+    </div><!-- /main -->
+  </div><!-- /shell -->
+
+  <script>
+    const N = 10;
+    let cur = 0;
+    const titles = ['MDP Foundations', 'Bellman Equations', 'Dynamic Programming', 'TD Learning', 'Q-Learning & SARSA', 'Function Approx', 'Policy Gradient', 'Actor-Critic & GAE', 'Deep RL · DQN/PPO', 'RLHF · GRPO · DPO'];
+    const seen = new Set([0]);
+
+    const dotsEl = document.getElementById('dots');
+    for (let i = 0; i < N; i++) {
+      const d = document.createElement('div');
+      d.className = 'bnav-dot' + (i === 0 ? ' active' : '');
+      d.id = 'dot' + i;
+      d.onclick = () => show(i);
+      d.style.cursor = 'pointer';
+      dotsEl.appendChild(d);
+    }
+
+    function show(i) {
+      document.getElementById('s' + cur).classList.remove('active');
+      document.querySelectorAll('.nav-item')[cur].classList.remove('active');
+      cur = i;
+      seen.add(i);
+      document.getElementById('s' + cur).classList.add('active');
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems[cur].classList.add('active');
+      navItems[cur].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      document.getElementById('btn-prev').disabled = cur === 0;
+      document.getElementById('btn-next').disabled = cur === N - 1;
+      document.getElementById('btn-next').textContent = cur === N - 1 ? 'Complete ✓' : 'Next →';
+      document.getElementById('chapter-path').textContent = 'Chapter 0' + (cur + 1);
+      document.getElementById('chapter-pill').textContent = titles[cur];
+      document.querySelectorAll('.bnav-dot').forEach((d, k) => {
+        d.className = 'bnav-dot' + (k === cur ? ' active' : seen.has(k) && k !== cur ? ' done' : '');
+      });
+      const pct = Math.round(((cur + 1) / N) * 100);
+      document.getElementById('prog-fill').style.width = pct + '%';
+      document.getElementById('prog-pct').textContent = pct + '%';
+    }
+    function go(d) { show(Math.max(0, Math.min(N - 1, cur + d))); }
+  </script>
+</body>
+
+</html>
